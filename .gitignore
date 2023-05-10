@@ -8,5 +8,6 @@
 scripts/work/
 scripts/work/*
 scripts/.nextflow.log*
+scripts/.nextflow.*
 scripts/.nextflow/
 
