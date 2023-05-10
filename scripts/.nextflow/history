@@ -1,5 +1,0 @@
-2023-05-10 14:25:43	-	mad_curran	-	71712bfbc6b04c9d8eda87ea279fa799	4279bea9-9309-443f-ade7-bd7c6625ae7d	nextflow run PairedMSA_preprocessing_workflow.nf
-2023-05-10 14:26:24	-	romantic_goodall	-	21fc550b593f0349d703e34a6aea135f	1686b4bc-a722-4a07-a530-81a8af9917bc	nextflow run PairedMSA_preprocessing_workflow.nf
-2023-05-10 14:28:18	-	festering_kay	-	76a0a5e3cfedcedbc8b78d1f54cd677a	40c3dafe-cee6-4719-bb70-6904cdcf93da	nextflow run PairedMSA_preprocessing_workflow.nf
-2023-05-10 14:28:44	1.8s	festering_borg	ERR	f55043fb8c894458725ed7cb57241e8b	48515725-ba8b-4972-a712-dae6b25f6f7e	nextflow run PairedMSA_preprocessing_workflow.nf
-2023-05-10 14:29:56	2.1s	big_khorana	ERR	5f33288b3b68fd11e750881784ac8478	0feb5978-c145-4910-92c2-62d6eac678f6	nextflow run PairedMSA_preprocessing_workflow.nf
