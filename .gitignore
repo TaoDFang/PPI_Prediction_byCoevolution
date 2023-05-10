@@ -1,3 +1,5 @@
 #ignore nextflow output
 PPI_Prediction_byCoevolution/scripts/work/
+PPI_Prediction_byCoevolution/scripts/work/*
 PPI_Prediction_byCoevolution/*/work/
+PPI_Prediction_byCoevolution/*/work/*
