@@ -1,0 +1,87 @@
+May-10 16:38:27.967 [main] DEBUG nextflow.cli.Launcher - $> nextflow run PairedMSA_preprocessing_workflow.nf
+May-10 16:38:28.048 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 23.04.1
+May-10 16:38:28.063 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/mnt/mnemo5/tao/.nextflow/plugins; core-plugins: nf-amazon@1.16.2,nf-azure@1.0.1,nf-codecommit@0.1.4,nf-console@1.0.5,nf-ga4gh@1.0.5,nf-google@1.7.3,nf-tower@1.5.12,nf-wave@0.8.2
+May-10 16:38:28.073 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+May-10 16:38:28.074 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+May-10 16:38:28.076 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+May-10 16:38:28.083 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+May-10 16:38:28.140 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declararion
+May-10 16:38:28.154 [main] INFO  nextflow.cli.CmdRun - Launching `PairedMSA_preprocessing_workflow.nf` [big_meninsky] DSL2 - revision: 134123f7dc
+May-10 16:38:28.154 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+May-10 16:38:28.155 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+May-10 16:38:28.161 [main] DEBUG nextflow.secret.LocalSecretsProvider - Secrets store: /mnt/mnemo5/tao/.nextflow/secrets/store.json
+May-10 16:38:28.167 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@187eb9a8] - activable => nextflow.secret.LocalSecretsProvider@187eb9a8
+May-10 16:38:28.215 [main] DEBUG nextflow.Session - Session UUID: 9e4add8e-a352-45c3-988f-446109678497
+May-10 16:38:28.215 [main] DEBUG nextflow.Session - Run name: big_meninsky
+May-10 16:38:28.217 [main] DEBUG nextflow.Session - Executor pool size: 256
+May-10 16:38:28.225 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=768; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+May-10 16:38:28.249 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 23.04.1 build 5866
+  Created: 15-04-2023 06:51 UTC (08:51 CEST)
+  System: Linux 5.4.0-135-generic
+  Runtime: Groovy 3.0.16 on OpenJDK 64-Bit Server VM 17.0.3-internal+0-adhoc..src
+  Encoding: UTF-8 (UTF-8)
+  Process: 476668@deimos [127.0.1.1]
+  CPUs: 256 - Mem: 1007.5 GB (223.1 GB) - Swap: 8 GB (2.3 MB)
+May-10 16:38:28.271 [main] DEBUG nextflow.Session - Work-dir: /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts/work [nfs]
+May-10 16:38:28.272 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts/bin
+May-10 16:38:28.281 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+May-10 16:38:28.288 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+May-10 16:38:28.303 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+May-10 16:38:28.310 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 257; maxThreads: 1000
+May-10 16:38:28.365 [main] DEBUG nextflow.Session - Session start
+May-10 16:38:28.876 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+May-10 16:38:28.931 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+May-10 16:38:28.931 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+May-10 16:38:28.935 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+May-10 16:38:28.940 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=256; memory=1007.5 GB; capacity=256; pollInterval=100ms; dumpInterval=5m
+May-10 16:38:29.046 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+May-10 16:38:29.046 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+May-10 16:38:29.053 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: PrepareFastaDataBySpecies, Test
+May-10 16:38:29.053 [main] DEBUG nextflow.Session - Igniting dataflow network (3)
+May-10 16:38:29.053 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > Test
+May-10 16:38:29.059 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > PrepareFastaDataBySpecies
+May-10 16:38:29.059 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+May-10 16:38:29.059 [main] DEBUG nextflow.Session - Session await
+May-10 16:38:29.167 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+May-10 16:38:29.169 [Task submitter] INFO  nextflow.Session - [77/05ce83] Submitted process > Test
+May-10 16:38:29.178 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+May-10 16:38:29.179 [Task submitter] INFO  nextflow.Session - [3d/22f00d] Submitted process > PrepareFastaDataBySpecies (1)
+May-10 16:38:29.198 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: Test; status: COMPLETED; exit: 0; error: -; workDir: /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts/work/77/05ce837fab7391a9f32c650d734310]
+May-10 16:38:29.218 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: PrepareFastaDataBySpecies (1); status: COMPLETED; exit: 1; error: -; workDir: /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts/work/3d/22f00dfba3da2eae1639029ad09e51]
+May-10 16:38:29.221 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Handling unexpected condition for
+  task: name=PrepareFastaDataBySpecies (1); work-dir=/mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts/work/3d/22f00dfba3da2eae1639029ad09e51
+  error [nextflow.exception.ProcessFailedException]: Process `PrepareFastaDataBySpecies (1)` terminated with an error exit status (1)
+May-10 16:38:29.230 [Task monitor] ERROR nextflow.processor.TaskProcessor - Error executing process > 'PrepareFastaDataBySpecies (1)'
+
+Caused by:
+  Process `PrepareFastaDataBySpecies (1)` terminated with an error exit status (1)
+
+Command executed:
+
+  echo started
+  echo finished
+  echo ${i_Base_Folder}
+
+Command exit status:
+  1
+
+Command output:
+  started
+  finished
+
+Command error:
+  started
+  finished
+  .command.sh: line 4: i_Base_Folder: unbound variable
+
+Work dir:
+  /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts/work/3d/22f00dfba3da2eae1639029ad09e51
+
+Tip: when you have fixed the problem you can continue the execution adding the option `-resume` to the run command line
+May-10 16:38:29.232 [main] DEBUG nextflow.Session - Session await > all processes finished
+May-10 16:38:29.233 [Task monitor] DEBUG nextflow.Session - Session aborted -- Cause: Process `PrepareFastaDataBySpecies (1)` terminated with an error exit status (1)
+May-10 16:38:29.243 [main] DEBUG nextflow.Session - Session await > all barriers passed
+May-10 16:38:29.248 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=1; failedCount=1; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=1ms; failedDuration=12ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=1; peakMemory=0; ]
+May-10 16:38:29.442 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+May-10 16:38:29.458 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
