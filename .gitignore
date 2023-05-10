@@ -4,4 +4,4 @@ PPI_Prediction_byCoevolution/scripts/work/*
 PPI_Prediction_byCoevolution/*/work/
 PPI_Prediction_byCoevolution/*/work/*
 
-PPI_Prediction_byCoevolution/scripts/.nextflow.log*
+PPI_Prediction_byCoevolution/scripts/.nextflow.*
