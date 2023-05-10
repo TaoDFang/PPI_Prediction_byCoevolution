@@ -7,5 +7,6 @@
 
 scripts/work/
 scripts/work/*
-scripts/.nextflow.*
+scripts/.nextflow.log*
 scripts/.nextflow/
+
