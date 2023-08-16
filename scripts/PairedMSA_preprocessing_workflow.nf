@@ -19,10 +19,7 @@ params.RawData_Folder = '/mnt/mnemo6/tao/nextflow/STRING_Data_11.5/'
 
 
 
-workflow {
-    Test()
-    Test.out.view()
-    
+workflow {    
     //somehow this chnnel didnt give me folder path, but keep give me "Base_Folder: unbound variable" error, maybe its better for the files ?, and if remove "type: 'dir'", do nothing 
     // Problem solved by replace ''' ''' to """ """" for "script" section in downLoadRawFastaFile process
     // RawData_Folder_ch=Channel.fromPath('${params.RawData_Folder}/*',type:'dir')
@@ -37,20 +34,6 @@ workflow {
 }
 
     
-process Test {
-    
-    label "simple_process"
-    
-    output:
-    stdout
-        
-    script:
-    '''
-    echo test started
-    echo test finished
-    '''
-}
-
 
 //http://localhost:8206/lab/workspaces/auto-Z/tree/code/MNF/notebooks/STRING_Data_11.5/PrepareFastaDataBySpecies.ipynb
 // download all fasta seq data from new string website 
@@ -63,10 +46,11 @@ process downLoadRawFastaFile {
     
     output:
     //stdout
-    // path "${i_RawData_Folder}/STRINGSequencesBySpecies/", emit: STRING_fastaBySpecies_Folder
+    path "511145.protein.sequences.v11.5.fa", emit: rawFasta_file
     // path "${i_RawData_Folder}/STRINGBacteriaSequencesBySpecies/", emit: STRING_fastaByBacteriaSpecies_Folder
-    val "${STRING_fastaBySpecies_Folder}"
-    val "${STRING_fastaByBacteriaSpecies_Folder}"
+    // val "${STRING_fastaBySpecies_Folder}"
+    // val "${STRING_fastaByBacteriaSpecies_Folder}"
+    //val "${STRING_fastaBySpecies_Folder}"
         
     
     script:
@@ -77,16 +61,14 @@ process downLoadRawFastaFile {
     echo ${i_RawData_Folder} #output: STRING_Data_11.5
     echo ${params.RawData_Folder} #output: /mnt/mnemo6/tao/nextflow/STRING_Data_11.5/
     #my understanding is the channel is more  important for the "input" of intermediate task, not the first task 
+
+
+    # why here generated multiple layer folder ??
+    cd ${i_RawData_Folder}
+    wget https://stringdb-downloads.org/download/protein.sequences.v11.5/511145.protein.sequences.v11.5.fa.gz -P .
+    gunzip -c 511145.protein.sequences.v11.5.fa.gz > 511145.protein.sequences.v11.5.fa
     
-    
-    STRING_fastaBySpecies_Folder="${i_RawData_Folder}/STRINGSequencesBySpecies/"
-    STRING_fastaByBacteriaSpecies_Folder="${i_RawData_Folder}/STRINGBacteriaSequencesBySpecies/"
-    
-    #here notice for bash variables(defined withing script block), it need to be used by "\" charater
-    echo \${STRING_fastaBySpecies_Folder}
-    echo \${STRING_fastaByBacteriaSpecies_Folder}
-    
-    
+
 
     
     echo process downLoadRawFastaFile finished
@@ -95,11 +77,19 @@ process downLoadRawFastaFile {
 }
 
 
-
-//     # where here generated multiple layer folder ??
+//     # why here generated multiple layer folder ??
 //     cd ${i_RawData_Folder}
 //     wget https://stringdb-static.org/download/protein.sequences.v11.5.fa.gz -P .
-//     gzip -d protein.sequences.v11.5.fa.gz
+//     gzip -d protein.sequences.v11.5.fa.gz > protein.sequences.v11.5.fa
+    
+
+
+//     STRING_fastaBySpecies_Folder="${i_RawData_Folder}/STRINGSequencesBySpecies/"
+//     STRING_fastaByBacteriaSpecies_Folder="${i_RawData_Folder}/STRINGBacteriaSequencesBySpecies/"
+//     #here notice for bash variables(defined withing script block), it need to be used by "\" charater
+//     echo \${STRING_fastaBySpecies_Folder} >
+//     echo \${STRING_fastaByBacteriaSpecies_Folder}
+    
     
 
 
@@ -118,6 +108,8 @@ process downLoadRawFastaFile {
     
 //     """
 // }
+
+
 
 /*
 * optional: test in a tmux sesssion:  tmux attach -t tmux-nextflow 
