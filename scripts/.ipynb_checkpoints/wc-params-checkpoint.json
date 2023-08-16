@@ -1,0 +1,23 @@
+{
+     "outdir": "/mnt/mnemo6/tao/nextflow/STRING_Data_11.5",
+}
+
+
+//difference between configuration files  and parameter files
+// first one is configure general nextflow setting ,  parameter files are used to set parameter used by nextflow workflow or even by configuration files ?
+
+
+// https://carpentries-incubator.github.io/workflows-nextflow/08-configuration/index.html
+// How configuration files are combined
+// Configuration settings can be spread across several files. This also allows settings to be overridden by other configuration files. The priority of a setting is determined by the following order, ranked from highest to lowest.
+
+// Parameters specified on the command line (--param_name value).
+// Parameters provided using the -params-file option.
+// Config file specified using the -c my_config option.
+// The config file named nextflow.config in the current directory.
+// The config file named nextflow.config in the workflow project directory ($projectDir: the directory where the script to be run is located).
+// The config file $HOME/.nextflow/config.
+// Values defined within the workflow script itself (e.g., main.nf).
+// If configuration is provided by more than one of these methods, configuration is merged giving higher priority to configuration provided higher in the list.
+
+// Existing configuration can be completely ignored by using -C <custom.config> to use only configuration provided in the custom.config file.
