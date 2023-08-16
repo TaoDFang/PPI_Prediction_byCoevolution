@@ -30,8 +30,12 @@ workflow {
     
     downLoadRawFastaFile_ch=downLoadRawFastaFile(RawData_Folder_ch)
     //downLoadRawFastaFile.out.view()
-    downLoadRawFastaFile_ch.view()
+    downLoadRawFastaFile_ch.rawFasta_file.view()
+    downLoadRawFastaFile_ch.test_output.view()
+    //downLoadRawFastaFile_ch.view(), this is not working when there are multiple output files that are not from same object, alternatively use tuple
 }
+
+
 
     
 
@@ -46,7 +50,10 @@ process downLoadRawFastaFile {
     
     output:
     //stdout
+        
+    //here seem path has to be the output from some where in the script , 
     path "511145.protein.sequences.v11.5.fa", emit: rawFasta_file
+    path "process_finished.txt", emit: test_output
     // path "${i_RawData_Folder}/STRINGBacteriaSequencesBySpecies/", emit: STRING_fastaByBacteriaSpecies_Folder
     // val "${STRING_fastaBySpecies_Folder}"
     // val "${STRING_fastaByBacteriaSpecies_Folder}"
@@ -56,25 +63,23 @@ process downLoadRawFastaFile {
     script:
     """
     
-    echo process downLoadRawFastaFile started
+    echo process downLoadRawFastaFile started 
     
     echo ${i_RawData_Folder} #output: STRING_Data_11.5
-    echo ${params.RawData_Folder} #output: /mnt/mnemo6/tao/nextflow/STRING_Data_11.5/
+    echo ${params.RawData_Folder}  #output: /mnt/mnemo6/tao/nextflow/STRING_Data_11.5/
     #my understanding is the channel is more  important for the "input" of intermediate task, not the first task 
 
 
-    # why here generated multiple layer folder ??
-    cd ${i_RawData_Folder}
-    wget https://stringdb-downloads.org/download/protein.sequences.v11.5/511145.protein.sequences.v11.5.fa.gz -P .
-    gunzip -c 511145.protein.sequences.v11.5.fa.gz > 511145.protein.sequences.v11.5.fa
+    #cd ${i_RawData_Folder} #here this command cause error, no output, why ???, it seem create a new folder inside folder i_RawData_Folder ?
+    wget https://stringdb-downloads.org/download/protein.sequences.v11.5/511145.protein.sequences.v11.5.fa.gz -P ${i_RawData_Folder}
+    gunzip -c "${i_RawData_Folder}/511145.protein.sequences.v11.5.fa.gz" > 511145.protein.sequences.v11.5.fa
     
-
-
-    
-    echo process downLoadRawFastaFile finished
+    echo process downLoadRawFastaFile finished  >process_finished.txt
     
     """
 }
+
+
 
 
 //     # why here generated multiple layer folder ??
