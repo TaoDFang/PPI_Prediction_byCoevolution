@@ -5,6 +5,7 @@
 import argparse
 import pandas as pd
 import os
+from shutil import copyfile
 
 
 parser = argparse.ArgumentParser(description='moveOnlyBacteriaSepcies python script')
@@ -30,7 +31,7 @@ STR_backteria_id_list[1:10]
 
 
 for bid in STR_backteria_id_list:
-    copyfile(os.path.join(STRING_fastaBySpecies,str(bid),".fa"), os.path.join(STRING_fastaByBacteriaSpecies,str(bid),".fa"))
+    copyfile(os.path.join(STRING_fastaBySpecies,str(bid)+".fa"), os.path.join(STRING_fastaByBacteriaSpecies,str(bid)+".fa"))
 
         
 
