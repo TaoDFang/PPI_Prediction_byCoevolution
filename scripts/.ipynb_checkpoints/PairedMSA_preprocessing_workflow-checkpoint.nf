@@ -43,6 +43,7 @@ workflow {
     // here use channel not params.STRING_fastaBySpecies_Folder directly to triger next process ""
     //STRING_fastaBySpecies_Folder_ch=Channel.fromPath(params.STRING_fastaBySpecies_Folder,type:'dir')
     moveOnlyBacteriaSepcies(prepareFastaDataBySpecies_ch)
+    moveOnlyBacteriaSepcies.out.view()
     
     
 }
@@ -113,6 +114,7 @@ process downLoadRawFastaFile {
 
 process prepareFastaDataBySpecies {
     tag "process  prepareFastaDataBySpecies"
+    publishDir "${params.outdir}"
     // cpus 32
     // memory 100.GB
     
@@ -125,7 +127,9 @@ process prepareFastaDataBySpecies {
 
     
     output: 
-        path "${rawFasta_file}"
+       path "STRINGSequencesBySpecies", type : "dir", emit: STRING_fastaBySpecies_Folder
+       //here could not use full path,  "${params.RawData_Folder}/STRINGSequencesBySpecies/",
+        //other wise get error : file `/mnt/mnemo6/tao/nextflow/STRING_Data_11.5/STRINGSequencesBySpecies/` is outside the scope of the process work directory: /mnt/mnemo6/tao/nextflow/work/fd/ceda6c2edc10b2d7971b44198ce727
     
     
         // env to cappute variable defined in script  ,but this step still created intemediated files 
@@ -141,24 +145,21 @@ process prepareFastaDataBySpecies {
     script:
         
     """
-    
-    #here nto use params.RawData_Folder direclty in order to be able to  trigle next process 
-    #STRING_fastaBySpecies_Folder="\${params.RawData_Folder}/STRINGSequencesBySpecies/", then use env to export it, failed
-
     echo ${rawFasta_file}
-    echo "${rawFasta_file.baseName}"
-    echo "${rawFasta_file.Parent}"
-
-
-    mkdir -p  ${params.STRING_fastaBySpecies_Folder}
-
     echo $CONDA_DEFAULT_ENV  # this is not specified conda enviroment, but seem bewlowing python use the correct one 
+    
+
+    
+    #here nto use params options diretly to be able to  trigle next process  moveOnlyBacteriaSepcies
+    STRING_fastaBySpecies_Folder_tmp="${params.RawData_Folder}/STRINGSequencesBySpecies_tmp/"
+    mkdir -p  \${STRING_fastaBySpecies_Folder_tmp}
     
     # here use without python instead of 'python prepareFastaDataBySpecies.py', its nextflow special : https://carpentries-incubator.github.io/workflows-nextflow/aio/index.html
     # here in conda enviroment "nf-training", python3 works but not python
-    python ${projectDir}/prepareFastaDataBySpecies.py --rawFasta_file ${rawFasta_file} --STRING_fastaBySpecie ${params.STRING_fastaBySpecies_Folder}
+    python ${projectDir}/python_scripts/prepareFastaDataBySpecies.py --rawFasta_file ${rawFasta_file} --STRING_fastaBySpecie \${STRING_fastaBySpecies_Folder_tmp}
     
-    okay, use solution output (better form python ) to a file and read content from it 
+    mv \${STRING_fastaBySpecies_Folder_tmp} "STRINGSequencesBySpecies" # use this to be able to export folder as process output 
+    # altinatively, use solution output folder name  (better form python ) to a file and read content from the file 
     
     """
 }
