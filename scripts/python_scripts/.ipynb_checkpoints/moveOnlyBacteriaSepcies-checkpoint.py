@@ -4,13 +4,13 @@
 
 import argparse
 import pandas as pd
-import numpy as np
+import os
 
 
 parser = argparse.ArgumentParser(description='moveOnlyBacteriaSepcies python script')
 parser.add_argument('-s','--STR_species_mem_file', type=str, help='STR_species_mem_file')
-parser.add_argument('-s','--STRING_fastaBySpecies', type=str, help='folder that save parsed fasta file by species')
-parser.add_argument('-s','--STRING_fastaByBacteriaSpecies', type=str, help='folder that save only fasta file for bacteria')
+parser.add_argument('-t','--STRING_fastaBySpecies', type=str, help='folder that save parsed fasta file by species')
+parser.add_argument('-r','--STRING_fastaByBacteriaSpecies', type=str, help='folder that save only fasta file for bacteria')
 
 
 args = parser.parse_args()
@@ -29,11 +29,8 @@ STR_backteria_id_list=list(STR_bacteria.iloc[:,0])
 STR_backteria_id_list[1:10]
 
 
-rePureName=re.compile(".*/(.*).fa")
 for bid in STR_backteria_id_list:
-
-    print(STRING_fastaBySpecies,STRING_fastaByBacteriaSpecies)
-    #copyfile(STRING_fastaBySpecies+str(bid)+".fa", STRING_fastaByBacteriaSpecies+str(bid)+".fa")
+    copyfile(os.path.join(STRING_fastaBySpecies,str(bid),".fa"), os.path.join(STRING_fastaByBacteriaSpecies,str(bid),".fa"))
 
         
 

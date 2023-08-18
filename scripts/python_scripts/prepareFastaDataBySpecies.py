@@ -17,31 +17,31 @@ STRING_fastaBySpecies=args.STRING_fastaBySpecies
 
 
 
-# current_speFasta=""
-# current_speId=np.inf
-# species_Id = np.inf
-# with open(rawFasta_file) as input_handle:
-#     for line in input_handle:
+current_speFasta=""
+current_speId=np.inf
+species_Id = np.inf
+with open(rawFasta_file) as input_handle:
+    for line in input_handle:
 
 
-#         if  line.startswith(">"):
-#             species_Id=int(line[1:].split(".")[0])
-#             if current_speId !=np.inf and current_speId!=species_Id:
-#                 with open(STRING_fastaBySpecies+str(current_speId) + ".fa", 'w') as output_handle:
-#                     output_handle.write(current_speFasta)
-#                 current_speId=species_Id
-#                 current_speFasta=""
-#                 current_speFasta +=line
+        if  line.startswith(">"):
+            species_Id=int(line[1:].split(".")[0])
+            if current_speId !=np.inf and current_speId!=species_Id:
+                with open(STRING_fastaBySpecies+str(current_speId) + ".fa", 'w') as output_handle:
+                    output_handle.write(current_speFasta)
+                current_speId=species_Id
+                current_speFasta=""
+                current_speFasta +=line
 
-#             else:
-#                 current_speId=species_Id
-#                 current_speFasta +=line
+            else:
+                current_speId=species_Id
+                current_speFasta +=line
             
-#         else: 
-#             current_speFasta +=line
+        else: 
+            current_speFasta +=line
             
-# with open(STRING_fastaBySpecies+str(current_speId) + ".fa", 'w') as output_handle:
-#     output_handle.write(current_speFasta)
+with open(STRING_fastaBySpecies+str(current_speId) + ".fa", 'w') as output_handle:
+    output_handle.write(current_speFasta)
     
     
     

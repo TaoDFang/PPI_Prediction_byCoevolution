@@ -3,6 +3,7 @@
 nextflow.enable.dsl=2
 
 // the main logic is from http://localhost:8206/lab/workspaces/auto-Z/tree/code/MNF/notebooks/STRING_Data_11.5/CoEvo_EggNOG_preprocessing_STRING1105_varyEggNOGMaxLevels_prepareSTRINPhyPPIBenchmark.ipynb
+// or this one beter ? http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/script_allPPI_CoEvo_EggNOG_preprocessing_STRING1105_varyEggNOGMaxLevels.py
 // compare with one jupyter notebook , the snakemake has better pipeline, (running )enviroment managements 
 
 // for the text editor format , choose groovy 
@@ -13,14 +14,18 @@ nextflow.enable.dsl=2
 
 
 params.RawData_Folder = '/mnt/mnemo6/tao/nextflow/STRING_Data_11.5'
-params.STRING_fastaBySpecies_Folder="${params.RawData_Folder}/STRINGSequencesBySpecies/"
-//STRING_root_folder="/mnt/mnemo6/tao/STRING_Data_11.5/"
+
 
 
 
 
 
 workflow {    
+    
+    
+    // ************Download all metadata and sequencing data**********
+    
+    
     //somehow this chnnel didnt give me folder path, but keep give me "Base_Folder: unbound variable" error, maybe its better for the files ?, and if remove "type: 'dir'", do nothing 
     // Problem solved by replace ''' ''' to """ """" for "script" section in downLoadRawFastaFile process
     // RawData_Folder_ch=Channel.fromPath('${params.RawData_Folder}/*',type:'dir')
@@ -42,8 +47,20 @@ workflow {
     
     // here use channel not params.STRING_fastaBySpecies_Folder directly to triger next process ""
     //STRING_fastaBySpecies_Folder_ch=Channel.fromPath(params.STRING_fastaBySpecies_Folder,type:'dir')
-    moveOnlyBacteriaSepcies(prepareFastaDataBySpecies_ch)
+    moveOnlyBacteriaSepcies(downLoadRawFastaFile_ch.STR_species_mem,prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
     moveOnlyBacteriaSepcies.out.view()
+    
+    
+    // ************Prepare single MSA **********
+    
+    
+    
+    // ************Prepare paired MSA **********
+    
+    
+    
+    // ************Compute DCA  **********
+    
     
     
 }
@@ -87,6 +104,7 @@ process downLoadRawFastaFile {
 
     # cd \${RawData_Folder} here this command cause error, no output, why ???, it seem create a new folder inside folder RawData_Folder ?
     
+    # when using full path, the output is not in process working directory and thus no need to use publishDir directive
     wget https://stringdb-static.org/download/protein.sequences.v11.5.fa.gz  -P ${params.RawData_Folder}
     gunzip -c "${params.RawData_Folder}/protein.sequences.v11.5.fa.gz" >  protein.sequences.v11.5.fa
     
@@ -127,7 +145,7 @@ process prepareFastaDataBySpecies {
 
     
     output: 
-       path "STRINGSequencesBySpecies", type : "dir", emit: STRING_fastaBySpecies_Folder
+       path "STRINGSequencesBySpecies/", type : "dir", emit: STRING_fastaBySpecies_Folder
        //here could not use full path,  "${params.RawData_Folder}/STRINGSequencesBySpecies/",
         //other wise get error : file `/mnt/mnemo6/tao/nextflow/STRING_Data_11.5/STRINGSequencesBySpecies/` is outside the scope of the process work directory: /mnt/mnemo6/tao/nextflow/work/fd/ceda6c2edc10b2d7971b44198ce727
     
@@ -150,7 +168,7 @@ process prepareFastaDataBySpecies {
     
 
     
-    #here nto use params options diretly to be able to  trigle next process  moveOnlyBacteriaSepcies
+    #here do not  use params options diretly to be able to  trigle next process  moveOnlyBacteriaSepcies
     STRING_fastaBySpecies_Folder_tmp="${params.RawData_Folder}/STRINGSequencesBySpecies_tmp/"
     mkdir -p  \${STRING_fastaBySpecies_Folder_tmp}
     
@@ -158,7 +176,7 @@ process prepareFastaDataBySpecies {
     # here in conda enviroment "nf-training", python3 works but not python
     python ${projectDir}/python_scripts/prepareFastaDataBySpecies.py --rawFasta_file ${rawFasta_file} --STRING_fastaBySpecie \${STRING_fastaBySpecies_Folder_tmp}
     
-    mv \${STRING_fastaBySpecies_Folder_tmp} "STRINGSequencesBySpecies" # use this to be able to export folder as process output 
+    mv \${STRING_fastaBySpecies_Folder_tmp} "STRINGSequencesBySpecies/" # use this to be able to export folder as process output 
     # altinatively, use solution output folder name  (better form python ) to a file and read content from the file 
     
     """
@@ -166,30 +184,29 @@ process prepareFastaDataBySpecies {
 
 
 process moveOnlyBacteriaSepcies {
+    publishDir "${params.outdir}", mode: "copy"
+    
     input: 
-        path x
+        path STR_species_mem
+        path STRING_fastaBySpecie
+
     
     output:
-        stdout
+        path "STRINGBacteriaSequencesBySpecies/", type: "dir", emit: STRING_fastaByBacteriaSpecies_Folder
     
     script:
     """
         echo process moveOnlyBacteriaSepcies
-        echo ${x}
+        mkdir -p "STRINGBacteriaSequencesBySpecies/"
+        
+        # when using relative path, the output is not in working directory and thus no need need to use  publishDir directive to actulyl copy the data from/out of process working directory 
+        python ${projectDir}/python_scripts/moveOnlyBacteriaSepcies.py --STR_species_mem_file ${STR_species_mem} --STRING_fastaBySpecie ${STRING_fastaBySpecie} --STRING_fastaByBacteriaSpecies "STRINGBacteriaSequencesBySpecies/"
+        
 
     """
     
 }
 
-// the thing is next copy process should depend on successfuly exeution of last command ?, can output something folder from last script ??nex
-// still need to use STRING_fastaBySpecies_Folder as channel 
-
-
-//     #here notice for bash variables(defined withing script block), it need to be used by "\" charater
-//     #STRING_fastaBySpecies_Folder="${params.RawData_Folder}/STRINGSequencesBySpecies/"
-//     #echo \${STRING_fastaBySpecies_Folder}
-//     #echo \${STRING_fastaBySpecies_Folder} > "STRING_fastaBySpecies_Folder_path", not actully working to output folder STRING_fastaBySpecies_Folder
-    
 
 
 
