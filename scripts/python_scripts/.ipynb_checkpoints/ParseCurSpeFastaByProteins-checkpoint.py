@@ -3,14 +3,27 @@
 
 
 import argparse
+import sys
+import glob
+import pandas as pd
+import os
 
-sys.path.append("../../src/utilities")
+# print("os.getcwd()",os.getcwd())
+# print("print(sys.path):",sys.path) 
+#sys.path.append("../src/utilities") # failed, as current working directory is nextflow temporay working directory
+# default , the path of where the curret python .py script locate is in the sys.path file 
+# the simple solution now is more utilies to the same folder "....../PPI_Prediction_byCoevolution/scripts/python_scripts"
+# but not works to move to "....../PPI_Prediction_byCoevolution/scripts/python_scripts/utilies" only to 
+# ""....../PPI_Prediction_byCoevolution/scripts/python_scripts""
+# or better solution, export python path before run python code, check PPI_Prediction_byCoevolution/scripts/PairedMSA_preprocessing_workflow.nf
+
+
 
 from create_singleMSA import ParseCurSpeFastaByProteins_STRNG1105
 
 
 parser = argparse.ArgumentParser(description='ParseCurSpeFastaByProteins_STRNG1105')
-parser.add_argument('-f','--currentSpe_fastaData', type=str, help='currentSpe_fastaData)
+parser.add_argument('-f','--currentSpe_fastaData', type=str, help='currentSpe_fastaData')
 parser.add_argument('-b','--currentSpeProSeqPath_ByProteins', type=str, help='currentSpeProSeqPath_ByProteins')
 parser.add_argument('-n','--currentSpe_protein_info_filename', type=str, help='currentSpe_protein_info_filename')
 

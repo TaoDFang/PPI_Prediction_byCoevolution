@@ -1,7 +1,7 @@
 {
     "outdir": "/mnt/mnemo6/tao/nextflow/STRING_Data_11.5",
     "RawData_Folder": "/mnt/mnemo6/tao/nextflow/STRING_Data_11.5",
-    "PPI_Coevolution":"/mnt/mnemo6/tao/nextflow/PPI_Coevolution",
-    "currentSpe_TaxID","511145",
+    "PPI_Coevolution": "/mnt/mnemo6/tao/nextflow/PPI_Coevolution",
+    "currentSpe_TaxID": "511145",
     "end": "end"
 }

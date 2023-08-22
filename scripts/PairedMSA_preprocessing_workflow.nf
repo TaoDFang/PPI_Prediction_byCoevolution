@@ -20,6 +20,15 @@ include { downLoadRawFastaFile; prepareFastaDataBySpecies;moveOnlyBacteriaSepcie
 
 
 workflow {    
+    
+
+    println "scriptFile: " + workflow.scriptFile
+    println "projectDir: " + workflow.projectDir
+    println "launchDir: " + workflow.launchDir
+    println "workDir: " + workflow.workDir
+    println "configFiles: " + workflow.configFiles
+    
+    
     // ************Download all metadata and sequencing data**********
     
     //downLoadRawFastaFile_ch=downLoadRawFastaFile(RawData_Folder_ch)
@@ -29,6 +38,7 @@ workflow {
   
     
     prepareFastaDataBySpecies_ch=prepareFastaDataBySpecies(downLoadRawFastaFile_ch.rawFasta_file)
+    prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder.view()
     //prepareFastaDataBySpecies.out.view()
     
     // here use channel not params.STRING_fastaBySpecies_Folder directly to triger next process ""
@@ -44,13 +54,10 @@ workflow {
     
     // ************Prepare paired MSA **********
     prepareSingleMSA_ParseCurSpeFastaByProteins_ch=prepareSingleMSA_ParseCurSpeFastaByProteins(prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
-    prepareSingleMSA_ParseCurSpeFastaByProteins_ch.view()
-    
-    
+    prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder.view()
     
     
     // ************Compute DCA  **********
-    
     
     
 }
@@ -61,22 +68,23 @@ workflow {
 
 // ************Prepare single MSA **********
 
-//here prepare folder and raw files necesseary for the python code 
 process prepareSingleMSA_ParseCurSpeFastaByProteins {
-    publishDir "${params.PPI_Coevolution}", mode: "copy"
     
-    conda "/mnt/mnemo5/tao/anaconda3/envs/ipykernel_py3" 
+    publishDir "${params.PPI_Coevolution}"  //, mode: "copy"
+    
+    
+    label "simple_py_process"
+    
+    conda "/mnt/mnemo5/tao/anaconda3/envs/ipykernel_py3" // seesm configuration here not working , but rather need to be done in configuration file, or need to do both ?
     debug true //echo true echo directive is depreca
     
-    label "simple_process"
-    
     input: 
-        path: origProSeqPath
+        path origProSeqPath
         
     output:
-        path: "STRING_data_11.5/",type: "dir", emit: newSTRING_rootFolder
-        path: "STRING_data_11.5/${params.currentSpe_TaxID}/", type: "dir", emit: currentSpeProSeqPath
-        path: "STRING_data_11.5/${params.currentSpe_TaxID}ByProteins/", type: "dir", emit: currentSpeProSeqPath_ByProteins
+        path "STRING_data_11.5/",type: "dir", emit: newSTRING_rootFolder
+        path "STRING_data_11.5/${params.currentSpe_TaxID}/", type: "dir", emit: currentSpeProSeqPath
+        path "STRING_data_11.5/${params.currentSpe_TaxID}ByProteins/", type: "dir", emit: currentSpeProSeqPath_ByProteins
     script:
         
         //newSTRING_rootFolder="${params.PPI_Coevolution}/STRING_data_11.5/" # here do not use params.PPI_Coevolution to avoid abolute path 
@@ -84,34 +92,31 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
         # cp protein seq of current species  to a new folder and separated them by proteins for later use 
         newSTRING_rootFolder="STRING_data_11.5/" #define same in the output to export folder for downstreaming process
         mkdir -p \${newSTRING_rootFolder}
-        currentSpeProSeqPath="\${newSTRING_rootFolder}/${params.currentSpe_TaxID}/" 
+        currentSpeProSeqPath="\${newSTRING_rootFolder}${params.currentSpe_TaxID}/" 
         mkdir -p \${currentSpeProSeqPath}
-        cp "${origProSeqPath}/${params.currentSpe_TaxID}.fa}" \${currentSpeProSeqPath}
+        cp "${origProSeqPath}/${params.currentSpe_TaxID}.fa" \${currentSpeProSeqPath}  # origProSeqPath, here origProSeqPath is a output channel, the "/" at the end is treated as no, in this case ?
         # create .fai inndex file for samtool faxid later , and  parta fasta files by prpteins,need in phmmer section to 
-        currentSpe_fastaData="\${newSTRING_rootFolder}/${params.currentSpe_TaxID}.fa" 
+        currentSpe_fastaData="\${currentSpeProSeqPath}${params.currentSpe_TaxID}.fa" 
         samtools faidx \${currentSpe_fastaData}
         
-        currentSpeProSeqPath_ByProteins="\${newSTRING_rootFolder}/${params.currentSpe_TaxID}ByProteins/"
+        currentSpeProSeqPath_ByProteins="\${newSTRING_rootFolder}${params.currentSpe_TaxID}ByProteins/"
         mkdir -p \${currentSpeProSeqPath_ByProteins}
         
         # download file "protein.info.v11.5.txt.gz" for the validation reason later 
-        currentSpe_protein_info_filename="\${newSTRING_rootFolder}/${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz" 
-        mkdir -p \${currentSpe_protein_info_filename}
+        currentSpe_protein_info_filename="\${newSTRING_rootFolder}${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz" 
         wget  https://stringdb-static.org/download/protein.info.v11.5/${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz -P \${newSTRING_rootFolder}
         
-        python ${projectDir}/python_scripts/prepareFastaDataBySpecies.py --currentSpe_fastaData \${currentSpe_fastaData} --currentSpeProSeqPath_ByProteins \${currentSpeProSeqPath_ByProteins} --currentSpe_protein_info_filename \${currentSpe_protein_info_filename}
         
-
-
+        export PYTHONPATH="${projectDir}/../src/utilities/" # "\${projectDir}/../" not working 
+        python ${projectDir}/python_scripts/ParseCurSpeFastaByProteins.py --currentSpe_fastaData \${currentSpe_fastaData} --currentSpeProSeqPath_ByProteins \${currentSpeProSeqPath_ByProteins} --currentSpe_protein_info_filename \${currentSpe_protein_info_filename}
 
     """
     
 }
 
+        
 
-
-
-
+                    
 /*
 * optional: test in a tmux sesssion:  tmux attach -t tmux-nextflow 
 conda activate nf-training
