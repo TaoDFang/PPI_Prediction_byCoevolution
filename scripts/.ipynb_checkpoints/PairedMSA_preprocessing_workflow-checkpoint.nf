@@ -36,7 +36,6 @@ workflow {
     //downLoadRawFastaFile.out.view()
     // downLoadRawFastaFile_ch.rawFasta_file.view()
   
-    
     prepareFastaDataBySpecies_ch=prepareFastaDataBySpecies(downLoadRawFastaFile_ch.rawFasta_file)
     prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder.view()
     //prepareFastaDataBySpecies.out.view()
@@ -44,8 +43,10 @@ workflow {
     // here use channel not params.STRING_fastaBySpecies_Folder directly to triger next process ""
     //STRING_fastaBySpecies_Folder_ch=Channel.fromPath(params.STRING_fastaBySpecies_Folder,type:'dir')
     moveOnlyBacteriaSepcies(downLoadRawFastaFile_ch.STR_species_mem,prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
-    moveOnlyBacteriaSepcies.out.view()
+    println "moveOnlyBacteriaSepcies.out.view: " + moveOnlyBacteriaSepcies.out.view()
     
+    
+    downLoadOtherRawFiles_ch=downLoadOtherRawFiles()
     
     // ************Prepare single MSA **********
     //http://localhost:8206/lab/workspaces/auto-I/tree/code/MNF/notebooks/STRING_Data_11.5/CoEvo_EggNOG_preprocessing_STRING1105_varyEggNOGMaxLevels_prepareSTRINPhyPPIBenchmark.ipynb
@@ -56,6 +57,7 @@ workflow {
     prepareSingleMSA_ParseCurSpeFastaByProteins_ch=prepareSingleMSA_ParseCurSpeFastaByProteins(prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
     prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder.view()
     
+    prepareSingleMSA_RemoveRedundantProteins_ch=prepareSingleMSA_RemoveRedundantProteins(prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder,prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpe_fastaData)
     
     // ************Compute DCA  **********
     
@@ -64,13 +66,41 @@ workflow {
 
 
 
+process downLoadOtherRawFiles {
+    
+    label "simple_process"
+    
+    
+    publishDir "${params.outdir}", mode: "copy"
+    
+    output:
+    //stdout
+        
+    //here seem path has to be the output from somewhere in the script , 
+    path "species.tree.v11.5.txt", type: "file", emit: species_tree_file
 
+
+    
+    script:
+    """
+    
+        wget https://stringdb-downloads.org/download/species.tree.v11.5.txt -P ${params.RawData_Folder}  -O species.tree.v11.5.txt # here has to use -O to get actually output
+        
+        #download eggnog file
+        wget 
+        mkdir eggnog5AddSTRING11.5_Species
+        tar -zxvf eggnog5AddSTRING11.5_Species.tar.gz -C eggnog5AddSTRING11.5_Species/
+
+
+    """
+}
 
 // ************Prepare single MSA **********
 
+//section ParseEcoliFastaByProtein, need in phmmer section to 
 process prepareSingleMSA_ParseCurSpeFastaByProteins {
     
-    publishDir "${params.PPI_Coevolution}"  //, mode: "copy"
+    publishDir "${params.PPI_Coevolution}", mode: "copy"
     
     
     label "simple_py_process"
@@ -85,6 +115,7 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
         path "STRING_data_11.5/",type: "dir", emit: newSTRING_rootFolder
         path "STRING_data_11.5/${params.currentSpe_TaxID}/", type: "dir", emit: currentSpeProSeqPath
         path "STRING_data_11.5/${params.currentSpe_TaxID}ByProteins/", type: "dir", emit: currentSpeProSeqPath_ByProteins
+        path "STRING_data_11.5/${params.currentSpe_TaxID}/${params.currentSpe_TaxID}.fa", type: "file", emit: currentSpe_fastaData
     script:
         
         //newSTRING_rootFolder="${params.PPI_Coevolution}/STRING_data_11.5/" # here do not use params.PPI_Coevolution to avoid abolute path 
@@ -114,8 +145,77 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
     
 }
 
-        
 
+//remove rudadant proteins for later use 
+//removed redundant ones: only the longer sequence was kept  if two sequences were over 95% identical and the alignment covered 90% of the shorter sequence
+process prepareSingleMSA_RemoveRedundantProteins {
+    
+    publishDir "${params.PPI_Coevolution}",mode: "copy"
+    
+    
+    label "simple_py_process"
+    
+    debug true //echo true echo directive is deprecated
+    
+    input: 
+        path newSTRING_rootFolder
+        path currentSpe_fastaData
+    output:
+        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}withinBlast/", type: "dir", emit: currentSpe_withinBlastPath
+        // has to output currentSpeProSeqPath_DB also here, so its acturally moved to publishDir, otherwise its only in current process working directory 
+        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}_redundant_proteins.csv", type: "dir", emit: redundant_proteins_csvFile
+    script:
+
+    """
+        currentSpeProSeqPath_DB="${newSTRING_rootFolder}/${params.currentSpe_TaxID}DB/${params.currentSpe_TaxID}"
+        mkdir -p \${currentSpeProSeqPath_DB}
+        /mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/makeblastdb -in ${currentSpe_fastaData} -dbtype "prot" \
+        -out \${currentSpeProSeqPath_DB} -parse_seqids
+        
+        
+        currentSpe_withinBlastPath="${newSTRING_rootFolder}/${params.currentSpe_TaxID}withinBlast/"
+        echo \${currentSpe_withinBlastPath}
+        mkdir -p \${currentSpe_withinBlastPath}
+        
+        /mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/blastp -num_threads 1 -query ${currentSpe_fastaData} \
+         -db \${currentSpeProSeqPath_DB} \
+         -out "\${currentSpe_withinBlastPath}all2all.txt" \
+         -evalue 1e-6  \
+         -outfmt '7 qseqid qaccver  qlen sseqid saccver slen qstart qend sstart send evalue bitscore score length pident nident mismatch positive gapopen gaps ppos qcovs qcovhsp'
+        
+        
+        redundant_proteins_csvFile="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_redundant_proteins.csv"
+        
+        export PYTHONPATH="${projectDir}/../src/utilities/" 
+        python ${projectDir}/python_scripts/RemoveRedundantProteins.py --redundant_proteins_csvFile \${redundant_proteins_csvFile} --currentSpe_withinBlastPath \${currentSpe_withinBlastPath}
+    """
+    
+}
+
+        
+// //then preprocess eggNOG othologous group , to make sure for each orthologous group ,only one protein fro one speices 
+// process prepareSingleMSA_PreprocessEggnogOrthologGroup {
+//     publishDir "${params.PPI_Coevolution}",mode: "copy"
+    
+    
+//     label "simple_py_process"
+    
+//     debug true //echo true echo directive is deprecated
+    
+//     input: 
+//         path newSTRING_rootFolder
+//     output:
+//         path 
+    
+//     script: 
+//     """
+//         currentSpe_currentMaxLevel_orthologs="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/"
+//         mkdir -p \${currentSpe_currentMaxLevel_orthologs}
+//         export PYTHONPATH="${projectDir}/../src/utilities/" 
+//         python ${projectDir}/python_scripts/RemoveRedundantProteins.py
+//     """
+// }
+        
                     
 /*
 * optional: test in a tmux sesssion:  tmux attach -t tmux-nextflow 

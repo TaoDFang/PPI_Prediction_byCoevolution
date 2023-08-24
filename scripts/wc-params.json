@@ -3,5 +3,6 @@
     "RawData_Folder": "/mnt/mnemo6/tao/nextflow/STRING_Data_11.5",
     "PPI_Coevolution": "/mnt/mnemo6/tao/nextflow/PPI_Coevolution",
     "currentSpe_TaxID": "511145",
+    "current_EggNOG_maxLevel": "1224",
     "end": "end"
 }
