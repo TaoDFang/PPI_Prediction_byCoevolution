@@ -78,7 +78,7 @@ process downLoadOtherRawFiles {
         
     //here seem path has to be the output from somewhere in the script , 
     path "species.tree.v11.5.txt", type: "file", emit: species_tree_file
-
+    patt "${params.RawData_Folder}/eggnog5AddSTRING11.5_Species/groups", type: "dir", eimt: eggNOG_groups_folder
 
     
     script:
@@ -87,9 +87,10 @@ process downLoadOtherRawFiles {
         wget https://stringdb-downloads.org/download/species.tree.v11.5.txt -P ${params.RawData_Folder}  -O species.tree.v11.5.txt # here has to use -O to get actually output
         
         #download eggnog file
-        wget 
-        mkdir eggnog5AddSTRING11.5_Species
-        tar -zxvf eggnog5AddSTRING11.5_Species.tar.gz -C eggnog5AddSTRING11.5_Species/
+        eggNOG_folder="${params.RawData_Folder}/eggnog5AddSTRING11.5_Species/"
+        mkdir -p \${eggNOG_folder}
+        wget ......  -P ${params.RawData_Folder}  -O eggnog5AddSTRING11.5_Species.tar.gz
+        tar -zxvf "${params.RawData_Folder}/eggnog5AddSTRING11.5_Species.tar.gz" -C \${eggNOG_folder}
 
 
     """
