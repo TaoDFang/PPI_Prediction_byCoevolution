@@ -27,12 +27,11 @@ process downLoadRawFastaFile {
 
     # cd \${RawData_Folder} here this command cause error, no output, why ???, it seem create a new folder inside folder RawData_Folder ?
     
-    # when using full path, the output is not in process working directory and thus no need to use publishDir directive
-    wget https://stringdb-static.org/download/protein.sequences.v11.5.fa.gz  -P ${params.RawData_Folder}
-    gunzip -c "${params.RawData_Folder}/protein.sequences.v11.5.fa.gz" >  protein.sequences.v11.5.fa
     
-    # also download other STRING meatafile 
-    wget https://stringdb-downloads.org/download/species.v11.5.txt -P ${params.RawData_Folder} -O species.v11.5.txt # here has to use -O to get actually output
+    wget https://stringdb-static.org/download/protein.sequences.v11.5.fa.gz  # here actull no need to use  -P \${params.RawData_Folder}, since we will copy data from current process working directory to the output channel
+    # when using full path like -P \${params.RawData_Folder}, the output is not in process working directory and thus no need to use publishDir directive, but better not do it 
+    gunzip -c protein.sequences.v11.5.fa.gz >  protein.sequences.v11.5.fa
+    
 
     echo process downLoadRawFastaFile finished  > process_finished.txt 
     

@@ -223,6 +223,7 @@ if __name__ == '__main__':
     ## Load species, tree and groups
     ##
 
+    #edit here with the input 
     level_prot_og, level_og_prot, all_sps, levels, tree_up = preload_data()
 
 
