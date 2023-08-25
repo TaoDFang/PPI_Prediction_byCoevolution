@@ -2,15 +2,15 @@ import os, sys
 import argparse
 from collections import defaultdict
 
-def preload_data():
+def preload_data(groups_folder,species_file,tree_file):
 
     
-    # this three files can be downloaded directly from string and eggnog files directly 
-    # when I build the pipeline, eggnog is not pubslish for string11.5, but i prepared it by /MNF/notebooks/STRING_Data_11.5/PrepareEggNOGDataForSTRING11.5.ipynb using inhouse pipeline and then compresse it  ("tao@deimos:/mnt/mnemo6/tao/STRING_Data_11.5$ tar -cvf eggnog5AddSTRING11.5_Species.tar.gz -C /mnt/mnemo6/tao/STRING_Data_11.5/eggnog5AddSTRING11.5_Species .")
-    # and share it at Zenodo: 
-    groups_folder = "/mnt/mnemo6/tao/STRING_Data_11.5/eggnog5AddSTRING11.5_Species/groups"
-    species_file = "/mnt/mnemo6/tao/STRING_Data_11.5/species.v11.5.txt"    
-    tree_file = "/mnt/mnemo6/tao/STRING_Data_11.5/species.tree.v11.5.txt"
+    # # this three files can be downloaded directly from string and eggnog files directly 
+    # # when I build the pipeline, eggnog is not pubslish for string11.5, but i prepared it by /MNF/notebooks/STRING_Data_11.5/PrepareEggNOGDataForSTRING11.5.ipynb using inhouse pipeline and then compresse it  ("tao@deimos:/mnt/mnemo6/tao/STRING_Data_11.5$ tar -cvf eggnog5AddSTRING11.5_Species.tar.gz -C /mnt/mnemo6/tao/STRING_Data_11.5/eggnog5AddSTRING11.5_Species .")
+    # # and share it at Zenodo:  "https://zenodo.org/record/8279323"
+    # groups_folder = "/mnt/mnemo6/tao/STRING_Data_11.5/eggnog5AddSTRING11.5_Species/groups"
+    # species_file = "/mnt/mnemo6/tao/STRING_Data_11.5/species.v11.5.txt"    
+    # tree_file = "/mnt/mnemo6/tao/STRING_Data_11.5/species.tree.v11.5.txt"
     
 
     ##  
@@ -212,10 +212,18 @@ if __name__ == '__main__':
     parser.add_argument('-o','--currentSpe_currentMaxLevel_orthologs', type=str, help='output folder')
     parser.add_argument('-i','--currentSpe_fastaData', type=str, help='fasta file of current speceis')
     parser.add_argument('-m','--max_orthology_level', type=str, help='max eggnog level belong which we find ogs of protein in current species')
+    parser.add_argument('-g','--groups_folder', type=str, help='eggnog orthoglog group information')
+    parser.add_argument('-s','--species_file', type=str, help='STRING species file')
+    parser.add_argument('-t','--tree_file', type=str, help='STRING species tree file')
     args = parser.parse_args()
     currentSpe_currentMaxLevel_orthologs=args.currentSpe_currentMaxLevel_orthologs
     currentSpe_fastaData=args.currentSpe_fastaData
     max_orthology_level=args.max_orthology_level
+    groups_folder=args.groups_folder
+    species_file=args.species_file
+    tree_file=args.tree_file
+
+    
 
     print(currentSpe_currentMaxLevel_orthologs,currentSpe_fastaData,max_orthology_level)
 
@@ -224,7 +232,7 @@ if __name__ == '__main__':
     ##
 
     #edit here with the input 
-    level_prot_og, level_og_prot, all_sps, levels, tree_up = preload_data()
+    level_prot_og, level_og_prot, all_sps, levels, tree_up = preload_data(groups_folder,species_file,tree_file)
 
 
     ##

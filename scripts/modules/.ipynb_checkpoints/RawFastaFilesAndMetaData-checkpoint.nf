@@ -2,6 +2,44 @@
 
 //http://localhost:8206/lab/workspaces/auto-Z/tree/code/MNF/notebooks/STRING_Data_11.5/PrepareFastaDataBySpecies.ipynb
 // download all fasta seq data from new string website 
+
+process downLoadOtherRawFiles {
+    
+    label "simple_process"
+    
+    
+    publishDir "${params.outdir}", mode: "copy" // here params.outdir change to params.RawData_Folde to improve readbility 
+    debug true //echo true echo directive is depreca
+    
+    output:
+    //stdout
+        
+    //here seem path has to be the output from somewhere in the script , 
+    path "species.v11.5.txt", type: "file", emit: species_file
+    path "species.tree.v11.5.txt", type: "file", emit: species_tree_file
+    path "eggnog5AddSTRING11.5_Species/", type: "dir", emit: eggNOG_folder //here cant not use  path "${params.RawData_Folder}/eggnog5AddSTRING11.5_Species/groups"
+
+    
+    script:
+    """
+    
+        wget https://stringdb-downloads.org/download/species.v11.5.txt -O species.v11.5.txt  # here -N is not necesseary since its in temperaroy processing working directoy ,  -N
+        wget https://stringdb-downloads.org/download/species.tree.v11.5.txt  -O species.tree.v11.5.txt 
+        
+        #download eggnog file
+        eggNOG_folder="eggnog5AddSTRING11.5_Species/"
+        mkdir -p \${eggNOG_folder} # here -p is not necesseary since its in temperaroy processing working directoy 
+        wget https://zenodo.org/record/8279323/files/eggnog5AddSTRING11.5_Species.tar.gz?download=1  -O eggnog5AddSTRING11.5_Species.tar.gz
+        tar -xf "eggnog5AddSTRING11.5_Species.tar.gz" -C \${eggNOG_folder} #https://linuxhint.com/solve-gzip-stdin-not-gzip-format-error/. without -v to avoid outut infor -v
+
+
+
+    """
+}
+
+
+
+
 process downLoadRawFastaFile {
     
     label "simple_process"
@@ -14,7 +52,6 @@ process downLoadRawFastaFile {
         
     //here seem path has to be the output from somewhere in the script , 
     path "protein.sequences.v11.5.fa", emit: rawFasta_file
-    path "species.v11.5.txt", emit: STR_species_mem
     path "process_finished.txt", emit: test_output
 
     
@@ -28,7 +65,7 @@ process downLoadRawFastaFile {
     # cd \${RawData_Folder} here this command cause error, no output, why ???, it seem create a new folder inside folder RawData_Folder ?
     
     
-    wget https://stringdb-static.org/download/protein.sequences.v11.5.fa.gz  # here actull no need to use  -P \${params.RawData_Folder}, since we will copy data from current process working directory to the output channel
+    wget https://stringdb-static.org/download/protein.sequences.v11.5.fa.gz -O protein.sequences.v11.5.fa.gz  # here actull no need to use  -P \${params.RawData_Folder}, since we will copy data from current process working directory to the output channel
     # when using full path like -P \${params.RawData_Folder}, the output is not in process working directory and thus no need to use publishDir directive, but better not do it 
     gunzip -c protein.sequences.v11.5.fa.gz >  protein.sequences.v11.5.fa
     
@@ -62,13 +99,9 @@ process prepareFastaDataBySpecies {
     echo $CONDA_DEFAULT_ENV  # this is not specified  correct conda enviroment, but seem bewlowing python use the correct one 
     
     #here do not  use params options diretly to be able to  trigle next process  moveOnlyBacteriaSepcies
-    STRING_fastaBySpecies_Folder_tmp="${params.RawData_Folder}/STRINGSequencesBySpecies_tmp/"
-    mkdir -p  \${STRING_fastaBySpecies_Folder_tmp}
-    
-    python ${projectDir}/python_scripts/prepareFastaDataBySpecies.py --rawFasta_file ${rawFasta_file} --STRING_fastaBySpecie \${STRING_fastaBySpecies_Folder_tmp}
-    
-    mv \${STRING_fastaBySpecies_Folder_tmp} "STRINGSequencesBySpecies/" # use this to be able to export folder as process output 
-    # altinatively, use solution output folder name  (better form python ) to a file and read content from the file 
+    STRING_fastaBySpecies_Folder="STRINGSequencesBySpecies/"
+    mkdir -p  \${STRING_fastaBySpecies_Folder}  # here -p is not necesseary since its in temperaroy processing working directoy 
+    python ${projectDir}/python_scripts/prepareFastaDataBySpecies.py --rawFasta_file ${rawFasta_file} --STRING_fastaBySpecie \${STRING_fastaBySpecies_Folder}
     
     """
 }

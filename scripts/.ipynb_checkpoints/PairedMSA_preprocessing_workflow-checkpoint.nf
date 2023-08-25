@@ -15,7 +15,7 @@ nextflow.enable.dsl=2
 
 
 
-include { downLoadRawFastaFile; prepareFastaDataBySpecies;moveOnlyBacteriaSepcies } from './modules/RawFastaFilesAndMetaData'
+include {downLoadOtherRawFiles; downLoadRawFastaFile; prepareFastaDataBySpecies;moveOnlyBacteriaSepcies } from './modules/RawFastaFilesAndMetaData'
 
 
 
@@ -31,6 +31,8 @@ workflow {
     
     // ************Download all metadata and sequencing data**********
     
+    downLoadOtherRawFiles_ch=downLoadOtherRawFiles()
+    
     //downLoadRawFastaFile_ch=downLoadRawFastaFile(RawData_Folder_ch)
     downLoadRawFastaFile_ch=downLoadRawFastaFile()
     //downLoadRawFastaFile.out.view()
@@ -42,11 +44,10 @@ workflow {
     
     // here use channel not params.STRING_fastaBySpecies_Folder directly to triger next process ""
     //STRING_fastaBySpecies_Folder_ch=Channel.fromPath(params.STRING_fastaBySpecies_Folder,type:'dir')
-    moveOnlyBacteriaSepcies(downLoadRawFastaFile_ch.STR_species_mem,prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
+    moveOnlyBacteriaSepcies(downLoadOtherRawFiles_ch.species_file,prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
     println "moveOnlyBacteriaSepcies.out.view: " + moveOnlyBacteriaSepcies.out.view()
     
     
-    downLoadOtherRawFiles_ch=downLoadOtherRawFiles()
     
     // ************Prepare single MSA **********
     //http://localhost:8206/lab/workspaces/auto-I/tree/code/MNF/notebooks/STRING_Data_11.5/CoEvo_EggNOG_preprocessing_STRING1105_varyEggNOGMaxLevels_prepareSTRINPhyPPIBenchmark.ipynb
@@ -59,45 +60,20 @@ workflow {
     
     prepareSingleMSA_RemoveRedundantProteins_ch=prepareSingleMSA_RemoveRedundantProteins(prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder,prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpe_fastaData)
     
+    
+    prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs_ch=prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs(prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder,prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpe_fastaData,downLoadOtherRawFiles_ch.eggNOG_folder,downLoadOtherRawFiles_ch.species_file,downLoadOtherRawFiles_ch.species_tree_file)
     // ************Compute DCA  **********
     
     
 }
 
 
+        path newSTRING_rootFolder
+        path currentSpe_fastaData
+        path eggNOG_folder
+        path species_file
+        path tree_file
 
-process downLoadOtherRawFiles {
-    
-    label "simple_process"
-    
-    
-    publishDir "${params.outdir}", mode: "copy"
-    debug true //echo true echo directive is depreca
-    
-    output:
-    //stdout
-        
-    //here seem path has to be the output from somewhere in the script , 
-    path "species.tree.v11.5.txt", type: "file", emit: species_tree_file
-    path "eggnog5AddSTRING11.5_Species/groups", type: "dir", emit: eggNOG_groups_folder //here cant not use  path "${params.RawData_Folder}/eggnog5AddSTRING11.5_Species/groups"
-
-    
-    script:
-    """
-    
-        wget https://stringdb-downloads.org/download/species.v11.5.txt -P ${params.RawData_Folder} -O species.v11.5.txt # here has to use -O to get actually output
-    
-        wget -N https://stringdb-downloads.org/download/species.tree.v11.5.txt -P ${params.RawData_Folder}  -O species.tree.v11.5.txt # here has to use -O to get actually output
-        
-        #download eggnog file
-        eggNOG_folder="${params.RawData_Folder}/eggnog5AddSTRING11.5_Species/"
-        mkdir -p \${eggNOG_folder}
-        wget -N https://zenodo.org/record/8279323/files/eggnog5AddSTRING11.5_Species.tar.gz?download=1  -P ${params.RawData_Folder}  -O eggnog5AddSTRING11.5_Species.tar.gz
-        tar -zxvf "${params.RawData_Folder}/eggnog5AddSTRING11.5_Species.tar.gz" -C \${eggNOG_folder}
-
-
-    """
-}
 
 // ************Prepare single MSA **********
 
@@ -197,29 +173,40 @@ process prepareSingleMSA_RemoveRedundantProteins {
 }
 
         
-// //then preprocess eggNOG othologous group , to make sure for each orthologous group ,only one protein fro one speices 
-// process prepareSingleMSA_PreprocessEggnogOrthologGroup {
-//     publishDir "${params.PPI_Coevolution}",mode: "copy"
+//then preprocess eggNOG othologous group , to make sure for each orthologous group ,only one protein fro one speices 
+
+//this substep take long time , so put it in one single process for easy debugging  
+process prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs {
+    publishDir "${params.PPI_Coevolution}",mode: "copy"
     
+    label "large_memory_process"
     
-//     label "simple_py_process"
+    debug true //echo true echo directive is deprecated
     
-//     debug true //echo true echo directive is deprecated
+    input: 
+        path newSTRING_rootFolder
+        path currentSpe_fastaData
+        path eggNOG_folder
+        path species_file
+        path tree_file
+    output:
+        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/" emit: currentSpe_currentMaxLevel_orthologs
     
-//     input: 
-//         path newSTRING_rootFolder
-//     output:
-//         path 
-    
-//     script: 
-//     """
-//         currentSpe_currentMaxLevel_orthologs="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/"
-//         mkdir -p \${currentSpe_currentMaxLevel_orthologs}
-//         export PYTHONPATH="${projectDir}/../src/utilities/" 
-//         python ${projectDir}/python_scripts/RemoveRedundantProteins.py
-//     """
-// }
+    script: 
+    """
+        currentSpe_currentMaxLevel_orthologs="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/"
+        mkdir -p \${currentSpe_currentMaxLevel_orthologs}
+        eggNOG_group_folder="${eggNOG_folder}/groups"
         
+        
+        export PYTHONPATH="${projectDir}/../src/utilities/" 
+        python ${projectDir}/python_scripts/choose_orthologs_STRING11.05.py -o \${currentSpe_currentMaxLevel_orthologs} \
+        -i  currentSpe_fastaData -m ${params.current_EggNOG_maxLevel} \
+        -g \${eggNOG_group_folder} \
+        -s species_file -t tree_file
+    """
+}
+ 
                     
 /*
 * optional: test in a tmux sesssion:  tmux attach -t tmux-nextflow 

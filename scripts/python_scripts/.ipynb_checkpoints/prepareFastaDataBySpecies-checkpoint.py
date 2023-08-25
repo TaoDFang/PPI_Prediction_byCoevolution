@@ -4,6 +4,7 @@
 import argparse
 import pandas as pd
 import numpy as np
+import os 
 
 
 parser = argparse.ArgumentParser(description='prepareFastaDataBySpecies python script')
@@ -40,10 +41,6 @@ with open(rawFasta_file) as input_handle:
         else: 
             current_speFasta +=line
             
-with open(STRING_fastaBySpecies+str(current_speId) + ".fa", 'w') as output_handle:
+with open(os.path.join(STRING_fastaBySpecies,str(current_speId) + ".fa",), 'w') as output_handle:
     output_handle.write(current_speFasta)
     
-    
-    
-
-
