@@ -39,7 +39,7 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('-sf','--newSTRING_rootFolder', type=str, help='newSTRING_rootFolder')
+    parser.add_argument('-fa','--currentSpe_fastaData', type=str, help='currentSpe_fastaData')
     parser.add_argument('-id','--currentSpe_TaxID', type=str, help='currentSpe_TaxID')
     parser.add_argument('-c','--currentSpe_currentMaxLevel_orthologs', type=str, help='currentSpe_currentMaxLevel_orthologs')
     parser.add_argument('-r','--redundant_proteins_csvFile', type=str, help='redundant_proteins_csvFile')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     parser.add_argument('-ut','--code_utilities_folder', type=str, help='code_utilities_folder')
 
     args = parser.parse_args()
-    newSTRING_rootFolder=args.newSTRING_rootFolder
+    currentSpe_fastaData=args.currentSpe_fastaData
     currentSpe_TaxID=args.currentSpe_TaxID
     currentSpe_currentMaxLevel_orthologs=args.currentSpe_currentMaxLevel_orthologs
     redundant_proteins_csvFile=args.redundant_proteins_csvFile
@@ -150,7 +150,7 @@ if __name__ == '__main__':
     print(newsingleMSA_RBH_OrthologousGroup_frame.shape)
     newsingleMSA_RBH_OrthologousGroup_OGidx=[idx+1 for idx in range(newsingleMSA_RBH_OrthologousGroup_frame.shape[0])]
 
-    newsingleMSA_RBH_OrthologousGroup_OGidx_ArgForFaidx=[(code_utilities_folder,currentSpe_TaxID,OG_idx,newSTRING_rootFolder,origSTRINGBacteriaProSeqPath,currentSpe_OrthologousGroup_Fa_path,currentSpe_OrthologousGroup_Fa_logpath,newsingleMSA_RBH_OrthologousGroup_fileName) for OG_idx in newsingleMSA_RBH_OrthologousGroup_OGidx]
+    newsingleMSA_RBH_OrthologousGroup_OGidx_ArgForFaidx=[(code_utilities_folder,currentSpe_TaxID,OG_idx,currentSpe_fastaData,origSTRINGBacteriaProSeqPath,currentSpe_OrthologousGroup_Fa_path,currentSpe_OrthologousGroup_Fa_logpath,newsingleMSA_RBH_OrthologousGroup_fileName) for OG_idx in newsingleMSA_RBH_OrthologousGroup_OGidx]
     pool=mp.Pool(mp_task_nums)  # here when we set it as 50, there are more i.o wait time from top command ; 
     pool.map(fun_newSingleMSA_EggNOG_OrthologousGroup_faidx,newsingleMSA_RBH_OrthologousGroup_OGidx_ArgForFaidx)
     pool.close() 

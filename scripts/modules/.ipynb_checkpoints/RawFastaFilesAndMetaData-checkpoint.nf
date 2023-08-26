@@ -8,7 +8,7 @@ process downLoadOtherRawFiles {
     label "simple_process"
     
     
-    publishDir "${params.outdir}", mode: "copy" // here params.outdir change to params.RawData_Folde to improve readbility 
+    publishDir "${params.RawData_Folder}", mode: "copy" // here params.outdir change to params.RawData_Folde to improve readbility 
     debug true //echo true echo directive is depreca
     
     output:
@@ -45,7 +45,7 @@ process downLoadRawFastaFile {
     label "simple_process"
     
     
-    publishDir "${params.outdir}"
+    publishDir "${params.RawData_Folder}"
     
     output:
     //stdout
@@ -78,7 +78,7 @@ process downLoadRawFastaFile {
 
 process prepareFastaDataBySpecies {
     tag "process  prepareFastaDataBySpecies"
-    publishDir "${params.outdir}" , mode: "copy"
+    publishDir "${params.RawData_Folder}" , mode: "copy"
     // cpus 32
     // memory 100.GB
     
@@ -108,7 +108,7 @@ process prepareFastaDataBySpecies {
 
 
 process moveOnlyBacteriaSepcies {
-    publishDir "${params.outdir}", mode: "copy"
+    publishDir "${params.RawData_Folder}", mode: "copy"
     
     input: 
         path STR_species_mem

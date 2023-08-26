@@ -12,7 +12,7 @@ nextflow.enable.dsl=2
 //https://github.com/TaoDFang/PPI_Prediction_byCoevolution/issues/1
 
 
-
+params.newSTRING_rootFolder="${params.PPI_Coevolution}/STRING_data_11.5" //this folder is just newSTRING_rootFolder
 
 
 include {downLoadOtherRawFiles; downLoadRawFastaFile; prepareFastaDataBySpecies;moveOnlyBacteriaSepcies } from './modules/RawFastaFilesAndMetaData'
@@ -56,14 +56,13 @@ workflow {
     
     // ************Prepare paired MSA **********
     prepareSingleMSA_ParseCurSpeFastaByProteins_ch=prepareSingleMSA_ParseCurSpeFastaByProteins(prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
-    prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder.view()
     
-    prepareSingleMSA_RemoveRedundantProteins_ch=prepareSingleMSA_RemoveRedundantProteins(prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder,prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpe_fastaData)
+    prepareSingleMSA_RemoveRedundantProteins_ch=prepareSingleMSA_RemoveRedundantProteins(prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpe_fastaData)
     
     
-    prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs_ch=prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs(prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder,prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpe_fastaData,downLoadOtherRawFiles_ch.eggNOG_folder,downLoadOtherRawFiles_ch.species_file,downLoadOtherRawFiles_ch.species_tree_file)
+    prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs_ch=prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs(prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpe_fastaData,downLoadOtherRawFiles_ch.eggNOG_folder,downLoadOtherRawFiles_ch.species_file,downLoadOtherRawFiles_ch.species_tree_file)
     
-    prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas_ch=prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas(prepareSingleMSA_ParseCurSpeFastaByProteins_ch.newSTRING_rootFolder,prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs_ch.currentSpe_currentMaxLevel_orthologs,prepareSingleMSA_RemoveRedundantProteins_ch.redundant_proteins_csvFile,moveOnlyBacteriaSepcies_ch.STRING_fastaByBacteriaSpecies_Folder)
+    prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas_ch=prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas(prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs_ch.currentSpe_currentMaxLevel_orthologs,prepareSingleMSA_RemoveRedundantProteins_ch.redundant_proteins_csvFile,moveOnlyBacteriaSepcies_ch.STRING_fastaByBacteriaSpecies_Folder,prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpe_fastaData)
     // ************Compute DCA  **********
     
     
@@ -76,7 +75,7 @@ workflow {
 //section ParseEcoliFastaByProtein, need in phmmer section to 
 process prepareSingleMSA_ParseCurSpeFastaByProteins {
     
-    publishDir "${params.PPI_Coevolution}", mode: "copy"
+    publishDir "${params.newSTRING_rootFolder}", mode: "copy"
     
     
     label "simple_py_process"
@@ -88,30 +87,26 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
         path origProSeqPath
         
     output:
-        path "STRING_data_11.5/",type: "dir", emit: newSTRING_rootFolder
-        path "STRING_data_11.5/${params.currentSpe_TaxID}/", type: "dir", emit: currentSpeProSeqPath
-        path "STRING_data_11.5/${params.currentSpe_TaxID}ByProteins/", type: "dir", emit: currentSpeProSeqPath_ByProteins
-        path "STRING_data_11.5/${params.currentSpe_TaxID}/${params.currentSpe_TaxID}.fa", type: "file", emit: currentSpe_fastaData
+        path "${params.currentSpe_TaxID}/", type: "dir", emit: currentSpeProSeqPath
+        path "${params.currentSpe_TaxID}ByProteins/", type: "dir", emit: currentSpeProSeqPath_ByProteins
+        path "${params.currentSpe_TaxID}/${params.currentSpe_TaxID}.fa", type: "file", emit: currentSpe_fastaData
     script:
         
-        //newSTRING_rootFolder="${params.PPI_Coevolution}/STRING_data_11.5/" # here do not use params.PPI_Coevolution to avoid abolute path 
     """
         # cp protein seq of current species  to a new folder and separated them by proteins for later use 
-        newSTRING_rootFolder="STRING_data_11.5/" #define same in the output to export folder for downstreaming process
-        mkdir -p \${newSTRING_rootFolder}
-        currentSpeProSeqPath="\${newSTRING_rootFolder}${params.currentSpe_TaxID}/" 
+        currentSpeProSeqPath="${params.currentSpe_TaxID}/" 
         mkdir -p \${currentSpeProSeqPath}
         cp "${origProSeqPath}/${params.currentSpe_TaxID}.fa" \${currentSpeProSeqPath}  # origProSeqPath, here origProSeqPath is a output channel, the "/" at the end is treated as no, in this case ?
         # create .fai inndex file for samtool faxid later , and  parta fasta files by prpteins,need in phmmer section to 
         currentSpe_fastaData="\${currentSpeProSeqPath}${params.currentSpe_TaxID}.fa" 
         samtools faidx \${currentSpe_fastaData}
         
-        currentSpeProSeqPath_ByProteins="\${newSTRING_rootFolder}${params.currentSpe_TaxID}ByProteins/"
+        currentSpeProSeqPath_ByProteins="${params.currentSpe_TaxID}ByProteins/"
         mkdir -p \${currentSpeProSeqPath_ByProteins}
         
         # download file "protein.info.v11.5.txt.gz" for the validation reason later 
-        currentSpe_protein_info_filename="\${newSTRING_rootFolder}${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz" 
-        wget  https://stringdb-static.org/download/protein.info.v11.5/${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz -P \${newSTRING_rootFolder}
+        currentSpe_protein_info_filename="${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz" 
+        wget  https://stringdb-static.org/download/protein.info.v11.5/${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz
         
         
         export PYTHONPATH="${projectDir}/../src/utilities/" # "\${projectDir}/../" not working 
@@ -126,7 +121,7 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
 //removed redundant ones: only the longer sequence was kept  if two sequences were over 95% identical and the alignment covered 90% of the shorter sequence
 process prepareSingleMSA_RemoveRedundantProteins {
     
-    publishDir "${params.PPI_Coevolution}",mode: "copy"
+    publishDir "${params.newSTRING_rootFolder}",mode: "copy"  //this folder is just newSTRING_rootFolder
     
     
     label "simple_py_process"
@@ -134,22 +129,22 @@ process prepareSingleMSA_RemoveRedundantProteins {
     // debug true //echo true echo directive is deprecated
     
     input: 
-        path newSTRING_rootFolder  // when downstreaing process add more content to this folder, this process will be trigered and re-run, how to deal with this problem ?? best maynot seprated new folder and this folder, but this will cause too many folders which I dont like ,!!! ah the sollution is change the publishDir to this folder, but remver this folder from the temporary folder in current process !!!
+        //path newSTRING_rootFolder  // when downstreaing process add more content to this folder, this process will be trigered and re-run, how to deal with this problem ?? best maynot seprated new folder and this folder, but this will cause too many folders which I dont like ,!!! ah the sollution is change the publishDir to this folder, but remver this folder from the temporary folder in current process !!!, simpleput , the output chanel of new process dont changle the real output , but only go to the temperory working directory, and the inpuzt channel of new process alway avoid to a big folder . 
         path currentSpe_fastaData
     output:
-        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}withinBlast/", type: "dir", emit: currentSpe_withinBlastPath
+        path "${params.currentSpe_TaxID}withinBlast/", type: "dir", emit: currentSpe_withinBlastPath
         // has to output currentSpeProSeqPath_DB also here, so its acturally moved to publishDir, otherwise its only in current process working directory 
-        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}_redundant_proteins.csv", type: "dir", emit: redundant_proteins_csvFile
+        path "${params.currentSpe_TaxID}_redundant_proteins.csv", type: "dir", emit: redundant_proteins_csvFile
     script:
 
     """
-        currentSpeProSeqPath_DB="${newSTRING_rootFolder}/${params.currentSpe_TaxID}DB/${params.currentSpe_TaxID}"
+        currentSpeProSeqPath_DB="${params.currentSpe_TaxID}DB/${params.currentSpe_TaxID}"
         mkdir -p \${currentSpeProSeqPath_DB}
         /mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/makeblastdb -in ${currentSpe_fastaData} -dbtype "prot" \
         -out \${currentSpeProSeqPath_DB} -parse_seqids
         
         
-        currentSpe_withinBlastPath="${newSTRING_rootFolder}/${params.currentSpe_TaxID}withinBlast/"
+        currentSpe_withinBlastPath="${params.currentSpe_TaxID}withinBlast/"
         echo \${currentSpe_withinBlastPath}
         mkdir -p \${currentSpe_withinBlastPath}
         
@@ -160,7 +155,7 @@ process prepareSingleMSA_RemoveRedundantProteins {
          -outfmt '7 qseqid qaccver  qlen sseqid saccver slen qstart qend sstart send evalue bitscore score length pident nident mismatch positive gapopen gaps ppos qcovs qcovhsp'
         
         
-        redundant_proteins_csvFile="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_redundant_proteins.csv"
+        redundant_proteins_csvFile="${params.currentSpe_TaxID}_redundant_proteins.csv"
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/RemoveRedundantProteins.py --redundant_proteins_csvFile \${redundant_proteins_csvFile} --currentSpe_withinBlastPath \${currentSpe_withinBlastPath}
@@ -173,24 +168,23 @@ process prepareSingleMSA_RemoveRedundantProteins {
 
 //this substep take long time , so put it in one single process for easy debugging  
 process prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs {
-    publishDir "${params.PPI_Coevolution}",mode: "copy"
+    publishDir "${params.newSTRING_rootFolder}",mode: "copy"
     
     label "large_memory_process"
     
     // debug true //echo true echo directive is deprecated , here too much output, so delete this line 
     
     input: 
-        path newSTRING_rootFolder
         path currentSpe_fastaData
         path eggNOG_folder
         path species_file
         path tree_file
     output:
-        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/", emit: currentSpe_currentMaxLevel_orthologs
+        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/", emit: currentSpe_currentMaxLevel_orthologs
     
     script: 
     """
-        currentSpe_currentMaxLevel_orthologs="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/"
+        currentSpe_currentMaxLevel_orthologs="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/"
         mkdir -p \${currentSpe_currentMaxLevel_orthologs}
         eggNOG_group_folder="${eggNOG_folder}/groups"
         
@@ -207,41 +201,41 @@ process prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs {
 // for each OG group, find their sequence and save them in to one fasta file ,
 // first seuquence has to be query protein for downstream filtering 
 process prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas {
-    publishDir "${params.PPI_Coevolution}",mode: "copy"
+    publishDir "${params.newSTRING_rootFolder}",mode: "copy"
     
     label "many_cpu_process"
     
     debug true //echo true echo directive is deprecated
     
     input: 
-        path newSTRING_rootFolder
         path currentSpe_currentMaxLevel_orthologs
         path redundant_proteins_csvFile
         path origSTRINGBacteriaProSeqPath
+        path currentSpe_fastaData
     output:
-        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/",type: "dir",  emit: currentSpeMiddleDataPath
-        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/newsingleMSA_RBH_OrthologousGroup.csv",type: "file", emit: newsingleMSA_RBH_OrthologousGroup_fileName
-        path "${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa/", type: "dir", emit: currentSpe_OrthologousGroup_Fa_path
+        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/",type: "dir",  emit: currentSpeMiddleDataPath
+        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/newsingleMSA_RBH_OrthologousGroup.csv",type: "file", emit: newsingleMSA_RBH_OrthologousGroup_fileName
+        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa/", type: "dir", emit: currentSpe_OrthologousGroup_Fa_path
     
     script: 
     """
-        currentSpeMiddleDataPath="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/"
+        currentSpeMiddleDataPath="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/"
         mkdir -p \${currentSpeMiddleDataPath} # create the folder to prevent non-existing folder/file problem later
         newsingleMSA_RBH_OrthologousGroup_fileName="\${currentSpeMiddleDataPath}newsingleMSA_RBH_OrthologousGroup.csv"
         
         
- currentSpe_OrthologousGroup_Fa_path="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa/"
+ currentSpe_OrthologousGroup_Fa_path="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa/"
 
        mkdir -p \${currentSpe_OrthologousGroup_Fa_path}
        
-       currentSpe_OrthologousGroup_Fa_logpath="${newSTRING_rootFolder}/${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa_log/"
+       currentSpe_OrthologousGroup_Fa_logpath="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa_log/"
        
        mkdir -p \${currentSpe_OrthologousGroup_Fa_logpath} 
        
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         #first part of this process is fast, so good for debug
-        python ${projectDir}/python_scripts/PreprocessEggnogOrthologGroup_collectingOGFastas.py -sf ${newSTRING_rootFolder} \
+        python ${projectDir}/python_scripts/PreprocessEggnogOrthologGroup_collectingOGFastas.py -fa ${currentSpe_fastaData} \
         -id ${params.current_EggNOG_maxLevel} -c ${currentSpe_currentMaxLevel_orthologs} \
         -r ${redundant_proteins_csvFile} -f \${newsingleMSA_RBH_OrthologousGroup_fileName} \
         -fa \${currentSpe_OrthologousGroup_Fa_path} -log \${currentSpe_OrthologousGroup_Fa_logpath} \
