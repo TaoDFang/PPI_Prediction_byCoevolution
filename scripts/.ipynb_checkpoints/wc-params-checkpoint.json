@@ -1,9 +1,15 @@
 {
     "RawData_Folder": "/mnt/mnemo6/tao/nextflow/STRING_Data_11.5",
     "PPI_Coevolution": "/mnt/mnemo6/tao/nextflow/PPI_Coevolution",
-    "currentSpe_TaxID": "511145",
-    "current_EggNOG_maxLevel": "1224",
     "small_mp_task_nums": "10",
+    "middle_mp_task_nums": "30",
+    "large_mp_task_nums": "50",
     "code_utilities_folder":"${projectDir}/../src/utilities/" ,
+    "phmmer_path":"/mnt/mnemo5/tao/BeeiveProgram/HMMER3/bin/phmmer",
+    "clustalo_path":"/mnt/mnemo5/tao/BeeiveProgram/clustalO/bin/clustalo", 
+    "hmmbuild_path":"/mnt/mnemo5/tao/BeeiveProgram/HMMER3/bin/hmmbuild", 
+    "hmmalign_path":"/mnt/mnemo5/tao/BeeiveProgram/HMMER3/bin/hmmalign",
+    "Nf90_thres":"16",
     "end": "end"
 }
+

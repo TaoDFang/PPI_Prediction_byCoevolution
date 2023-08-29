@@ -9,6 +9,7 @@ process downLoadOtherRawFiles {
     
     
     publishDir "${params.RawData_Folder}", mode: "copy" // here params.outdir change to params.RawData_Folde to improve readbility 
+    // if publishDir does not exist , nextflow will create it automaticlly 
     debug true //echo true echo directive is depreca
     
     output:
@@ -45,7 +46,7 @@ process downLoadRawFastaFile {
     label "simple_process"
     
     
-    publishDir "${params.RawData_Folder}"
+    publishDir "${params.RawData_Folder}", mode: "copy"
     
     output:
     //stdout

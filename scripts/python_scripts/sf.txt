@@ -1,0 +1,58 @@
+
+    # ## get combined info for all postive an negtive PPI
+
+    currentSpe_allPPIs_pps_ArgForGetDCAMax=[(p1,p2,fasta_protein_lens[p1],fasta_protein_lens[p2],DCA_coevolutoin_path) for p1 , p2 in currentSpe_allPPIs_pps]
+    print(len(currentSpe_allPPIs_pps_ArgForGetDCAMax))
+
+
+
+    if not os.path.exists(Benchmark_folder+"max_pydcaFNAPC_frame.csv"):
+
+        pool=mp.Pool(30) 
+        max_pydcaFNAPC_list=pool.map(get_maxBetValue_dict_pydcaFNAPC_array_npz,currentSpe_allPPIs_pps_ArgForGetDCAMax)
+        pool.close() 
+        max_pydcaFNAPC_frame=pd.DataFrame(max_pydcaFNAPC_list,columns=["currentSpe_pro1", "currentSpe_pro2",
+                                                                       "maxValue_all_idx_row","maxValue_all_idx_col","maxValue_all",
+                                                                       "maxValue_bet_idx_row","maxValue_bet_idx_col","maxValue_bet"])
+        max_pydcaFNAPC_frame.to_csv(Benchmark_folder+"max_pydcaFNAPC_frame.csv",header=True, index=None,sep="\t")
+
+
+
+
+    max_pydcaFNAPC_frame=pd.read_csv(Benchmark_folder+"max_pydcaFNAPC_frame.csv",
+                                    header=0,index_col=None,sep="\t")
+    print(max_pydcaFNAPC_frame.shape)
+    max_pydcaFNAPC_bet_dict=getFrame2Dict_bet(max_pydcaFNAPC_frame)
+    print(list(max_pydcaFNAPC_bet_dict.items())[0:3])
+
+
+
+    # copy code from Ovchinnikov_eggNOGfilteredData_LargeTest_changehhfilter_new.ipynb
+    # here get a data.frame combined all inportnta informatin for each PPI 
+
+
+    # Where benchmark status is:
+    # P - in positive set
+    # N - in negative set
+
+
+
+    allPPI_allInfo_frame=combineManyInfo_simpleVersion(currentSpe_STRINGcurrentSpePhyPPI_posPPI_pps,currentSpe_STRINGcurrentSpePhyPPI_negPPI_pps,
+                                                      fasta_protein_lens,
+                                                      max_MIApcAllResidues_bet_dict,max_pydcaFNAPC_bet_dict,)
+    allPPI_allInfo_frame.to_csv(Benchmark_folder+"allPPI_allInfo_frame.csv",header=True,index=None,sep="\t")
+
+
+    # In[ ]:
+
+
+
+
+
+    # In[ ]:
+
+
+    allPPI_allInfo_frame=pd.read_csv(Benchmark_folder+"allPPI_allInfo_frame.csv",
+                                     header=0,index_col=None,sep="\t")
+    print(allPPI_allInfo_frame.shape)
+    allPPI_allInfo_frame.head(n=3)

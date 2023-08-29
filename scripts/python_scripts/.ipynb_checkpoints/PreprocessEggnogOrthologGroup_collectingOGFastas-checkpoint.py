@@ -10,6 +10,7 @@ from collections import defaultdict
 
 
 from create_singleMSA import combinedRBH_STRING1105
+from create_singleMSA import fun_newSingleMSA_EggNOG_OrthologousGroup_faidx
 
 
 def getCurrentSpeRBHdict(pro):
@@ -39,13 +40,14 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('-fa','--currentSpe_fastaData', type=str, help='currentSpe_fastaData')
+    parser.add_argument('-sfa','--currentSpe_fastaData', type=str, help='currentSpe_fastaData')
     parser.add_argument('-id','--currentSpe_TaxID', type=str, help='currentSpe_TaxID')
     parser.add_argument('-c','--currentSpe_currentMaxLevel_orthologs', type=str, help='currentSpe_currentMaxLevel_orthologs')
     parser.add_argument('-r','--redundant_proteins_csvFile', type=str, help='redundant_proteins_csvFile')
     parser.add_argument('-f','--newsingleMSA_RBH_OrthologousGroup_fileName', type=str, help='newsingleMSA_RBH_OrthologousGroup_fileName')
     parser.add_argument('-fa','--currentSpe_OrthologousGroup_Fa_path', type=str, help='currentSpe_OrthologousGroup_Fa_path')
     parser.add_argument('-log','--currentSpe_OrthologousGroup_Fa_logpath', type=str, help='currentSpe_OrthologousGroup_Fa_logpath') 
+    parser.add_argument('-b','--origSTRINGBacteriaProSeqPath', type=str, help='origSTRINGBacteriaProSeqPath') 
     parser.add_argument('-n','--mp_task_nums', type=str, help='mp_task_nums')
     parser.add_argument('-ut','--code_utilities_folder', type=str, help='code_utilities_folder')
 
@@ -141,7 +143,6 @@ if __name__ == '__main__':
 
 
                 
-                
 
     #notice following code could be simply all implemented in bash script 
     #here for we use python to wrap bash code because Im familiar with parallel processing in python 
@@ -155,4 +156,4 @@ if __name__ == '__main__':
     pool.map(fun_newSingleMSA_EggNOG_OrthologousGroup_faidx,newsingleMSA_RBH_OrthologousGroup_OGidx_ArgForFaidx)
     pool.close() 
 
-        
+    
