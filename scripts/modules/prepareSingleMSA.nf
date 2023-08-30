@@ -13,29 +13,30 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
     // debug true //echo true echo directive is depreca
     
     input: 
+        path currentSpe_TaxID_ch
         path origProSeqPath
         
     output:
-        path "${params.currentSpe_TaxID}/", type: "dir", emit: currentSpeProSeqPath
-        path "${params.currentSpe_TaxID}ByProteins/", type: "dir", emit: currentSpeProSeqPath_ByProteins
-        path "${params.currentSpe_TaxID}/${params.currentSpe_TaxID}.fa", type: "file", emit: currentSpe_fastaData
+        path "${currentSpe_TaxID_ch}/", type: "dir", emit: currentSpeProSeqPath
+        path "${currentSpe_TaxID_ch}ByProteins/", type: "dir", emit: currentSpeProSeqPath_ByProteins
+        path "${currentSpe_TaxID_ch}/${currentSpe_TaxID_ch}.fa", type: "file", emit: currentSpe_fastaData
     script:
         
     """
         # cp protein seq of current species  to a new folder and separated them by proteins for later use 
-        currentSpeProSeqPath="${params.currentSpe_TaxID}/" 
+        currentSpeProSeqPath="${currentSpe_TaxID_ch}/" 
         mkdir -p \${currentSpeProSeqPath}
-        cp "${origProSeqPath}/${params.currentSpe_TaxID}.fa" \${currentSpeProSeqPath}  # origProSeqPath, here origProSeqPath is a output channel, the "/" at the end is treated as no, in this case ?
+        cp "${origProSeqPath}/${currentSpe_TaxID_ch}.fa" \${currentSpeProSeqPath}  # origProSeqPath, here origProSeqPath is a output channel, the "/" at the end is treated as no, in this case ?
         # create .fai inndex file for samtool faxid later , and  parta fasta files by prpteins,need in phmmer section to 
-        currentSpe_fastaData="\${currentSpeProSeqPath}${params.currentSpe_TaxID}.fa" 
+        currentSpe_fastaData="\${currentSpeProSeqPath}${currentSpe_TaxID_ch}.fa" 
         samtools faidx \${currentSpe_fastaData}
         
-        currentSpeProSeqPath_ByProteins="${params.currentSpe_TaxID}ByProteins/"
+        currentSpeProSeqPath_ByProteins="${currentSpe_TaxID_ch}ByProteins/"
         mkdir -p \${currentSpeProSeqPath_ByProteins}
         
         # download file "protein.info.v11.5.txt.gz" for the validation reason later 
-        currentSpe_protein_info_filename="${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz" 
-        wget  https://stringdb-static.org/download/protein.info.v11.5/${params.currentSpe_TaxID}.protein.info.v11.5.txt.gz
+        currentSpe_protein_info_filename="${currentSpe_TaxID_ch}.protein.info.v11.5.txt.gz" 
+        wget  https://stringdb-static.org/download/protein.info.v11.5/${currentSpe_TaxID_ch}.protein.info.v11.5.txt.gz
         
         
         export PYTHONPATH="${projectDir}/../src/utilities/" # "\${projectDir}/../" not working 
