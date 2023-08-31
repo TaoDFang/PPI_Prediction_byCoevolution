@@ -20,7 +20,7 @@ process coevolutionComputation_mfDCA {
     
     input: 
         path DCA_coevolutoin_path
-        path currentSpeMiddleDataPath
+        path currentSpeMSAGapsFilteringMetaFolder
         path PPIInfoBeforeCoEvoComp_csv
         path pairedMSA_Nf90_folder
     // output:
@@ -31,7 +31,7 @@ process coevolutionComputation_mfDCA {
         export PYTHONPATH="${projectDir}/../src/utilities/" 
 
         python ${projectDir}/python_scripts/coevolutionComputation_mfDCA.py -dpath "${DCA_coevolutoin_path}/"  \
-        -m "${currentSpeMiddleDataPath}/" -acsv ${PPIInfoBeforeCoEvoComp_csv} -nf90f "${pairedMSA_Nf90_folder}/" \
+        -m "${currentSpeMSAGapsFilteringMetaFolder}/" -acsv ${PPIInfoBeforeCoEvoComp_csv} -nf90f "${pairedMSA_Nf90_folder}/" \
         -n ${params.middle_mp_task_nums}
         
     """

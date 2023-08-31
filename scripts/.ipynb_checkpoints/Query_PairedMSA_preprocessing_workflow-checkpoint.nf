@@ -8,13 +8,13 @@ nextflow.enable.dsl=2
 
 // for the text editor format , choose groovy 
 
-//https://github.com/TaoDFang/MNF/issues/98
-//https://github.com/TaoDFang/PPI_Prediction_byCoevolution/issues/1
+// https://github.com/TaoDFang/MNF/issues/98
+// https://github.com/TaoDFang/PPI_Prediction_byCoevolution/issues/1
 
-
+//something changed in vscode, check data change in jupyter
 
 params.CoEvo_data_folder="${params.PPI_Coevolution}/CoEvo_data_STRING11.5/"
-params.input_root_folder="${params.CoEvo_data_folder}allPPI_${params.query_currentSpe_TaxID}_EggNOGmaxLevel${params.query_current_EggNOG_maxLevel}_eggNOGfilteredData"
+params.input_root_folder="${params.CoEvo_data_folder}allPPI_${params.query_currentSpe_TaxID}_EggNOGmaxLevel${params.query_current_EggNOG_maxLevel}_eggNOGfilteredData"// in the next nextflow pipeline, by default its query species folder 
 
 //params.DCA_coevolutoin_path="${params.input_root_folder}/coevolutoin_result_DCA/"
 
@@ -24,9 +24,6 @@ include {prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
 
 
 include {preparePairedMSA_oneRunWithNf90;preparePairedMSA_removeHomologousPairs} from  "./modules/preparePairedMSA.nf"
-
-// include {coevolutionComputation_mfDCA_createdFolder;coevolutionComputation_mfDCA} from "./modules/coevolutionComputation.nf"
-
 
 workflow Query_PairedMSA_preprocessing_workflow{    
     take:
@@ -58,6 +55,7 @@ workflow Query_PairedMSA_preprocessing_workflow{
         PPIInfoBeforeCoEvoComp_csv=preparePairedMSA_removeHomologousPairs_ch.PPIInfoBeforeCoEvoComp_csv
     
 }
+
 
 workflow {
     

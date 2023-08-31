@@ -51,21 +51,21 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-dpath','--DCA_coevolutoin_path', type=str, help='DCA_coevolutoin_path')
-    parser.add_argument('-m','--currentSpeMiddleDataPath', type=str, help='currentSpeMiddleDataPath')
+    parser.add_argument('-m','--currentSpeMSAGapsFilteringMetaFolder', type=str, help='currentSpeMSAGapsFilteringMetaFolder')
     parser.add_argument('-acsv','--PPIInfoBeforeCoEvoComp_csv', type=str, help='PPIInfoBeforeCoEvoComp_csv')
     parser.add_argument('-nf90f','--pairedMSA_Nf90_folder', type=str, help='pairedMSA_Nf90_folder')
     parser.add_argument('-n','--mp_task_nums', type=str, help='mp_task_nums')
     
     
     args = parser.parse_args()
-    currentSpeMiddleDataPath=args.currentSpeMiddleDataPath
+    currentSpeMSAGapsFilteringMetaFolder=args.currentSpeMSAGapsFilteringMetaFolder
     PPIInfoBeforeCoEvoComp_csv=args.PPIInfoBeforeCoEvoComp_csv
     DCA_coevolutoin_path=args.DCA_coevolutoin_path
     pairedMSA_Nf90_folder=args.pairedMSA_Nf90_folder
     mp_task_nums=int(args.mp_task_nums)
 
     
-    with open(currentSpeMiddleDataPath+'fasta_protein_lens_dict.pickle', 'rb') as handle:
+    with open(currentSpeMSAGapsFilteringMetaFolder+'fasta_protein_lens_dict.pickle', 'rb') as handle:
         fasta_protein_lens=pickle.load(handle)
 
     # use  postive and negative ppi to only use pp that have large Nf90 value, and after removing deep homologs  
