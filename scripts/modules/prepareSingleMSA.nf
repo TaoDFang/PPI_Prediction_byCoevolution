@@ -13,7 +13,7 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
     // debug true //echo true echo directive is depreca
     
     input: 
-        path currentSpe_TaxID_ch
+        val currentSpe_TaxID_ch
         path origProSeqPath
         
     output:
@@ -60,21 +60,22 @@ process prepareSingleMSA_RemoveRedundantProteins {
     
     input: 
         //path newSTRING_rootFolder  // when downstreaing process add more content to this folder, this process will be trigered and re-run, how to deal with this problem ?? best maynot seprated new folder and this folder, but this will cause too many folders which I dont like ,!!! ah the sollution is change the publishDir to this folder, but remver this folder from the temporary folder in current process !!!, simpleput , the output chanel of new process dont changle the real output , but only go to the temperory working directory, and the inpuzt channel of new process alway avoid to a big folder . 
+        val currentSpe_TaxID_ch
         path currentSpe_fastaData
     output:
-        path "${params.currentSpe_TaxID}withinBlast/", type: "dir", emit: currentSpe_withinBlastPath
+        path "${currentSpe_TaxID_ch}withinBlast/", type: "dir", emit: currentSpe_withinBlastPath
         // has to output currentSpeProSeqPath_DB also here, so its acturally moved to publishDir, otherwise its only in current process working directory 
-        path "${params.currentSpe_TaxID}_redundant_proteins.csv", type: "dir", emit: redundant_proteins_csvFile
+        path "${currentSpe_TaxID_ch}_redundant_proteins.csv", type: "dir", emit: redundant_proteins_csvFile
     script:
 
     """
-        currentSpeProSeqPath_DB="${params.currentSpe_TaxID}DB/${params.currentSpe_TaxID}"
+        currentSpeProSeqPath_DB="${currentSpe_TaxID_ch}DB/${currentSpe_TaxID_ch}"
         mkdir -p \${currentSpeProSeqPath_DB}
         /mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/makeblastdb -in ${currentSpe_fastaData} -dbtype "prot" \
         -out \${currentSpeProSeqPath_DB} -parse_seqids
         
         
-        currentSpe_withinBlastPath="${params.currentSpe_TaxID}withinBlast/"
+        currentSpe_withinBlastPath="${currentSpe_TaxID_ch}withinBlast/"
         echo \${currentSpe_withinBlastPath}
         mkdir -p \${currentSpe_withinBlastPath}
         
@@ -85,7 +86,7 @@ process prepareSingleMSA_RemoveRedundantProteins {
          -outfmt '7 qseqid qaccver  qlen sseqid saccver slen qstart qend sstart send evalue bitscore score length pident nident mismatch positive gapopen gaps ppos qcovs qcovhsp'
         
         
-        redundant_proteins_csvFile="${params.currentSpe_TaxID}_redundant_proteins.csv"
+        redundant_proteins_csvFile="${currentSpe_TaxID_ch}_redundant_proteins.csv"
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/RemoveRedundantProteins.py --redundant_proteins_csvFile \${redundant_proteins_csvFile} --currentSpe_withinBlastPath \${currentSpe_withinBlastPath}
@@ -105,23 +106,25 @@ process prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs {
     // debug true //echo true echo directive is deprecated , here too much output, so delete this line 
     
     input: 
+        val currentSpe_TaxID_ch
+        val current_EggNOG_maxLevel_ch
         path currentSpe_fastaData
         path eggNOG_folder
         path species_file
         path tree_file
     output:
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/", emit: currentSpe_currentMaxLevel_orthologs
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_orthologs/", emit: currentSpe_currentMaxLevel_orthologs
     
     script: 
     """
-        currentSpe_currentMaxLevel_orthologs="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_orthologs/"
+        currentSpe_currentMaxLevel_orthologs="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_orthologs/"
         mkdir -p \${currentSpe_currentMaxLevel_orthologs}
         eggNOG_group_folder="${eggNOG_folder}/groups"
         
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/choose_orthologs_STRING11.05.py -o \${currentSpe_currentMaxLevel_orthologs} \
-        -i  ${currentSpe_fastaData} -m ${params.current_EggNOG_maxLevel} \
+        -i  ${currentSpe_fastaData} -m ${current_EggNOG_maxLevel_ch} \
         -g \${eggNOG_group_folder} \
         -s ${species_file} -t ${tree_file}
     """
@@ -138,27 +141,29 @@ process prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas {
     // debug true //echo true echo directive is deprecated
     
     input: 
+        val currentSpe_TaxID_ch
+        val current_EggNOG_maxLevel_ch
         path currentSpe_currentMaxLevel_orthologs
         path redundant_proteins_csvFile
         path origSTRINGBacteriaProSeqPath
         path currentSpe_fastaData
     output:
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/",type: "dir",  emit: currentSpeMiddleDataPath
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/newsingleMSA_RBH_OrthologousGroup.csv",type: "file", emit: newsingleMSA_RBH_OrthologousGroup_fileName
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa/", type: "dir", emit: currentSpe_OrthologousGroup_Fa_path
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/",type: "dir",  emit: currentSpeMiddleDataPath
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/newsingleMSA_RBH_OrthologousGroup.csv",type: "file", emit: newsingleMSA_RBH_OrthologousGroup_fileName
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_EggNOG_OrthologousGroup_Fa/", type: "dir", emit: currentSpe_OrthologousGroup_Fa_path
     
     script: 
     """
-        currentSpeMiddleDataPath="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_MiddleData/"
+        currentSpeMiddleDataPath="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/"
         mkdir -p \${currentSpeMiddleDataPath} # create the folder to prevent non-existing folder/file problem later
         newsingleMSA_RBH_OrthologousGroup_fileName="\${currentSpeMiddleDataPath}newsingleMSA_RBH_OrthologousGroup.csv"
         
         
- currentSpe_OrthologousGroup_Fa_path="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa/"
+ currentSpe_OrthologousGroup_Fa_path="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_EggNOG_OrthologousGroup_Fa/"
 
        mkdir -p \${currentSpe_OrthologousGroup_Fa_path}
        
-       currentSpe_OrthologousGroup_Fa_logpath="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_EggNOG_OrthologousGroup_Fa_log/"
+       currentSpe_OrthologousGroup_Fa_logpath="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_EggNOG_OrthologousGroup_Fa_log/"
        
        mkdir -p \${currentSpe_OrthologousGroup_Fa_logpath} 
        
@@ -166,7 +171,7 @@ process prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas {
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         #first part of this process is fast, so good for debug
         python ${projectDir}/python_scripts/PreprocessEggnogOrthologGroup_collectingOGFastas.py -sfa ${currentSpe_fastaData} \
-        -id ${params.current_EggNOG_maxLevel} -c ${currentSpe_currentMaxLevel_orthologs} \
+        -id ${current_EggNOG_maxLevel_ch} -c ${currentSpe_currentMaxLevel_orthologs} \
         -r ${redundant_proteins_csvFile} -f \${newsingleMSA_RBH_OrthologousGroup_fileName} \
         -fa \${currentSpe_OrthologousGroup_Fa_path} -log \${currentSpe_OrthologousGroup_Fa_logpath} \
         -b "${origSTRINGBacteriaProSeqPath}/" -n ${params.small_mp_task_nums} -ut ${params.code_utilities_folder}
@@ -190,18 +195,20 @@ process prepareSingleMSA_SeedAlignment {
     // debug true //echo true echo directive is deprecated
     
     input: 
+        val currentSpe_TaxID_ch
+        val current_EggNOG_maxLevel_ch
         path currentSpeProSeqPath_ByProteins
         path currentSpe_OrthologousGroup_Fa_path
     output:
-         path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_phmmer_results_pident/", emit: currentSpe_phmmer_outPath
+         path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_phmmer_results_pident/", emit: currentSpe_phmmer_outPath
         
     script: 
     """        
- currentSpe_phmmer_outPath="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_phmmer_results_pident/"
+ currentSpe_phmmer_outPath="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_phmmer_results_pident/"
 
        mkdir -p \${currentSpe_phmmer_outPath}
        
-       currentSpe_phmmer_logPath="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_phmmer_results_pident_log/"
+       currentSpe_phmmer_logPath="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_phmmer_results_pident_log/"
        
        mkdir -p \${currentSpe_phmmer_logPath} 
        
@@ -228,14 +235,16 @@ process prepareSingleMSA_SeedAlignment_filtering {
     // debug true //echo true echo directive is deprecated
     
     input: 
+        val currentSpe_TaxID_ch
+        val current_EggNOG_maxLevel_ch
         path currentSpeProSeqPath_ByProteins
         path origSTRINGBacteriaProSeqPath
         path currentSpe_phmmer_outPath
     output:
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_phmmer_OrthologousGroup_Fa_pident/", emit: currentSpe_phmmer_OrthologousGroup_path
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_phmmer_OrthologousGroup_Fa_pident/", emit: currentSpe_phmmer_OrthologousGroup_path
     script: 
     """      
-                                            currentSpe_phmmer_OrthologousGroup_path="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_phmmer_OrthologousGroup_Fa_pident/"
+                                            currentSpe_phmmer_OrthologousGroup_path="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_phmmer_OrthologousGroup_Fa_pident/"
         mkdir -p \${currentSpe_phmmer_OrthologousGroup_path}
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/SeedAlignment_filtering.py -b "${currentSpeProSeqPath_ByProteins}/" -pf  \${currentSpe_phmmer_OrthologousGroup_path} \
@@ -255,13 +264,15 @@ process prepareSingleMSA_ProfileHMM_ClustoMA {
     // debug true //echo true echo directive is deprecated
     
     input: 
+        val currentSpe_TaxID_ch
+        val current_EggNOG_maxLevel_ch
         path currentSpe_phmmer_OrthologousGroup_path
     output:
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_phmmer_OrthologousGroup_Fa_pident_ClustoMSA/", emit: currentSpe_ClustoMSA_path
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_phmmer_OrthologousGroup_Fa_pident_ClustoMSA/", emit: currentSpe_ClustoMSA_path
     script: 
     """      
 
-    currentSpe_ClustoMSA_path="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_phmmer_OrthologousGroup_Fa_pident_ClustoMSA/"
+    currentSpe_ClustoMSA_path="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_phmmer_OrthologousGroup_Fa_pident_ClustoMSA/"
         mkdir -p \${currentSpe_ClustoMSA_path}
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
@@ -282,13 +293,15 @@ process prepareSingleMSA_ProfileHMM_hmmbuild {
     // debug true //echo true echo directive is deprecated
     
     input: 
+        val currentSpe_TaxID_ch
+        val current_EggNOG_maxLevel_ch
         path currentSpe_ClustoMSA_path
     output:
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_hmm_profiles_pident/", emit: currentSpe_hmm_profiles_path
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_hmm_profiles_pident/", emit: currentSpe_hmm_profiles_path
         
     script: 
     """      
-        currentSpe_hmm_profiles_path="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_hmm_profiles_pident/"
+        currentSpe_hmm_profiles_path="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_hmm_profiles_pident/"
         mkdir -p \${currentSpe_hmm_profiles_path}
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/ProfileHMM_hmmbuild.py -hmm  \${currentSpe_hmm_profiles_path} \
@@ -309,14 +322,16 @@ process prepareSingleMSA_HMMAllAlignment {
     // debug true //echo true echo directive is deprecated
     
     input: 
+        val currentSpe_TaxID_ch
+        val current_EggNOG_maxLevel_ch
         path currentSpe_hmm_profiles_path
         path currentSpe_OrthologousGroup_Fa_path
     output:
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_hmmalign_pident_results/", emit: currentSpe_hmm_align_path
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_hmmalign_pident_results/", emit: currentSpe_hmm_align_path
         
     script: 
     """      
-                currentSpe_hmm_align_path="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_hmmalign_pident_results/"
+        currentSpe_hmm_align_path="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_hmmalign_pident_results/"
         mkdir -p \${currentSpe_hmm_align_path}
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
@@ -341,24 +356,30 @@ process prepareSingleMSA_singleMSAGapsFiltering {
     // debug true //echo true echo directive is deprecated
     
     input: 
+        val currentSpe_TaxID_ch
+        val current_EggNOG_maxLevel_ch
         path currentSpe_hmm_align_path
         path currentSpe_ClustoMSA_path
-        path currentSpeMiddleDataPath
+        // path currentSpeMiddleDataPath
     output:
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_hmmalign_removeGaps_keepGapPos/", emit: currentSpe_msa_removeGaps_path
-        path "${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_hmmalign_removeGaps_trackGapPos/", emit: currentSpe_msa_trackGapsPos_path
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_hmmalign_removeGaps_keepGapPos/", emit: currentSpe_msa_removeGaps_path
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_hmmalign_removeGaps_trackGapPos/", emit: currentSpe_msa_trackGapsPos_path
+        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MSAGapsFiltering/", emit:currentSpeMSAGapsFilteringMetaFolder
         
     script: 
     """      
-        currentSpe_msa_removeGaps_path="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_hmmalign_removeGaps_keepGapPos/"
+        currentSpe_msa_removeGaps_path="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_hmmalign_removeGaps_keepGapPos/"
         mkdir -p \${currentSpe_msa_removeGaps_path} 
-                currentSpe_msa_trackGapsPos_path="${params.currentSpe_TaxID}_EggNOGmaxLevel${params.current_EggNOG_maxLevel}_newSingleMSA_hmmalign_removeGaps_trackGapPos/"
+                currentSpe_msa_trackGapsPos_path="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_hmmalign_removeGaps_trackGapPos/"
         mkdir -p \${currentSpe_msa_trackGapsPos_path}
+        
+        currentSpeMSAGapsFilteringMetaFolder="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MSAGapsFiltering/"
+        mkdir -p \${currentSpeMSAGapsFilteringMetaFolder} # this is created to replace old "currentSpeMiddleDataPath" to prevent the current process to change input channel, bad bad, the previous will be trigled when re-run https://github.com/TaoDFang/MNF/issues/103#issuecomment-1694210857
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/singleMSAGapsFiltering.py -a "${currentSpe_hmm_align_path}/" \
         -c "${currentSpe_ClustoMSA_path}/" -tp \${currentSpe_msa_trackGapsPos_path} -rp \${currentSpe_msa_removeGaps_path} \
-        -m "${currentSpeMiddleDataPath}/" -n ${params.middle_mp_task_nums}
+        -m \${currentSpeMSAGapsFilteringMetaFolder} -n ${params.middle_mp_task_nums}
         
     """
 }

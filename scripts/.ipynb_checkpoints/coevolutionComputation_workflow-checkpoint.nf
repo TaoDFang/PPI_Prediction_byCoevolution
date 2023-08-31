@@ -104,6 +104,7 @@ workflow {
     // but direct use final output folder as the input channel or as input parameters 
      coevolutionComputation_mfDCA_createdFolder()
     DCA_coevolutoin_path_ch=Channel.fromPath(params.DCA_coevolutoin_path,type:'dir')
+    //below input channle name can put chagned
         coevolutionComputation_mfDCA_ch=coevolutionComputation_mfDCA(DCA_coevolutoin_path_ch,prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas_ch.currentSpeMiddleDataPath,preparePairedMSA_removeHomologousPairs_ch.PPIInfoBeforeCoEvoComp_csv,preparePairedMSA_oneRunWithNf90_ch.pairedMSA_Nf90_folder)
     
     

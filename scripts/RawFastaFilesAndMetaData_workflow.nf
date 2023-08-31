@@ -19,36 +19,41 @@ include {downLoadOtherRawFiles; downLoadRawFastaFile; prepareFastaDataBySpecies;
 
 
 workflow RawFastaFilesAndMetaData_workflow{    
-    
+    main: 
+        println "scriptFile: " + workflow.scriptFile
+        println "projectDir: " + workflow.projectDir
+        println "launchDir: " + workflow.launchDir
+        println "workDir: " + workflow.workDir
+        println "configFiles: " + workflow.configFiles
 
-    println "scriptFile: " + workflow.scriptFile
-    println "projectDir: " + workflow.projectDir
-    println "launchDir: " + workflow.launchDir
-    println "workDir: " + workflow.workDir
-    println "configFiles: " + workflow.configFiles
-    
-    
-    // ************Download all metadata and sequencing data**********
-    
-    downLoadOtherRawFiles_ch=downLoadOtherRawFiles()
-    
-    //downLoadRawFastaFile_ch=downLoadRawFastaFile(RawData_Folder_ch)
-    downLoadRawFastaFile_ch=downLoadRawFastaFile()
-    //downLoadRawFastaFile.out.view()
-    // downLoadRawFastaFile_ch.rawFasta_file.view()
-  
-    prepareFastaDataBySpecies_ch=prepareFastaDataBySpecies(downLoadRawFastaFile_ch.rawFasta_file)
-    prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder.view()
-    //prepareFastaDataBySpecies.out.view()
-    
-    // here use channel not params.STRING_fastaBySpecies_Folder directly to triger next process ""
-    //STRING_fastaBySpecies_Folder_ch=Channel.fromPath(params.STRING_fastaBySpecies_Folder,type:'dir')
-    moveOnlyBacteriaSepcies_ch=moveOnlyBacteriaSepcies(downLoadOtherRawFiles_ch.species_file,prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
-    //println "moveOnlyBacteriaSepcies.out.view: " + moveOnlyBacteriaSepcies.out.view()
-    
-    
-    
+
+        // ************Download all metadata and sequencing data**********
+
+        downLoadOtherRawFiles_ch=downLoadOtherRawFiles()
+
+        //downLoadRawFastaFile_ch=downLoadRawFastaFile(RawData_Folder_ch)
+        downLoadRawFastaFile_ch=downLoadRawFastaFile()
+        //downLoadRawFastaFile.out.view()
+        // downLoadRawFastaFile_ch.rawFasta_file.view()
+
+        prepareFastaDataBySpecies_ch=prepareFastaDataBySpecies(downLoadRawFastaFile_ch.rawFasta_file)
+        prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder.view()
+        //prepareFastaDataBySpecies.out.view()
+
+        // here use channel not params.STRING_fastaBySpecies_Folder directly to triger next process ""
+        //STRING_fastaBySpecies_Folder_ch=Channel.fromPath(params.STRING_fastaBySpecies_Folder,type:'dir')
+        moveOnlyBacteriaSepcies_ch=moveOnlyBacteriaSepcies(downLoadOtherRawFiles_ch.species_file,prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder)
+        //println "moveOnlyBacteriaSepcies.out.view: " + moveOnlyBacteriaSepcies.out.view()
+    emit: 
+        species_file = downLoadOtherRawFiles_ch.species_file
+        species_tree_file = downLoadOtherRawFiles_ch.species_tree_file
+        eggNOG_folder = downLoadOtherRawFiles_ch.eggNOG_folder
+        rawFasta_file = downLoadRawFastaFile_ch.rawFasta_file
+        STRING_fastaBySpecies_Folder = prepareFastaDataBySpecies_ch.STRING_fastaBySpecies_Folder
+        STRING_fastaByBacteriaSpecies_Folder = moveOnlyBacteriaSepcies_ch.STRING_fastaByBacteriaSpecies_Folder
+
 }
+
 
 
     

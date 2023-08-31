@@ -14,7 +14,7 @@ if __name__ == '__main__':
     parser.add_argument('-c','--currentSpe_ClustoMSA_path', type=str, help='currentSpe_ClustoMSA_path')
     parser.add_argument('-tp','--currentSpe_msa_trackGapsPos_path', type=str, help='currentSpe_msa_trackGapsPos_path')
     parser.add_argument('-rp','--currentSpe_msa_removeGaps_path', type=str, help='currentSpe_msa_removeGaps_path')
-    parser.add_argument('-m','--currentSpeMiddleDataPath', type=str, help='currentSpeMiddleDataPath')
+    parser.add_argument('-m','--currentSpeMSAGapsFilteringMetaFolder', type=str, help='currentSpeMSAGapsFilteringMetaFolder')
     parser.add_argument('-n','--mp_task_nums', type=str, help='mp_task_nums')
 
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     currentSpe_ClustoMSA_path=args.currentSpe_ClustoMSA_path
     currentSpe_msa_trackGapsPos_path=args.currentSpe_msa_trackGapsPos_path
     currentSpe_msa_removeGaps_path=args.currentSpe_msa_removeGaps_path
-    currentSpeMiddleDataPath=args.currentSpeMiddleDataPath
+    currentSpeMSAGapsFilteringMetaFolder=args.currentSpeMSAGapsFilteringMetaFolder
     mp_task_nums=int(args.mp_task_nums)
     
     
@@ -59,10 +59,10 @@ if __name__ == '__main__':
         fasta_protein_lens[pro]=len(alig[0])
         fasta_protein_Nf90s[pro]=len(alig)/math.sqrt(len(alig[0]))
 
-    with open(currentSpeMiddleDataPath+'fasta_protein_lens_dict.pickle', 'wb') as handle:
+    with open(currentSpeMSAGapsFilteringMetaFolder+'fasta_protein_lens_dict.pickle', 'wb') as handle:
         pickle.dump(fasta_protein_lens, handle)
 
-    with open(currentSpeMiddleDataPath+'fasta_protein_Nf90s_dict.pickle', 'wb') as handle:
+    with open(currentSpeMSAGapsFilteringMetaFolder+'fasta_protein_Nf90s_dict.pickle', 'wb') as handle:
         pickle.dump(fasta_protein_Nf90s, handle)
 
 

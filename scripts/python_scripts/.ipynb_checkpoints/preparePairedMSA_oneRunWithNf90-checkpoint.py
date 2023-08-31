@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-i','--currentSpe_TaxID', type=str, help='currentSpe_TaxID')
-    parser.add_argument('-m','--currentSpeMiddleDataPath', type=str, help='currentSpeMiddleDataPath')
+    parser.add_argument('-m','--currentSpeMSAGapsFilteringMetaFolder', type=str, help='currentSpeMSAGapsFilteringMetaFolder')
     parser.add_argument('-rp','--currentSpe_msa_removeGaps_path', type=str, help='currentSpe_msa_removeGaps_path') # notice currentSpe_msa_removeGaps_path is the old currentSpe_hmmalign_path in old script ,here give a differnt name for consitency of previous variable names 
     parser.add_argument('-un','--pairedMSA_unfiltered_folder', type=str, help='pairedMSA_unfiltered_folder')
     parser.add_argument('-hh','--pairedMSA_hhfilter_folder', type=str, help='pairedMSA_hhfilter_folder')
@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     currentSpe_TaxID=args.currentSpe_TaxID
-    currentSpeMiddleDataPath=args.currentSpeMiddleDataPath
+    currentSpeMSAGapsFilteringMetaFolder=args.currentSpeMSAGapsFilteringMetaFolder
     currentSpe_msa_removeGaps_path=args.currentSpe_msa_removeGaps_path
     pairedMSA_unfiltered_folder=args.pairedMSA_unfiltered_folder
     pairedMSA_hhfilter_folder=args.pairedMSA_hhfilter_folder
@@ -37,10 +37,10 @@ if __name__ == '__main__':
     mp_task_nums=int(args.mp_task_nums)
 
 
-    with open(currentSpeMiddleDataPath+'fasta_protein_lens_dict.pickle', 'rb') as handle:
+    with open(currentSpeMSAGapsFilteringMetaFolder+'fasta_protein_lens_dict.pickle', 'rb') as handle:
         fasta_protein_lens=pickle.load(handle)
 
-    with open(currentSpeMiddleDataPath+'fasta_protein_Nf90s_dict.pickle', 'rb') as handle:
+    with open(currentSpeMSAGapsFilteringMetaFolder+'fasta_protein_Nf90s_dict.pickle', 'rb') as handle:
         fasta_protein_Nf90s=pickle.load(handle)
 
 

@@ -6,7 +6,8 @@ process preparePairedMSA_oneRunWithNf90 {
     debug true //echo true echo directive is deprecated
     
     input: 
-        path currentSpeMiddleDataPath
+        val currentSpe_TaxID_ch
+        path currentSpeMSAGapsFilteringMetaFolder
         path currentSpe_msa_removeGaps_path
 
     output:
@@ -28,8 +29,8 @@ process preparePairedMSA_oneRunWithNf90 {
         mkdir -p \${pairedMSA_Nf90_folder}
 
         export PYTHONPATH="${projectDir}/../src/utilities/" 
-        python ${projectDir}/python_scripts/preparePairedMSA_oneRunWithNf90.py -i ${params.currentSpe_TaxID} \
-        -m "${currentSpeMiddleDataPath}/" -rp "${currentSpe_msa_removeGaps_path}/" \
+        python ${projectDir}/python_scripts/preparePairedMSA_oneRunWithNf90.py -i ${currentSpe_TaxID_ch} \
+        -m "${currentSpeMSAGapsFilteringMetaFolder}/" -rp "${currentSpe_msa_removeGaps_path}/" \
         -un \${pairedMSA_unfiltered_folder} -hh \${pairedMSA_hhfilter_folder} \
         -nf90f \${pairedMSA_Nf90_folder} -nf90csv \${pairedMSA_Nf90_csv} \
         -nf90 ${params.Nf90_thres} -n ${params.large_mp_task_nums}
