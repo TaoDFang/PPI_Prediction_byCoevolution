@@ -11,6 +11,9 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
 
+    # here -s need to a array, or multiple values without "," in betwween
+    # didnt figure out how to use nextflow value to bash array, so change it the intermediated string 
+    #parser.add_argument('-s','--spe_list',nargs='+', help='spe_list') #https://stackoverflow.com/questions/15753701/how-can-i-pass-a-list-as-a-command-line-argument-with-argparse
     parser.add_argument('-s','--spe_list', type=str, help='spe_list')
     parser.add_argument('-egg','--EggNOG_groupPath', type=str, help='EggNOG_groupPath')
     parser.add_argument('-t','--homologous_COG2PP_path', type=str, help='homologous_COG2PP_path')
@@ -22,6 +25,8 @@ if __name__ == '__main__':
     homologous_COG2PP_path=args.homologous_COG2PP_path
     mp_task_nums=int(args.mp_task_nums)
 
+    spe_list=spe_list.split("_")
+    print("spe_list:",spe_list)
 
 
     max_level="2"
