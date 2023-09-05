@@ -5,6 +5,7 @@ import pickle
 import multiprocessing as mp
 
 from IntergrateBestHomologousPPCoEvo_unNameSorted import allQuery2SubjectPPIMapping_getNameUnSorted_COGasLink
+from IntergrateBestHomologousPPCoEvo_unNameSorted import allQuery2SubjectSingleProteinMapping
 
 if __name__ == '__main__':
     
@@ -30,8 +31,17 @@ if __name__ == '__main__':
     
     print("Query_tuple:",Query_tuple)
     print("Subject_tupleList:",Subject_tupleList)
-    Query2Subject_QueSpeAllPPI_homologous_ignoreQueryDCA_dict_listDict=allQuery2SubjectPPIMapping_getNameUnSorted_COGasLink(Query_tuple,Subject_tupleList,PPIInfoBeforeCoEvoComp_csv,homologous_COG2PP_path)
+    
+    #simple 
+    Query2Subject_QueSpeAllPPI_homologous_dict_listDict=allQuery2SubjectPPIMapping_getNameUnSorted_COGasLink(Query_tuple,Subject_tupleList,PPIInfoBeforeCoEvoComp_csv,homologous_COG2PP_path)
 
 
     with open(homologous_allQuery2SubjectPPIMapping_path+"NameUnsorted_Query2Subject_QueSpeAllPPI_homologous_dict_listDict.pickle", 'wb') as handle:
-            pickle.dump(Query2Subject_QueSpeAllPPI_homologous_ignoreQueryDCA_dict_listDict,handle)
+            pickle.dump(Query2Subject_QueSpeAllPPI_homologous_dict_listDict,handle)
+
+            
+    Query2Subject_QueSpeAllPPI_homologous_singleProteinMaping_listDict=allQuery2SubjectSingleProteinMapping(Query2Subject_QueSpeAllPPI_homologous_dict_listDict)
+            
+            
+    with open(homologous_allQuery2SubjectPPIMapping_path+"NameUnsorted_Query2Subject_QueSpeAllPPI_homologous_singleProteinMaping_listDict.pickle", 'wb') as handle:
+            pickle.dump(Query2Subject_QueSpeAllPPI_homologous_singleProteinMaping_listDict,handle)

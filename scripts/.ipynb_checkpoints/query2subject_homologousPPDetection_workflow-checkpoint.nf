@@ -10,6 +10,9 @@ params.homologous_ppPath="${params.PPI_Coevolution}/STRING_data_11.5/homologous_
 
 include {RawFastaFilesAndMetaData_workflow } from './RawFastaFilesAndMetaData_workflow.nf'
 include {prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
+include {prepareSingleMSA_workflow as subject1_prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
+include {prepareSingleMSA_workflow as subject2_prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
+include {prepareSingleMSA_workflow as subject3_prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
 include {Query_PairedMSA_preprocessing_workflow} from  "./Query_PairedMSA_preprocessing_workflow.nf"
 
 
@@ -47,6 +50,35 @@ workflow {
                               RawFastaFilesAndMetaData_workflow.out.species_tree_file,
                               RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
                              )
+    
+    // this is to prevent error  
+    //Process 'prepareSingleMSA_ParseCurSpeFastaByProteins' has been already used -- If you need to reuse the same component, include it with a different name or include it in a different workflow context    
+    subject1_prepareSingleMSA_workflow=subject1_prepareSingleMSA_workflow(Channel.value("${params.subject1_currentSpe_TaxID}"),
+                         Channel.value("${params.subject1_current_EggNOG_maxLevel}"),
+                              RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
+                              RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
+                              RawFastaFilesAndMetaData_workflow.out.species_file,
+                              RawFastaFilesAndMetaData_workflow.out.species_tree_file,
+                              RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
+                             )
+
+    subject2_prepareSingleMSA_workflow=subject2_prepareSingleMSA_workflow(Channel.value("${params.subject2_currentSpe_TaxID}"),
+                         Channel.value("${params.subject2_current_EggNOG_maxLevel}"),
+                              RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
+                              RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
+                              RawFastaFilesAndMetaData_workflow.out.species_file,
+                              RawFastaFilesAndMetaData_workflow.out.species_tree_file,
+                              RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
+                             )
+
+    subject3_prepareSingleMSA_workflow=subject3_prepareSingleMSA_workflow(Channel.value("${params.subject3_currentSpe_TaxID}"),
+                         Channel.value("${params.subject3_current_EggNOG_maxLevel}"),
+                              RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
+                              RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
+                              RawFastaFilesAndMetaData_workflow.out.species_file,
+                              RawFastaFilesAndMetaData_workflow.out.species_tree_file,
+                              RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
+                             )
 
     // ************Prepare paired MSA **********
     // http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/script_allPPI_CoEvo_EggNOG_preprocessing_STRING1105_varyEggNOGMaxLevels.py
@@ -63,10 +95,42 @@ workflow {
     homologousPPDetection_COG2PPMapping_ch=homologousPPDetection_allQuery2SubjectPPIMapping(Query_tuple_ch,Subject_tupleList_ch,
                                                                   Query_PairedMSA_preprocessing_workflow_ch.PPIInfoBeforeCoEvoComp_csv,
                                                                   homologousPPDetection_COG2PPMapping_ch.homologous_COG2PP_path)
+    
+    // here need to change to exclude query species
+    // try with regular expression failed, use nextflow filter operator ? https://stackoverflow.com/questions/76104581/nextflow-regex-on-path
+    SubjectProSeqPath_ByProteins_ch=Channel
+        .fromPath("${params.newSTRING_rootFolder}/*ByProteins/",type:"dir")
+        .filter( ~/^((?!511145).)*/ ) // this works ! https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
+        // .filter( ~/.*511145.*/ )  // this works 
+        // .filter( ~/.*(?!511145).*/ )  // this does not work, why ???
+        // .filter{ ~/.*(?!511145.)*/ }
+        
+    
+        // .filter{it =~ /.*511145.*/}
+        // .filter{ ~/.*511145.*/ }
+        // .filter( ~/.*/ )
+        // .filter( ".*511145.*")
+        // .filter( ^(?!511145).* )
+    
+    // // seems regular expression works on val but not on path ??!! https://stackoverflow.com/questions/76104581/nextflow-regex-on-path
+    // SubjectProSeqPath_ByProteins_ch=Channel
+    //                                 .of( 'a', 'b', 'aa', 'adfafbc', 3, 4.5 )
+    //                                 .filter( ~/.*fa.*/ )
+    
+    
+    
+    homologousPPDetection_SeqMapping_ch=homologousPPDetection_SeqMapping(SubjectProSeqPath_ByProteins_ch)
+    
+    
 }
 
 
 
+
+
+
+
+    
 
 // prepare homoglogous COG group to pp group  mapping in name unsorted manner. so we can know single protein mapping relations
 // and here we use homologou pp under eggenog level  max level 2 (root level ) 
@@ -106,7 +170,7 @@ process homologousPPDetection_COG2PPMapping {
 
 
 
-// do protein mapping for homologous pp and single proteins 
+// do protein mapping for homologous pp and single protein mapping, not the one best homologous pp
 process homologousPPDetection_allQuery2SubjectPPIMapping {
     
     publishDir "${params.newSTRING_rootFolder}", mode: "copy"
@@ -142,8 +206,74 @@ process homologousPPDetection_allQuery2SubjectPPIMapping {
 }
 
 
-// single protein and seq mapping  are not incorporated in final analysis, so ignore for now 
-// maybe do it later for the visulisation reason 
+// do blastp/mapping between single query proteins and single subject proteins 
+process homologousPPDetection_SeqMapping {
+    
+    publishDir "${params.homologous_ppPath}", mode: "copy"
+    
+    
+    label "simple_py_process"
+    
+    debug true //echo true echo directive is deprecated
+    
+    
+    input: 
+        path SubjectProSeqPath_ByProtein_ch
+        // val SubjectProSeqPath_ByProtein_ch
+        
+    output:
+        
+    script:
+        
+    """
+        homologous_SeqMappingPath="SeqMapping/" 
+        mkdir -p \${homologous_SeqMappingPath}
+        
+        echo "process homologousPPDetection_SeqMapping: ${SubjectProSeqPath_ByProtein_ch}"
+
+
+        
+    """
+    
+}
+
+//         export PYTHONPATH="${projectDir}/../src/utilities/" 
+//         python ${projectDir}/python_scripts/homologousPPDetection_SeqMapping.py
+
+
+
+
+
+// // prepare paired MSA for homologous pp in other species 
+// process homologousPPDetection_preparePairedMSA {
+    
+//     publishDir "${params.}", mode: "copy"
+    
+    
+//     label "simple_py_process"
+    
+//     debug true //echo true echo directive is deprecated
+    
+    
+//     input: 
+
+//     output:
+       
+        
+//     script:
+        
+//     """
+
+
+//         export PYTHONPATH="${projectDir}/../src/utilities/" 
+//         python ${projectDir}/python_scripts/homologousPPDetection_preparePairedMSA.py 
+        
+//     """
+    
+// }
+
+
+
 
 
 

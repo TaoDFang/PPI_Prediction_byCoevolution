@@ -105,8 +105,8 @@ workflow {
                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
                                  )
     
-        prepareSingleMSA_workflow(Channel.value("${subject1.query_currentSpe_TaxID}"),
-                             Channel.value("${subject1.query_current_EggNOG_maxLevel}"),
+        prepareSingleMSA_workflow(Channel.value("${params.subject1_currentSpe_TaxID}"),
+                             Channel.value("${params.subject1_current_EggNOG_maxLevel}"),
                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
                                   RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
                                   RawFastaFilesAndMetaData_workflow.out.species_file,
@@ -114,8 +114,8 @@ workflow {
                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
                                  )
     
-        prepareSingleMSA_workflow(Channel.value("${subject2.query_currentSpe_TaxID}"),
-                             Channel.value("${subject2.query_current_EggNOG_maxLevel}"),
+        prepareSingleMSA_workflow(Channel.value("${params.subject2_currentSpe_TaxID}"),
+                             Channel.value("${params.subject2_current_EggNOG_maxLevel}"),
                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
                                   RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
                                   RawFastaFilesAndMetaData_workflow.out.species_file,
@@ -123,8 +123,8 @@ workflow {
                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
                                  )
     
-        prepareSingleMSA_workflow(Channel.value("${subject3.query_currentSpe_TaxID}"),
-                             Channel.value("${subject3.query_current_EggNOG_maxLevel}"),
+        prepareSingleMSA_workflow(Channel.value("${params.subject3_currentSpe_TaxID}"),
+                             Channel.value("${params.subject3_current_EggNOG_maxLevel}"),
                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
                                   RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
                                   RawFastaFilesAndMetaData_workflow.out.species_file,
