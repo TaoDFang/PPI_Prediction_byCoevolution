@@ -17,6 +17,7 @@
     "clustalo_path":"/mnt/mnemo5/tao/BeeiveProgram/clustalO/bin/clustalo", 
     "hmmbuild_path":"/mnt/mnemo5/tao/BeeiveProgram/HMMER3/bin/hmmbuild", 
     "hmmalign_path":"/mnt/mnemo5/tao/BeeiveProgram/HMMER3/bin/hmmalign",
+    "blastp_path":"/mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/blastp",
     "Nf90_thres":"16",
     "end": "end"
 }

@@ -5,7 +5,8 @@ nextflow.enable.dsl=2
 
 
 params.newSTRING_rootFolder="${params.PPI_Coevolution}/STRING_data_11.5" //this folder is just newSTRING_rootFolder
-params.homologous_ppPath="${params.PPI_Coevolution}/STRING_data_11.5/homologous_pp" 
+params.homologous_ppPath="${params.newSTRING_rootFolder}/homologous_pp"
+params.homologous_SeqMappingPath="${params.homologous_ppPath}/SeqMapping" 
 
 
 include {RawFastaFilesAndMetaData_workflow } from './RawFastaFilesAndMetaData_workflow.nf'
@@ -100,34 +101,31 @@ workflow {
     // try with regular expression failed, use nextflow filter operator ? https://stackoverflow.com/questions/76104581/nextflow-regex-on-path
     SubjectProSeqPath_ByProteins_ch=Channel
         .fromPath("${params.newSTRING_rootFolder}/*ByProteins/",type:"dir")
-        .filter( ~/^((?!511145).)*/ ) // this works ! https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
+        .filter( ~/^((?!${params.query_currentSpe_TaxID}).)*/ ) // this works ! https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
         // .filter( ~/.*511145.*/ )  // this works 
         // .filter( ~/.*(?!511145).*/ )  // this does not work, why ???
-        // .filter{ ~/.*(?!511145.)*/ }
-        
     
-        // .filter{it =~ /.*511145.*/}
-        // .filter{ ~/.*511145.*/ }
-        // .filter( ~/.*/ )
-        // .filter( ".*511145.*")
-        // .filter( ^(?!511145).* )
-    
-    // // seems regular expression works on val but not on path ??!! https://stackoverflow.com/questions/76104581/nextflow-regex-on-path
-    // SubjectProSeqPath_ByProteins_ch=Channel
-    //                                 .of( 'a', 'b', 'aa', 'adfafbc', 3, 4.5 )
-    //                                 .filter( ~/.*fa.*/ )
+    // SubjectSpe_MiddleDatas_ch=Channel
+    //     .fromPath("${params.newSTRING_rootFolder}/*MiddleData/",type:"dir") // here use this path to extract both phylum and species id, can alos use maps in nextflow 
+    //     .filter( ~/^((?!511145).)*/ ) 
     
     
+    QueryProSeqPath_ByProtein_ch=Channel
+        .fromPath("${params.newSTRING_rootFolder}/*ByProteins/",type:"dir")
+        .filter( ~/.*${params.query_currentSpe_TaxID}.*/ )  // this works 
+   
+
     
-    homologousPPDetection_SeqMapping_ch=homologousPPDetection_SeqMapping(SubjectProSeqPath_ByProteins_ch)
+    
+    homologousPPDetection_SeqMapping_ch=homologousPPDetection_SeqMapping(Query_tuple_ch,
+                                                                         Subject_tupleList_ch,
+                                                                         QueryProSeqPath_ByProtein_ch,
+                                                                         SubjectProSeqPath_ByProteins_ch,
+                                                                        homologousPPDetection_COG2PPMapping_ch.homologous_allQuery2SubjectPPIMapping_path,
+                                                                        )
     
     
 }
-
-
-
-
-
 
 
     
@@ -209,37 +207,60 @@ process homologousPPDetection_allQuery2SubjectPPIMapping {
 // do blastp/mapping between single query proteins and single subject proteins 
 process homologousPPDetection_SeqMapping {
     
-    publishDir "${params.homologous_ppPath}", mode: "copy"
+    publishDir "${homologous_SeqMappingPath}", mode: "copy"
     
     
-    label "simple_py_process"
+    label "many_cpu_process"
     
     debug true //echo true echo directive is deprecated
     
     
     input: 
-        path SubjectProSeqPath_ByProtein_ch
-        // val SubjectProSeqPath_ByProtein_ch
+        val Query_tuple_ch
+        val Subject_tupleList_ch
+        // path SubjectSpe_MiddleData_ch
+        each QueryProSeqPath_ByProtein_ch
+        each SubjectProSeqPath_ByProtein_ch //use each here bacause its the onyl inpuzt channle have multiple element; https://carpentries-incubator.github.io/workflows-nextflow/05-processes-part1/index.html
+    // #before using each keyword, the path  offSubjectProSeqPath_ByProteinSubjectProSeqPath_ByProtein: 411476ByProteins/
+    // #when use each key workd for , we got full path SubjectProSeqPath_ByProtein: /mnt/mnemo6/tao/nextflow/PPI_Coevolution/STRING_data_11.5/411476ByProteins/, become a value channle now ??
+        path homologous_allQuery2SubjectPPIMapping_path
+
         
     output:
+        path "${params.homologous_SeqMappingPath}/EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
         
     script:
         
     """
-        homologous_SeqMappingPath="SeqMapping/" 
-        mkdir -p \${homologous_SeqMappingPath}
+        echo "processadsdasfdfassadfdsfdfsdaffadfshsadomologousPPDetection_SeqMapping: ${SubjectProSeqPath_ByProtein_ch}"
         
-        echo "process homologousPPDetection_SeqMapping: ${SubjectProSeqPath_ByProtein_ch}"
+        f=\$(basename -- "${SubjectProSeqPath_ByProtein_ch}")  # https://stackoverflow.com/questions/66568781/how-to-call-a-variable-created-in-the-script-in-nextflow
+        echo \${f}
+        
+        [[ "\${f}" =~ ([0-9]+)* ]] #https://www.bashsupport.com/bash/variables/bash/bash_rematch/
+            
+        Subject_speID=\$(echo \${BASH_REMATCH[1]})
+        
+        echo "Subject_speID: \${Subject_speID}"
+        
+    current_homologous_SeqMappingPath="${params.homologous_SeqMappingPath}/EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/"
+
+        mkdir -p \${current_homologous_SeqMappingPath}
+        
+        
+        export PYTHONPATH="${projectDir}/../src/utilities/" 
+        python ${projectDir}/python_scripts/homologousPPDetection_SeqMapping.py -q ${Query_tuple_ch.join("_")}  \
+        -s ${Subject_tupleList_ch.join("_")} \
+        -qb "${QueryProSeqPath_ByProtein_ch}/" -sb "${SubjectProSeqPath_ByProtein_ch}/"  -seqM \${current_homologous_SeqMappingPath} \
+        -m "${homologous_allQuery2SubjectPPIMapping_path}/" -bp ${params.blastp_path} -n ${params.middle_mp_task_nums}
+               
+
 
 
         
     """
     
 }
-
-//         export PYTHONPATH="${projectDir}/../src/utilities/" 
-//         python ${projectDir}/python_scripts/homologousPPDetection_SeqMapping.py
-
 
 
 
