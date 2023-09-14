@@ -93,7 +93,7 @@ workflow {
 
     homologousPPDetection_COG2PPMapping_ch=homologousPPDetection_COG2PPMapping(spe_list_ch,RawFastaFilesAndMetaData_workflow.out.eggNOG_folder)
     
-    homologousPPDetection_COG2PPMapping_ch=homologousPPDetection_allQuery2SubjectPPIMapping(Query_tuple_ch,Subject_tupleList_ch,
+    homologousPPDetection_allQuery2SubjectPPIMapping_ch=homologousPPDetection_allQuery2SubjectPPIMapping(Query_tuple_ch,Subject_tupleList_ch,
                                                                   Query_PairedMSA_preprocessing_workflow_ch.PPIInfoBeforeCoEvoComp_csv,
                                                                   homologousPPDetection_COG2PPMapping_ch.homologous_COG2PP_path)
     
@@ -121,14 +121,21 @@ workflow {
                                                                          Subject_tupleList_ch,
                                                                          QueryProSeqPath_ByProtein_ch,
                                                                          SubjectProSeqPath_ByProteins_ch,
-                                                                        homologousPPDetection_COG2PPMapping_ch.homologous_allQuery2SubjectPPIMapping_path,
+                                                                        homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path,
                                                                         )
+    
+    
+    homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
+    homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch=homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous(Query_tuple_ch,
+                                                                                Subject_tupleList_ch, homologous_SeqMappingPath_ch,
+                                                                                homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path)
     
     
 }
 
 
     
+        
 
 // prepare homoglogous COG group to pp group  mapping in name unsorted manner. so we can know single protein mapping relations
 // and here we use homologou pp under eggenog level  max level 2 (root level ) 
@@ -192,6 +199,7 @@ process homologousPPDetection_allQuery2SubjectPPIMapping {
     """
         homologous_allQuery2SubjectPPIMapping_path="${Query_tuple_ch[1]}_EggNOGmaxLevel${Query_tuple_ch[0]}_allQuery2SubjectPPIMapping/" 
         mkdir -p \${homologous_allQuery2SubjectPPIMapping_path}
+    
 
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/homologousPPDetection_allQuery2SubjectPPIMapping.py \
@@ -204,10 +212,16 @@ process homologousPPDetection_allQuery2SubjectPPIMapping {
 }
 
 
+
 // do blastp/mapping between single query proteins and single subject proteins 
 process homologousPPDetection_SeqMapping {
     
-    publishDir "${homologous_SeqMappingPath}", mode: "copy"
+    // publishDir "${homologous_SeqMappingPath}", mode: "copy" , here the output is aboluste path so we dont need to publish data
+    // the reason we do this is that this process need to be run multiple times parallely and need to write to same same folder, 
+    // this cause problems 
+    // but use abosulut path reduce "explicitely" dependency between process ?, check what is nextflow diagraw looks like here 
+    //while we use fromPath to "implicatily" to capture this dependence ?
+    // or not use SubjectProSeqPath_ByProtein_ch but a list of pure subject ids ???
     
     
     label "many_cpu_process"
@@ -226,13 +240,14 @@ process homologousPPDetection_SeqMapping {
         path homologous_allQuery2SubjectPPIMapping_path
 
         
-    output:
-        path "${params.homologous_SeqMappingPath}/EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
+//     output:
+//         path "${params.homologous_SeqMappingPath}/EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
+    // Subject_speID is defined with bash script, cause problelm, maybe exract diffrect from by SubjectProSeqPath_ByProtein_ch by grooy command
         
     script:
         
     """
-        echo "processadsdasfdfassadfdsfdfsdaffadfshsadomologousPPDetection_SeqMapping: ${SubjectProSeqPath_ByProtein_ch}"
+        echo "process domologousPPDetection_SeqMapping: ${SubjectProSeqPath_ByProtein_ch}"
         
         f=\$(basename -- "${SubjectProSeqPath_ByProtein_ch}")  # https://stackoverflow.com/questions/66568781/how-to-call-a-variable-created-in-the-script-in-nextflow
         echo \${f}
@@ -254,15 +269,65 @@ process homologousPPDetection_SeqMapping {
         -qb "${QueryProSeqPath_ByProtein_ch}/" -sb "${SubjectProSeqPath_ByProtein_ch}/"  -seqM \${current_homologous_SeqMappingPath} \
         -m "${homologous_allQuery2SubjectPPIMapping_path}/" -bp ${params.blastp_path} -n ${params.middle_mp_task_nums}
                
-
-
-
         
     """
     
 }
 
 
+// do protein mapping for homologous pp and single protein mapping, not the one best homologous pp
+process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
+    
+    publishDir "${params.newSTRING_rootFolder}", mode: "copy"
+    
+    
+    label "simple_py_process"
+    
+    debug true //echo true echo directive is deprecated
+    
+    
+    input: 
+        val Query_tuple_ch
+        val Subject_tupleList_ch
+        path homologous_SeqMappingPath_ch
+        path homologous_allQuery2SubjectPPIMapping_path
+        
+    output:
+        path "${Query_tuple_ch[1]}_EggNOGmaxLevel${Query_tuple_ch[0]}_allQuery2SubjectPPIMapping_singleProteinBlastp/", emit: homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path
+        path "${Query_tuple_ch[1]}_EggNOGmaxLevel${Query_tuple_ch[0]}_allQuery2SubjectPPIMapping_bestHomologousPP/" , emit: homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path
+    script:
+        
+    """
+        homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path="${Query_tuple_ch[1]}_EggNOGmaxLevel${Query_tuple_ch[0]}_allQuery2SubjectPPIMapping_singleProteinBlastp/" 
+        mkdir -p \${homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path}
+        
+        homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path="${Query_tuple_ch[1]}_EggNOGmaxLevel${Query_tuple_ch[0]}_allQuery2SubjectPPIMapping_bestHomologousPP/" 
+        mkdir -p \${homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path}
+
+
+        export PYTHONPATH="${projectDir}/../src/utilities/" 
+        python   ${projectDir}/python_scripts/homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous.py  \
+        -q ${Query_tuple_ch.join("_")} -s ${Subject_tupleList_ch.join("_")} \
+        -seqM  "${homologous_SeqMappingPath_ch}/"   -m "${homologous_allQuery2SubjectPPIMapping_path}/" \
+        -ms \${homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path} \
+        -mb \${homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path}
+        
+    """
+    
+}
+
+
+// // dont includ this step in the computation pipeline but as the post-preporcess steps
+// // http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/test_phylumeffect_homologousPPDetection_STRINGPhyBalancePhyla.ipynb
+// process homologousPPDetection_msa2orig {
+        
+//     """
+//         export PYTHONPATH="${projectDir}/../src/utilities/" 
+//         python   ${projectDir}/python_scripts/homologousPPDetection_msa2orig.py  
+        
+//     """
+    
+// }
 
 
 // // prepare paired MSA for homologous pp in other species 

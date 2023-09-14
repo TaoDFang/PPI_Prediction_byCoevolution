@@ -89,12 +89,12 @@ if __name__ == '__main__':
 #     current_homologous_SeqMappingPath=homologous_SeqMappingPath+"EggNogMaxLevel2_QuerySpe_ID"+Query_speID+"and"+"SubjectSpe_ID"+Subject_speID+'/'
 #     print(current_homologous_SeqMappingPath)
 
-#     current_homologous_SeqMappingPath_results=glob.glob(current_homologous_SeqMappingPath+"*.pickle")
-#     current_homologous_SeqMappingPath_resultsDic={f:1 for f in current_homologous_SeqMappingPath_results}
-
-
 #     if not os.path.exists(current_homologous_SeqMappingPath):
 #         os.makedirs(current_homologous_SeqMappingPath)
+
+    current_homologous_SeqMappingPath_results=glob.glob(current_homologous_SeqMappingPath+"*.pickle")
+    current_homologous_SeqMappingPath_resultsDic={f:1 for f in current_homologous_SeqMappingPath_results}
+
 
     temp_Query2Subject_SubSpeAllPPI_homologous_singleProteinMaping_dict=Query2Subject_SubSpeAllPPI_homologous_singleProteinMaping_listDict[(Subject_phylum,Subject_speID)]
 

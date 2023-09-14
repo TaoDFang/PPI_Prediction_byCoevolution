@@ -73,6 +73,7 @@ workflow prepareSingleMSA_workflow{
     emit:
         currentSpeMSAGapsFilteringMetaFolder=prepareSingleMSA_singleMSAGapsFiltering_ch.currentSpeMSAGapsFilteringMetaFolder
         currentSpe_msa_removeGaps_path=prepareSingleMSA_singleMSAGapsFiltering_ch.currentSpe_msa_removeGaps_path
+        currentSpeProSeqPath_ByProteins=prepareSingleMSA_ParseCurSpeFastaByProteins_ch.currentSpeProSeqPath_ByProteins
         
     
     
