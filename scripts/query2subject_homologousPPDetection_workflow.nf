@@ -8,6 +8,8 @@ params.newSTRING_rootFolder="${params.PPI_Coevolution}/STRING_data_11.5" //this 
 params.homologous_ppPath="${params.newSTRING_rootFolder}/homologous_pp"
 params.homologous_SeqMappingPath="${params.homologous_ppPath}/SeqMapping" 
 
+params.CoEvo_data_folder="${params.PPI_Coevolution}/CoEvo_data_STRING11.5/"
+
 
 include {RawFastaFilesAndMetaData_workflow } from './RawFastaFilesAndMetaData_workflow.nf'
 include {prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
@@ -130,11 +132,17 @@ workflow {
                                                                                 Subject_tupleList_ch, homologous_SeqMappingPath_ch,
                                                                                 homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path)
     
+    newSTRING_rootFolder_ch=Channel.fromPath("${params.newSTRING_rootFolder_}",tpye:"dir")
+    homologousPPDetection_preparePairedMSA_ch=homologousPPDetection_preparePairedMSA(Query_tuple_ch,
+                                                                                Subject_tupleList_ch,
+                                                                                newSTRING_rootFolder_ch,
+                homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch.homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path)
+    
     
 }
 
 
-    
+       
         
 
 // prepare homoglogous COG group to pp group  mapping in name unsorted manner. so we can know single protein mapping relations
@@ -330,36 +338,43 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
 // }
 
 
-// // prepare paired MSA for homologous pp in other species 
-// process homologousPPDetection_preparePairedMSA {
+// prepare paired MSA for homologous pp in other species 
+process homologousPPDetection_preparePairedMSA {
     
-//     publishDir "${params.}", mode: "copy"
-    
-    
-//     label "simple_py_process"
-    
-//     debug true //echo true echo directive is deprecated
+    publishDir "${params.CoEvo_data_folder}", mode: "copy"
     
     
-//     input: 
-
-//     output:
+    label "many_cpu_process"
+    
+    debug true //echo true echo directive is deprecated
+    
+    
+    input: 
+        val Query_tuple_ch
+        val Subject_tupleList_ch
+        path newSTRING_rootFolder_ch
+        path homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path
+    output:
+        output "temp_CoEvo_data_folde/", emit: temp_CoEvo_data_folder
        
         
-//     script:
+    script:
         
-//     """
+    """
+        #create this folder to fit to nextflow logic (the input to next process is better the output of previous process), but the whole folder not just the conent will be move to ? \${params.CoEvo_data_folder}, try with and without /?
+        temp_CoEvo_data_folder="temp_CoEvo_data_folder/"
+        mkdir -p \${temp_CoEvo_data_folder}
 
-
-//         export PYTHONPATH="${projectDir}/../src/utilities/" 
-//         python ${projectDir}/python_scripts/homologousPPDetection_preparePairedMSA.py 
+        export PYTHONPATH="${projectDir}/../src/utilities/" 
+        python ${projectDir}/python_scripts/homologousPPDetection_preparePairedMSA.py  \
+         -q ${Query_tuple_ch.join("_")} -s ${Subject_tupleList_ch.join("_")} \
+         -f "{newSTRING_rootFolder}/" -c ${temp_CoEvo_data_folder} \
+         -mb "${homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path}/" \
+         -nf90 ${params.Nf90_thres} -n ${params.large_mp_task_nums}
         
-//     """
+    """
     
-// }
-
-
-
+}
 
 
 
