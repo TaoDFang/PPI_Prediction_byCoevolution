@@ -18,6 +18,7 @@ include {prepareSingleMSA_workflow as subject2_prepareSingleMSA_workflow} from '
 include {prepareSingleMSA_workflow as subject3_prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
 include {Query_PairedMSA_preprocessing_workflow} from  "./Query_PairedMSA_preprocessing_workflow.nf"
 
+include {homologousPPDetection_COG2PPMapping;homologousPPDetection_allQuery2SubjectPPIMapping;homologousPPDetection_SeqMapping;homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous;homologousPPDetection_preparePairedMSA;homologousPPDetection_ComputeHomologousDCA} from "./modules/query2subject_homologousPPDetectionAndCompuation.nf"
 
 spe_list_ch= Channel.value( ["${params.query_currentSpe_TaxID}", "${params.subject1_currentSpe_TaxID}", 
                              "${params.subject2_currentSpe_TaxID}", "${params.subject3_currentSpe_TaxID}"] )
@@ -41,7 +42,7 @@ workflow homologousPPDetectionAndCompuation_workflow{
         query_PPIInfoBeforeCoEvoComp_csv
         SubjectProSeqPath_ByProteins_ch
         QueryProSeqPath_ByProtein_ch
-        homologous_SeqMappingPath_ch
+        // homologous_SeqMappingPath_ch
         newSTRING_rootFolder_ch
         CoEvo_data_folder_ch
         
@@ -53,52 +54,38 @@ workflow homologousPPDetectionAndCompuation_workflow{
         println "configFiles: " + workflow.configFiles
     
     
-        homologousPPDetection_COG2PPMapping_ch=homologousPPDetection_COG2PPMapping(spe_list_ch,RawFastaFilesAndMetaData_workflow.out.eggNOG_folder)
+        homologousPPDetection_COG2PPMapping_ch=homologousPPDetection_COG2PPMapping(spe_list_ch,eggNOG_folder)
 
         homologousPPDetection_allQuery2SubjectPPIMapping_ch=homologousPPDetection_allQuery2SubjectPPIMapping(Query_tuple_ch,Subject_tupleList_ch,
-                                                                      Query_PairedMSA_preprocessing_workflow_ch.PPIInfoBeforeCoEvoComp_csv,
+                                                                      query_PPIInfoBeforeCoEvoComp_csv,
                                                                       homologousPPDetection_COG2PPMapping_ch.homologous_COG2PP_path)
 
-        // here need to change to exclude query species
-        // try with regular expression failed, use nextflow filter operator ? https://stackoverflow.com/questions/76104581/nextflow-regex-on-path
-        SubjectProSeqPath_ByProteins_ch=Channel
-            .fromPath("${params.newSTRING_rootFolder}/*ByProteins/",type:"dir")
-            .filter( ~/^((?!${params.query_currentSpe_TaxID}).)*/ ) // this works ! https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
-            // .filter( ~/.*511145.*/ )  // this works 
-            // .filter( ~/.*(?!511145).*/ )  // this does not work, why ???
-
-        // SubjectSpe_MiddleDatas_ch=Channel
-        //     .fromPath("${params.newSTRING_rootFolder}/*MiddleData/",type:"dir") // here use this path to extract both phylum and species id, can alos use maps in nextflow 
-        //     .filter( ~/^((?!511145).)*/ ) 
-
-
-        QueryProSeqPath_ByProtein_ch=Channel
-            .fromPath("${params.newSTRING_rootFolder}/*ByProteins/",type:"dir")
-            .filter( ~/.*${params.query_currentSpe_TaxID}.*/ )  // this works 
-
-
-
-
+        
+        homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
         homologousPPDetection_SeqMapping_ch=homologousPPDetection_SeqMapping(Query_tuple_ch,
                                                                              Subject_tupleList_ch,
                                                                              QueryProSeqPath_ByProtein_ch,
                                                                              SubjectProSeqPath_ByProteins_ch,
                                                                             homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path,
+                                                                             homologous_SeqMappingPath_ch
                                                                             )
 
 
-        homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
+        // homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
+        //here homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous actuall get output from homologousPPDetection_SeqMapping
+        // it has after homologousPPDetection_SeqMapping process, while current usuage homologous_SeqMappingPath_ch make it kind of parallel
+        // solution change output of process homologousPPDetection_SeqMapping
         homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch=homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous(Query_tuple_ch,
-                                                                                    Subject_tupleList_ch, homologous_SeqMappingPath_ch,
-                                                                                    homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path)
+                                                                                    Subject_tupleList_ch,
+                                                                                    homologousPPDetection_SeqMapping_ch.homologous_SeqMappingPath_ch,
+                                                                                                                                           homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path)
 
-        newSTRING_rootFolder_ch=Channel.fromPath("${params.newSTRING_rootFolder}",type:"dir") 
+        
         homologousPPDetection_preparePairedMSA_ch=homologousPPDetection_preparePairedMSA(Query_tuple_ch,
                                                                                     Subject_tupleList_ch,
                                                                                     newSTRING_rootFolder_ch,
                     homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch.homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path)
 
-        CoEvo_data_folder_ch=Channel.fromPath("${params.CoEvo_data_folder}",type:"dir") 
         homologousPPDetection_ComputeHomologousDCA_ch=homologousPPDetection_ComputeHomologousDCA(Query_tuple_ch,Subject_tupleList_ch,
                                                                                         newSTRING_rootFolder_ch,
                                                                                         CoEvo_data_folder_ch)
@@ -163,6 +150,27 @@ workflow {
                                            query_prepareSingleMSA_workflow.currentSpeMSAGapsFilteringMetaFolder,
                                            query_prepareSingleMSA_workflow.currentSpe_msa_removeGaps_path)
     
+    
+    // homologousPP Detection and Compuation
+    // these are results from *_prepareSingleMSA_workflow
+    SubjectProSeqPath_ByProteins_ch=Channel
+        .fromPath("${params.newSTRING_rootFolder}/*ByProteins/",type:"dir")
+        .filter( ~/^((?!${params.query_currentSpe_TaxID}).)*/ ) // this works ! https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
+    QueryProSeqPath_ByProtein_ch=Channel
+        .fromPath("${params.newSTRING_rootFolder}/*ByProteins/",type:"dir")
+        .filter( ~/.*${params.query_currentSpe_TaxID}.*/ )  // this works 
+    
+    newSTRING_rootFolder_ch=Channel.fromPath("${params.newSTRING_rootFolder}",type:"dir") 
+    CoEvo_data_folder_ch=Channel.fromPath("${params.CoEvo_data_folder}",type:"dir") 
+    
+    homologousPPDetectionAndCompuation_workflow_ch=homologousPPDetectionAndCompuation_workflow(spe_list_ch,RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
+                                                                                     Query_tuple_ch,Subject_tupleList_ch,
+                                                                                     Query_PairedMSA_preprocessing_workflow_ch.PPIInfoBeforeCoEvoComp_csv,
+                                                                                     SubjectProSeqPath_ByProteins_ch,QueryProSeqPath_ByProtein_ch,
+                                                                                     // homologous_SeqMappingPath_ch,
+                                                                                     newSTRING_rootFolder_ch,
+                                                                                     CoEvo_data_folder_ch)
+    
 
     
     
@@ -176,7 +184,7 @@ workflow {
 * optional: test in a tmux sesssion:  tmux attach -t tmux-nextflow 
 conda activate nf-training
 cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
-nextflow run query2subject_homologousPPDetection_workflow.nf -params-file wc-params.json -c nextflow.config -resume
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf -params-file wc-params.json -c nextflow.config -resume
 with "-resume -with-report -with-trace -with-timeline -with-dag dag.png" get more job running report
 to view nextflow log file ,  run "ls -lhtra" ,
 open file ".nextflow.log"

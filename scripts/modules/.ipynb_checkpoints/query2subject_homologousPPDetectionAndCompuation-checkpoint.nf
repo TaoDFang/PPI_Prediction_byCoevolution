@@ -99,11 +99,14 @@ process homologousPPDetection_SeqMapping {
     // #before using each keyword, the path  offSubjectProSeqPath_ByProteinSubjectProSeqPath_ByProtein: 411476ByProteins/
     // #when use each key workd for , we got full path SubjectProSeqPath_ByProtein: /mnt/mnemo6/tao/nextflow/PPI_Coevolution/STRING_data_11.5/411476ByProteins/, become a value channle now ??
         path homologous_allQuery2SubjectPPIMapping_path
+        path homologous_SeqMappingPath_ch
 
         
 //     output:
 //         path "${params.homologous_SeqMappingPath}/EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
     // Subject_speID is defined with bash script, cause problelm, maybe exract diffrect from by SubjectProSeqPath_ByProtein_ch by grooy command
+    output:
+        path "${homologous_SeqMappingPath_ch}", emit: homologous_SeqMappingPath_ch
         
     script:
         
