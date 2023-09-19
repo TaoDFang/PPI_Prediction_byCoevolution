@@ -11,6 +11,9 @@ import os
 import pickle 
 
 
+from  create_pairedMSA import get_pairedMSA_inOneRun
+from create_pairedMSA import  getSameProteinRatio
+
 
 if __name__ == '__main__':
 
@@ -44,13 +47,13 @@ if __name__ == '__main__':
     
     query_EggNOG_maxLevel,query_TaxID=Query_tuple
     
-    with open(homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path+"NameUnsorted_Query2Subject_QueSpeAllPPI_BestHomologous_listDict.pickle", 'wb') as handle:
+    with open(homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path+"NameUnsorted_Query2Subject_QueSpeAllPPI_BestHomologous_listDict.pickle", 'rb') as handle:
         Query2Subject_QueSpeAllPPI_BestHomologous_listDict=pickle.load(handle)  
 
 
 
     for currentSubject_EggNOG_maxLevel,currentSubject_TaxID in Subject_tupleList:
-        
+        print(currentSubject_EggNOG_maxLevel,currentSubject_TaxID)
         # adjust these three folder to fit to nextlfow convention
         # newSTRING_rootFolder="/mnt/mnemo6/tao/PPI_Coevolution/STRING_data_11.5/"
         # CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/"
@@ -60,13 +63,13 @@ if __name__ == '__main__':
         #then the created folder is also in the nextflow temperaroly folder ?
         
         #if without prefix, its for subject species 
-       
+        input_root_folder=CoEvo_data_folder+currentSubject_TaxID+"_EggNOGmaxLevel"+currentSubject_EggNOG_maxLevel+"_eggNOGfilteredData/"
         pairedMSA_unfiltered_folder=input_root_folder+"pair_MSA_unfiltered_PasteAlign/"
         pairedMSA_hhfilter_folder=input_root_folder+"pair_MSA_hhfilter_PasteAlign/"
         pairedMSA_Nf90_folder = input_root_folder+"pair_MSA_Nf90_PasteAlign/"
 
-        DCA_coevolutoin_path=input_root_folder+"coevolutoin_result_DCA/"
-        MI_coevolutoin_path=input_root_folder+"coevolutoin_result_MI/"
+        # DCA_coevolutoin_path=input_root_folder+"coevolutoin_result_DCA/"
+        # MI_coevolutoin_path=input_root_folder+"coevolutoin_result_MI/"
 
         #this two folder denition is inherated from previous pipeline
         #previous  we run the the created pairedMSA pipeline for subject species independently as we did for query speceis
@@ -84,18 +87,17 @@ if __name__ == '__main__':
         Benchmark_folder=input_root_folder+Query_prefix+"AllPPI_Benchmark/" #
 
         currentSubject_hmmalign_path=newSTRING_rootFolder+currentSubject_TaxID+"_EggNOGmaxLevel"+currentSubject_EggNOG_maxLevel+"_newSingleMSA_hmmalign_removeGaps_keepGapPos/"
-
-            currentSpeMSAGapsFilteringMetaFolder=newSTRING_rootFolder+currentSubject_TaxID+"_EggNOGmaxLevel"+currentSubject_EggNOG_maxLevel+"_MSAGapsFiltering/"
+        currentSpeMSAGapsFilteringMetaFolder=newSTRING_rootFolder+currentSubject_TaxID+"_EggNOGmaxLevel"+currentSubject_EggNOG_maxLevel+"_MSAGapsFiltering/"
 
 
         if not os.path.exists(Benchmark_folder):
             os.makedirs(Benchmark_folder)
 
-        if not os.path.exists(DCA_coevolutoin_path):
-            os.makedirs(DCA_coevolutoin_path)
+#         if not os.path.exists(DCA_coevolutoin_path):
+#             os.makedirs(DCA_coevolutoin_path)
 
-        if not os.path.exists(MI_coevolutoin_path):
-            os.makedirs(MI_coevolutoin_path)
+#         if not os.path.exists(MI_coevolutoin_path):
+#             os.makedirs(MI_coevolutoin_path)
 
         if not os.path.exists(pairedMSA_unfiltered_folder):
             os.makedirs(pairedMSA_unfiltered_folder)
@@ -114,20 +116,25 @@ if __name__ == '__main__':
             with open(pairedMSA_sameProteinRatio_csv, 'w') as fp:
                 pass
 
+        if not os.path.exists(original_pairedMSA_Nf90_csv):
+            with open(original_pairedMSA_Nf90_csv, 'w') as fp:
+                pass
+
+        if not os.path.exists(original_pairedMSA_sameProteinRatio_csv):
+            with open(original_pairedMSA_sameProteinRatio_csv, 'w') as fp:
+                pass
        
 
 
-        currentSubject_Query2Subject_QueSpePPHighDCA_BestHomologous_dict=Query2Subject_QueSpePPHighDCA_BestHomologous_listDict[(currentSubject_EggNOG_maxLevel,currentSubject_TaxID)]
+        currentSubject_Query2Subject_QueSpeAllPPI_BestHomologous_dict=Query2Subject_QueSpeAllPPI_BestHomologous_listDict[(currentSubject_EggNOG_maxLevel,currentSubject_TaxID)]
 
-
-
-        print("len(currentQuery_Subject2Query_QueSpePPHighDCA_BestHomologous_dict):",len(currentSubject_Query2Subject_QueSpePPHighDCA_BestHomologous_dict))
-        print(list(currentSubject_QuerySubject_QueSpePPHighDCA_BestHomologous_dict.items())[0:3])
+        print("len(currentQuery_Subject2Query_QueSpeAllPPI_BestHomologous_dict):",len(currentSubject_Query2Subject_QueSpeAllPPI_BestHomologous_dict))
+        print(list(currentSubject_Query2Subject_QueSpeAllPPI_BestHomologous_dict.items())[0:3])
 
 
         Current_Subject_homologousPPs=list()
-        for que_pp , best_subject_pp in currentSubject_Query2Subject_QueSpePPHighDCA_BestHomologous_dict.items():
-            Current_Query_homologousPPs.append(best_subject_pp)
+        for que_pp , best_subject_pp in currentSubject_Query2Subject_QueSpeAllPPI_BestHomologous_dict.items():
+            Current_Subject_homologousPPs.append(best_subject_pp)
         print("len(Current_Subject_homologousPPs):",len(Current_Subject_homologousPPs))
         Current_Subject_homologousPPs=list(set(Current_Subject_homologousPPs))
         print("len(set(Current_Subject_homologousPPs)):",len(Current_Subject_homologousPPs))
@@ -186,10 +193,15 @@ if __name__ == '__main__':
         # by  same protein ratio on two side of MSA 
 
         # first need to update postive and negative ppi to only use pp that have large Nf90 value 
-        original_pairedMSA_Nf90_frame = pd.read_csv(original_pairedMSA_Nf90_csv,header=None,index_col=None,sep="\t")
-        print("original_pairedMSA_Nf90_frame.shape:",original_pairedMSA_Nf90_frame.shape)
+        if os.path.getsize(original_pairedMSA_Nf90_csv) == 0:
+            original_pairedMSA_Nf90_frame=pd.DataFrame()
+        else:
+            original_pairedMSA_Nf90_frame = pd.read_csv(original_pairedMSA_Nf90_csv,header=None,index_col=None,sep="\t")
+            print("original_pairedMSA_Nf90_frame.shape:",original_pairedMSA_Nf90_frame.shape)
+        
         pairedMSA_Nf90_frame = pd.read_csv(pairedMSA_Nf90_csv,header=None,index_col=None,sep="\t")
         print("pairedMSA_Nf90_frame.shape:",pairedMSA_Nf90_frame.shape)
+        
         pairedMSA_Nf90_frame=pd.concat([original_pairedMSA_Nf90_frame,pairedMSA_Nf90_frame,]) 
         print("pairedMSA_Nf90_frame.shape:",pairedMSA_Nf90_frame.shape)
         pairedMSA_Nf90_list=pairedMSA_Nf90_frame.iloc[:,[0,1]].values.tolist()
@@ -206,15 +218,22 @@ if __name__ == '__main__':
 
         #heck paired MSA of homologus , if same proteins  from same species in both side
 
+        if os.path.getsize(original_pairedMSA_sameProteinRatio_csv) == 0:
+            original_pairedMSA_sameProteinRatio_frame=pd.DataFrame()
+        else:
+            original_pairedMSA_sameProteinRatio_frame = pd.read_csv(original_pairedMSA_sameProteinRatio_csv,header=None,index_col=None,sep="\t")
+            
         if os.path.getsize(pairedMSA_sameProteinRatio_csv) == 0:
-            pairedMSA_sameProteinRatio_dict=dict()
+            pairedMSA_sameProteinRatio_frame=pd.DataFrame()
         else:
             pairedMSA_sameProteinRatio_frame = pd.read_csv(pairedMSA_sameProteinRatio_csv,header=None,index_col=None,sep="\t")
-            original_pairedMSA_sameProteinRatio_frame = pd.read_csv(original_pairedMSA_sameProteinRatio_csv,header=None,index_col=None,sep="\t")
-            pairedMSA_sameProteinRatio_frame=pd.concat([original_pairedMSA_sameProteinRatio_frame,pairedMSA_sameProteinRatio_frame])
-            pairedMSA_sameProteinRatio_list=pairedMSA_sameProteinRatio_frame.values.tolist()
-            pairedMSA_sameProteinRatio_dict=dict([((p1,p2),r) for p1 , p2 , r in pairedMSA_sameProteinRatio_list])
-            #print(pairedMSA_sameProteinRatio_frame.shape)
+            
+            
+
+        pairedMSA_sameProteinRatio_frame=pd.concat([original_pairedMSA_sameProteinRatio_frame,pairedMSA_sameProteinRatio_frame])
+        pairedMSA_sameProteinRatio_list=pairedMSA_sameProteinRatio_frame.values.tolist()
+        pairedMSA_sameProteinRatio_dict=dict([((p1,p2),r) for p1 , p2 , r in pairedMSA_sameProteinRatio_list])
+        #print(pairedMSA_sameProteinRatio_frame.shape)
 
 
         Current_Subject_homologousPPs_ArgForSamePro=[(p1,p2,pairedMSA_Nf90_folder) for p1, p2, in Current_Subject_homologousPPs if (p1, p2) not in pairedMSA_sameProteinRatio_dict]
@@ -244,7 +263,10 @@ if __name__ == '__main__':
 
         sameProtein_ratio_frame = pd.read_csv(pairedMSA_sameProteinRatio_csv,header=None,index_col=None,sep="\t")
 
-        original_sameProtein_ratio_frame = pd.read_csv(original_pairedMSA_sameProteinRatio_csv,header=None,index_col=None,sep="\t")
+        if os.path.getsize(original_pairedMSA_sameProteinRatio_csv) == 0:
+            original_sameProtein_ratio_frame=pd.DataFrame()
+        else:
+            original_sameProtein_ratio_frame = pd.read_csv(original_pairedMSA_sameProteinRatio_csv,header=None,index_col=None,sep="\t")
 
 
         sameProtein_ratio_frame=pd.concat([original_sameProtein_ratio_frame,sameProtein_ratio_frame])
@@ -258,8 +280,8 @@ if __name__ == '__main__':
 
 
 
-        Current_Query_homologousPPs=[pp for pp in Current_Query_homologousPPs if pp not in large_sameProtein_ratio_dict]
-        print(len(Current_Query_homologousPPs))
+        Current_Subject_homologousPPs=[pp for pp in Current_Subject_homologousPPs if pp not in large_sameProtein_ratio_dict]
+        print(len(Current_Subject_homologousPPs))
 
 
 

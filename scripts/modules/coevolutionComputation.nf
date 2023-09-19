@@ -18,6 +18,8 @@ process coevolutionComputation_mfDCA {
     // publishDir "${params.input_root_folder}",mode: "copy"
     debug true //echo true echo directive is deprecated
     
+    label "coevolutionComputation_mfDCA_process"
+    
     input: 
         path DCA_coevolutoin_path
         path currentSpeMSAGapsFilteringMetaFolder
