@@ -19,6 +19,7 @@
     "hmmalign_path":"/mnt/mnemo5/tao/BeeiveProgram/HMMER3/bin/hmmalign",
     "blastp_path":"/mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/blastp",
     "Nf90_thres":"16",
+    "pydca_conda":"/mnt/mnemo5/tao/anaconda3/envs/py37_pydca",
     "end": "end"
 }
 

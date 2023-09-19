@@ -77,6 +77,7 @@ process homologousPPDetection_allQuery2SubjectPPIMapping {
 // do blastp/mapping between single query proteins and single subject proteins 
 process homologousPPDetection_SeqMapping {
     
+    publishDir "${params.homologous_SeqMappingPath}",mode: "copy", saveAs: { filename ->  filename.substring(12) } 
     // publishDir "${homologous_SeqMappingPath}", mode: "copy" , here the output is aboluste path so we dont need to publish data
     // the reason we do this is that this process need to be run multiple times parallely and need to write to same same folder, 
     // this cause problems 
@@ -99,14 +100,15 @@ process homologousPPDetection_SeqMapping {
     // #before using each keyword, the path  offSubjectProSeqPath_ByProteinSubjectProSeqPath_ByProtein: 411476ByProteins/
     // #when use each key workd for , we got full path SubjectProSeqPath_ByProtein: /mnt/mnemo6/tao/nextflow/PPI_Coevolution/STRING_data_11.5/411476ByProteins/, become a value channle now ??
         path homologous_allQuery2SubjectPPIMapping_path
-        path homologous_SeqMappingPath_ch
 
         
 //     output:
 //         path "${params.homologous_SeqMappingPath}/EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
     // Subject_speID is defined with bash script, cause problelm, maybe exract diffrect from by SubjectProSeqPath_ByProtein_ch by grooy command
     output:
-        path "${homologous_SeqMappingPath_ch}", emit: homologous_SeqMappingPath_ch
+    //     path "${homologous_SeqMappingPath_ch}", emit: homologous_SeqMappingPath_ch
+        // path "EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
+        path "temp_folder/*", emit: temp_folder
         
     script:
         
@@ -122,15 +124,18 @@ process homologousPPDetection_SeqMapping {
         
         echo "Subject_speID: \${Subject_speID}"
         
-    current_homologous_SeqMappingPath="${params.homologous_SeqMappingPath}/EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/"
+        temp_folder="temp_folder/"
+        mkdir -p \${temp_folder} 
+        
+    current_homologous_SeqMappingPath="\${temp_folder}EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/"
 
-        mkdir -p \${current_homologous_SeqMappingPath}
+        mkdir -p \${current_homologous_SeqMappingPath} 
         
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/homologousPPDetection_SeqMapping.py -q ${Query_tuple_ch.join("_")}  \
-        -s ${Subject_tupleList_ch.join("_")} \
-        -qb "${QueryProSeqPath_ByProtein_ch}/" -sb "${SubjectProSeqPath_ByProtein_ch}/"  -seqM \${current_homologous_SeqMappingPath} \
+        -s   ${Subject_tupleList_ch.join("_")} \
+        -qb "${QueryProSeqPath_ByProtein_ch}/"  -sb "${SubjectProSeqPath_ByProtein_ch}/"  -seqM \${current_homologous_SeqMappingPath} \
         -m "${homologous_allQuery2SubjectPPIMapping_path}/" -bp ${params.blastp_path} -n ${params.middle_mp_task_nums}
                
         
@@ -153,6 +158,7 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
     input: 
         val Query_tuple_ch
         val Subject_tupleList_ch
+        path temp_folder
         path homologous_SeqMappingPath_ch
         path homologous_allQuery2SubjectPPIMapping_path
         
@@ -162,6 +168,7 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
     script:
         
     """
+        echo "temp folder is: ${temp_folder}"
         homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path="${Query_tuple_ch[1]}_EggNOGmaxLevel${Query_tuple_ch[0]}_allQuery2SubjectPPIMapping_singleProteinBlastp/" 
         mkdir -p \${homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path}
         
@@ -197,7 +204,7 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
 // prepare paired MSA for homologous pp in other species 
 process homologousPPDetection_preparePairedMSA {
     
-    publishDir "${params.CoEvo_data_folder}", mode: "copy", saveAs: { filename ->  filename.substring(23) } // here the purpose is to only publish subfolder in output path "temp_CoEvo_data_folder/", https://nextflow-io.github.io/patterns/publish-rename-outputs/, https://www.tutorialspoint.com/groovy/groovy_substring.htm
+//     publishDir "${params.CoEvo_data_folder}", mode: "copy", saveAs: { filename ->  filename.substring(23) } // here the purpose is to only publish subfolder in output path "temp_CoEvo_data_folder/", https://nextflow-io.github.io/patterns/publish-rename-outputs/, https://www.tutorialspoint.com/groovy/groovy_substring.htm
     
     
     label "many_cpu_process"
@@ -209,38 +216,43 @@ process homologousPPDetection_preparePairedMSA {
         val Query_tuple_ch
         val Subject_tupleList_ch
         path newSTRING_rootFolder_ch
+        path CoEvo_data_folder_ch
         path homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path
     output:
-        path "temp_CoEvo_data_folder/*", emit: temp_CoEvo_data_folder
+        path "temp_CoEvo_data_folder/", emit: temp_CoEvo_data_folder
        
         
     script:
         
     """
-        #create this folder to fit to nextflow logic (the input to next process is better the output of previous process), but the whole folder not just the conent will be move to ? \${params.CoEvo_data_folder}, try with and without /?
+        #output this folder to process homologousPPDetection_ComputeHomologousDCA to force it to be executed after current process
         temp_CoEvo_data_folder="temp_CoEvo_data_folder/"
         mkdir -p \${temp_CoEvo_data_folder}
 
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/homologousPPDetection_preparePairedMSA.py  \
          -q ${Query_tuple_ch.join("_")}    -s ${Subject_tupleList_ch.join("_")} \
-         -f "${newSTRING_rootFolder_ch}/"  -c \${temp_CoEvo_data_folder} \
+         -f "${newSTRING_rootFolder_ch}/"  -c \${CoEvo_sdata_folder_ch} \
          -mb "${homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path}/" \
-         -nf90  ${params.Nf90_thres}    -n  ${params.large_mp_task_nums}
+         -nf90  ${params.Nf90_thres}     -n  ${params.large_mp_task_nums}
         
     """
     
 }
 
-
-
-
+// but one problem remain, as input_root_folder is at temp_CoEvo_data_folder from last process, so everrytime
+// DCA_coevolutoin_path fodler will created from empty
+        // #create this folder to fit to nextflow logic (the input to next process is better the output of previous process), but the whole folder not just the conent will be move to ? \${params.CoEvo_data_folder}, try with and without /?
+        // temp_CoEvo_data_folder="temp_CoEvo_data_folder/"
+        // mkdir -p \${temp_CoEvo_data_folder}
 
 
 // !!!!
 //for need to do DCA compuation for millions of PPs , if interupt, better not re-start from scratch 
 // in this case, better not use output to the temperory working directory and then copy to publishDir
 // but direct use final output folder(absolute path) as the input channel or as input parameters 
+
+
 process homologousPPDetection_ComputeHomologousDCA {
     // publishDir "${params.input_root_folder}",mode: "copy"
     debug true //echo true echo directive is deprecated
@@ -253,10 +265,11 @@ process homologousPPDetection_ComputeHomologousDCA {
         val Subject_tupleList_ch
         path newSTRING_rootFolder_ch
         path CoEvo_data_folder_ch
+        path temp_CoEvo_data_folder
     // output:
     script: 
     """      
-        
+        echo "temp_CoEvo_data_folder is ${temp_CoEvo_data_folder}"
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
 

@@ -61,34 +61,36 @@ workflow homologousPPDetectionAndCompuation_workflow{
                                                                       homologousPPDetection_COG2PPMapping_ch.homologous_COG2PP_path)
 
         
-        homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
         homologousPPDetection_SeqMapping_ch=homologousPPDetection_SeqMapping(Query_tuple_ch,
                                                                              Subject_tupleList_ch,
                                                                              QueryProSeqPath_ByProtein_ch,
                                                                              SubjectProSeqPath_ByProteins_ch,
                                                                             homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path,
-                                                                             homologous_SeqMappingPath_ch
                                                                             )
-
 
         // homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
         //here homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous actuall get output from homologousPPDetection_SeqMapping
-        // it has after homologousPPDetection_SeqMapping process, while current usuage homologous_SeqMappingPath_ch make it kind of parallel
+        // it has to be after homologousPPDetection_SeqMapping process, while current usuage homologous_SeqMappingPath_ch make it kind of parallel
         // solution change output of process homologousPPDetection_SeqMapping
+        homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
         homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch=homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous(Query_tuple_ch,
                                                                                     Subject_tupleList_ch,
-                                                                                    homologousPPDetection_SeqMapping_ch.homologous_SeqMappingPath_ch,
+                                                                                    homologousPPDetection_SeqMapping_ch.temp_folder,
+                                                                                    homologous_SeqMappingPath_ch,
                                                                                                                                            homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path)
 
         
         homologousPPDetection_preparePairedMSA_ch=homologousPPDetection_preparePairedMSA(Query_tuple_ch,
                                                                                     Subject_tupleList_ch,
                                                                                     newSTRING_rootFolder_ch,
+                                                                                    CoEvo_data_folder_ch,
                     homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch.homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path)
-
+        
+        //problem here is now proceess start without waiting process homologousPPDetection_preparePairedMSA to be fished 
         homologousPPDetection_ComputeHomologousDCA_ch=homologousPPDetection_ComputeHomologousDCA(Query_tuple_ch,Subject_tupleList_ch,
                                                                                         newSTRING_rootFolder_ch,
-                                                                                        CoEvo_data_folder_ch)
+                                                                                        CoEvo_data_folder_ch,
+                                                                                        homologousPPDetection_preparePairedMSA_ch.temp_CoEvo_data_folder)
 
 
     
