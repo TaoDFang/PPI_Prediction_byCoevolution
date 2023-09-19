@@ -232,7 +232,7 @@ process homologousPPDetection_preparePairedMSA {
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/homologousPPDetection_preparePairedMSA.py  \
          -q ${Query_tuple_ch.join("_")}    -s ${Subject_tupleList_ch.join("_")} \
-         -f "${newSTRING_rootFolder_ch}/"  -c \${CoEvo_sdata_folder_ch} \
+         -f "${newSTRING_rootFolder_ch}/"  -c "${CoEvo_data_folder_ch}/" \
          -mb "${homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path}/" \
          -nf90  ${params.Nf90_thres}     -n  ${params.large_mp_task_nums}
         

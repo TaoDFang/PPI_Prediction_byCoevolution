@@ -249,7 +249,7 @@ if __name__ == '__main__':
             pool.close() 
 
 
-            sameProtein_ratio_frame=pd.DataFrame(sameProtein_ratio_results,columns=["protein1","protein2","saemProtein_ratio"])
+            sameProtein_ratio_frame=pd.DataFrame(sameProtein_ratio_results,columns=["protein1","protein2","sameProtein_ratio"])
             sameProtein_ratio_frame.to_csv(pairedMSA_sameProteinRatio_csv,mode="a",
                                 header=None,index=None,sep="\t")
             print("sameProtein_ratio_frame.shape:",sameProtein_ratio_frame.shape)
@@ -286,10 +286,11 @@ if __name__ == '__main__':
 
 
         Current_Subject_homologousPPs_beforeDCAcomputation_file=Benchmark_folder+"Current_Subject_BestHomologousPPs_beforeDCAcomputation.pickle"
-        if not os.path.exists(Current_Subject_homologousPPs_beforeDCAcomputation_file):
-            with open(Current_Subject_homologousPPs_beforeDCAcomputation_file, 'wb') as handle:
-                    pickle.dump(Current_Subject_homologousPPs,handle)
-
+        # if not os.path.exists(Current_Subject_homologousPPs_beforeDCAcomputation_file):
+        #     with open(Current_Subject_homologousPPs_beforeDCAcomputation_file, 'wb') as handle:
+        #             pickle.dump(Current_Subject_homologousPPs,handle)
+        with open(Current_Subject_homologousPPs_beforeDCAcomputation_file, 'wb') as handle:
+                pickle.dump(Current_Subject_homologousPPs,handle)
 
 
         
