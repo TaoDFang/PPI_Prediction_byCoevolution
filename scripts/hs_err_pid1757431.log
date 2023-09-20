@@ -1,0 +1,1146 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 120 bytes for AllocateHeap
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Unscaled Compressed Oops mode in which the Java heap is
+#     placed in the first 4GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 4GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (allocation.cpp:46), pid=1757431, tid=1757500
+#
+# JRE version: OpenJDK Runtime Environment (11.0.1+13) (build 11.0.1+13-LTS)
+# Java VM: OpenJDK 64-Bit Server VM (11.0.1+13-LTS, mixed mode, tiered, compressed oops, serial gc, linux-amd64)
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E" (or dumping to /home/tfang/PPI_Prediction_byCoevolution/scripts/core.1757431)
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.nio.file.spi=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.fs=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.ftp=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.file=ALL-UNNAMED --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/java.util.regex=ALL-UNNAMED -Xms500M -Xmx2G -Djava.io.tmpdir=/sctmp/tfang -Djava.library.path=/cluster/22-05-9-1/munge-0.5.15/lib:/cluster/22-05-9-1/slurm-22-05-9-1/lib:/cluster/22-05-9-1/pmix-4.2.3/lib:/cluster/22-05-9-1/libevent-2.1.12/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib -Dfile.encoding=UTF-8 -Dcapsule.app=nextflow_23.04.1 -Djava.awt.headless=true -Dcapsule.jar=/data/tfang/conda-envs/nf-training/share/nextflow/dist/23.04.1/nextflow-23.04.1-one.jar -Dcom.sun.security.enableAIAcaIssuers=true nextflow.cli.Launcher run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow -c nextflow.config -profile slurm -resume
+
+Host: x86_64, 16 cores, 61G, x86_64
+Time: Wed Sep 20 17:44:10 2023 CEST elapsed time: 7 seconds (0d 0h 0m 7s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f4824fdc000):  JavaThread "Actor Thread 5" daemon [_thread_in_vm, id=1757500, stack(0x00007f47edd02000,0x00007f47ede03000)]
+
+Stack: [0x00007f47edd02000,0x00007f47ede03000],  sp=0x00007f47eddfd8a0,  free space=1006k
+Native frames: (J=compiled Java code, A=aot compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0xe34b81]
+[error occurred during error reporting (printing native stack), id 0xe0000001, Out of Memory Error (/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/memory/allocation.cpp:46)]
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 2158  java.lang.ClassLoader.defineClass1(Ljava/lang/ClassLoader;Ljava/lang/String;[BIILjava/security/ProtectionDomain;Ljava/lang/String;)Ljava/lang/Class; java.base@11.0.1 (0 bytes) @ 0x00007f48144d7e70 [0x00007f48144d7dc0+0x00000000000000b0]
+J 1475 c1 java.lang.ClassLoader.defineClass(Ljava/lang/String;[BIILjava/security/ProtectionDomain;)Ljava/lang/Class; java.base@11.0.1 (43 bytes) @ 0x00007f480d19a764 [0x00007f480d19a420+0x0000000000000344]
+j  org.codehaus.groovy.reflection.ClassLoaderForClassArtifacts.define(Ljava/lang/String;[B)Ljava/lang/Class;+19
+j  org.codehaus.groovy.reflection.ClassLoaderForClassArtifacts.lambda$defineClassAndGetConstructor$0(Ljava/lang/String;[B)Ljava/lang/Class;+3
+j  org.codehaus.groovy.reflection.ClassLoaderForClassArtifacts$$Lambda$121.run()Ljava/lang/Object;+12
+v  ~StubRoutines::call_stub
+J 1253  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedAction;)Ljava/lang/Object; java.base@11.0.1 (0 bytes) @ 0x00007f481449a20f [0x00007f481449a1c0+0x000000000000004f]
+j  org.codehaus.groovy.reflection.ClassLoaderForClassArtifacts.defineClassAndGetConstructor(Ljava/lang/String;[B)Ljava/lang/reflect/Constructor;+8
+j  org.codehaus.groovy.runtime.callsite.CallSiteGenerator.compilePogoMethod(Lorg/codehaus/groovy/reflection/CachedMethod;)Ljava/lang/reflect/Constructor;+38
+J 5107 c1 org.codehaus.groovy.reflection.CachedMethod.createPogoMetaMethodSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/MetaClassImpl;[Ljava/lang/Class;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (128 bytes) @ 0x00007f480d8527cc [0x00007f480d852680+0x000000000000014c]
+J 5130 c1 org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite.createCachedMethodSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/MetaClassImpl;Lorg/codehaus/groovy/reflection/CachedMethod;[Ljava/lang/Class;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (60 bytes) @ 0x00007f480d864704 [0x00007f480d8643e0+0x0000000000000324]
+J 5070 c1 groovy.lang.MetaClassImpl.createPogoCallSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (109 bytes) @ 0x00007f480d83c724 [0x00007f480d83c300+0x0000000000000424]
+J 5135 c1 org.codehaus.groovy.runtime.callsite.CallSiteArray.createPogoSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (53 bytes) @ 0x00007f480d86527c [0x00007f480d865100+0x000000000000017c]
+J 4065 c1 org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (64 bytes) @ 0x00007f480d61f58c [0x00007f480d61f4a0+0x00000000000000ec]
+J 4724 c1 org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (7 bytes) @ 0x00007f480d76af4c [0x00007f480d76aee0+0x000000000000006c]
+J 5019 c1 org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(Ljava/lang/Object;)Ljava/lang/Object; (9 bytes) @ 0x00007f480d8225ac [0x00007f480d822540+0x000000000000006c]
+j  nextflow.processor.TaskContext.<init>(Lnextflow/processor/TaskProcessor;Ljava/util/Map;)V+201
+j  nextflow.processor.TaskContext.<init>(Lnextflow/processor/TaskProcessor;)V+20
+v  ~StubRoutines::call_stub
+J 2135  jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Ljava/lang/reflect/Constructor;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (0 bytes) @ 0x00007f48144d5c23 [0x00007f48144d5bc0+0x0000000000000063]
+J 2134 c1 jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (89 bytes) @ 0x00007f480d2e1094 [0x00007f480d2e0d40+0x0000000000000354]
+J 4248 c1 jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (9 bytes) @ 0x00007f481459ce84 [0x00007f481459ce40+0x0000000000000044]
+J 5017 c1 org.codehaus.groovy.reflection.CachedConstructor.invoke([Ljava/lang/Object;)Ljava/lang/Object; (113 bytes) @ 0x00007f480d820fec [0x00007f480d820de0+0x000000000000020c]
+J 5083 c1 org.codehaus.groovy.runtime.callsite.ConstructorSite$ConstructorSiteNoUnwrapNoCoerce.callConstructor(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (31 bytes) @ 0x00007f480d846a94 [0x00007f480d846a00+0x0000000000000094]
+j  org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallConstructor(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+11
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+3
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+33
+j  nextflow.processor.TaskProcessor.createTaskRun(Lnextflow/processor/TaskStartParams;)Lnextflow/processor/TaskRun;+134
+v  ~StubRoutines::call_stub
+J 3679  jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (0 bytes) @ 0x00007f481456adb7 [0x00007f481456ad40+0x0000000000000077]
+J 2691 c1 jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (104 bytes) @ 0x00007f480d3dadac [0x00007f480d3daa20+0x000000000000038c]
+J 4254 c1 jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (10 bytes) @ 0x00007f481459d204 [0x00007f481459d1c0+0x0000000000000044]
+J 5145 c1 org.codehaus.groovy.runtime.callsite.PlainObjectMetaMethodSite.doInvoke(Ljava/lang/Object;[Ljava/lang/Object;Ljava/lang/reflect/Method;)Ljava/lang/Object; (34 bytes) @ 0x00007f480d869424 [0x00007f480d869320+0x0000000000000104]
+j  org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite$PogoCachedMethodSiteNoUnwrapNoCoerce.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+J 5108 c1 org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite.callCurrent(Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object; (29 bytes) @ 0x00007f480d853adc [0x00007f480d853a00+0x00000000000000dc]
+j  org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object;+17
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object;+3
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(Lgroovy/lang/GroovyObject;Ljava/lang/Object;)Ljava/lang/Object;+33
+j  nextflow.processor.TaskProcessor.invokeTask([Ljava/lang/Object;)V+335
+j  nextflow.processor.InvokeTaskAdapter.call([Ljava/lang/Object;)Ljava/lang/Object;+5
+j  groovyx.gpars.dataflow.operator.DataflowOperatorActor.startTask(Ljava/util/List;)V+19
+j  groovyx.gpars.dataflow.operator.ForkingDataflowOperatorActor.access$001(Lgroovyx/gpars/dataflow/operator/ForkingDataflowOperatorActor;Ljava/util/List;)V+2
+j  groovyx.gpars.dataflow.operator.ForkingDataflowOperatorActor$1.run()V+8
+j  java.util.concurrent.ThreadPoolExecutor.runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V+92 java.base@11.0.1
+j  java.util.concurrent.ThreadPoolExecutor$Worker.run()V+5 java.base@11.0.1
+j  java.lang.Thread.run()V+11 java.base@11.0.1
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007f47edb10010, length=20, elements={
+0x00007f4824014000, 0x00007f48240ca000, 0x00007f48240ce800, 0x00007f48240e5000,
+0x00007f48240e6800, 0x00007f48240e8800, 0x00007f48240ea800, 0x00007f48241a3800,
+0x00007f48241aa800, 0x00007f4824e56800, 0x00007f4824e65000, 0x00007f4824ef2000,
+0x00007f4824f77800, 0x00007f4824f78800, 0x00007f4824fce800, 0x00007f4824fd7000,
+0x00007f4824fd8000, 0x00007f4824fda000, 0x00007f4824fdc000, 0x00007f47edc32800
+}
+
+Java Threads: ( => current thread )
+  0x00007f4824014000 JavaThread "main" [_thread_blocked, id=1757465, stack(0x00007f482bdcc000,0x00007f482becd000)]
+  0x00007f48240ca000 JavaThread "Reference Handler" daemon [_thread_blocked, id=1757467, stack(0x00007f4829950000,0x00007f4829a51000)]
+  0x00007f48240ce800 JavaThread "Finalizer" daemon [_thread_blocked, id=1757468, stack(0x00007f482984f000,0x00007f4829950000)]
+  0x00007f48240e5000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=1757469, stack(0x00007f4828d5d000,0x00007f4828e5e000)]
+  0x00007f48240e6800 JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=1757470, stack(0x00007f4828c5c000,0x00007f4828d5d000)]
+  0x00007f48240e8800 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=1757471, stack(0x00007f4828b5b000,0x00007f4828c5c000)]
+  0x00007f48240ea800 JavaThread "Sweeper thread" daemon [_thread_blocked, id=1757472, stack(0x00007f4828a5a000,0x00007f4828b5b000)]
+  0x00007f48241a3800 JavaThread "Common-Cleaner" daemon [_thread_blocked, id=1757473, stack(0x00007f4828959000,0x00007f4828a5a000)]
+  0x00007f48241aa800 JavaThread "Service Thread" daemon [_thread_blocked, id=1757474, stack(0x00007f4828854000,0x00007f4828955000)]
+  0x00007f4824e56800 JavaThread "process reaper" daemon [_thread_blocked, id=1757485, stack(0x00007f48280cc000,0x00007f48280ee000)]
+  0x00007f4824e65000 JavaThread "Thread-1" daemon [_thread_blocked, id=1757486, stack(0x00007f480c08a000,0x00007f480c18b000)]
+  0x00007f4824ef2000 JavaThread "AnsiLogObserver" [_thread_blocked, id=1757491, stack(0x00007f47ee6f1000,0x00007f47ee7f2000)]
+  0x00007f4824f77800 JavaThread "Task monitor" [_thread_blocked, id=1757494, stack(0x00007f47ee5f0000,0x00007f47ee6f1000)]
+  0x00007f4824f78800 JavaThread "Task submitter" daemon [_thread_blocked, id=1757495, stack(0x00007f47ee4ef000,0x00007f47ee5f0000)]
+  0x00007f4824fce800 JavaThread "Actor Thread 1" daemon [_thread_blocked, id=1757496, stack(0x00007f47ee1ee000,0x00007f47ee2ef000)]
+  0x00007f4824fd7000 JavaThread "Actor Thread 2" daemon [_thread_blocked, id=1757497, stack(0x00007f47ee00d000,0x00007f47ee10e000)]
+  0x00007f4824fd8000 JavaThread "Actor Thread 3" daemon [_thread_blocked, id=1757498, stack(0x00007f47edf0c000,0x00007f47ee00d000)]
+  0x00007f4824fda000 JavaThread "Actor Thread 4" daemon [_thread_in_vm, id=1757499, stack(0x00007f47ede0b000,0x00007f47edf0c000)]
+=>0x00007f4824fdc000 JavaThread "Actor Thread 5" daemon [_thread_in_vm, id=1757500, stack(0x00007f47edd02000,0x00007f47ede03000)]
+  0x00007f47edc32800 JavaThread "Actor Thread 6" daemon [_thread_blocked, id=1757505, stack(0x00007f47edb14000,0x00007f47edc15000)]
+
+Other Threads:
+  0x00007f48240c2000 VMThread "VM Thread" [stack: 0x00007f4829a53000,0x00007f4829b53000] [id=1757466]
+  0x00007f48241ad000 WatcherThread [stack: 0x00007f4828751000,0x00007f4828851000] [id=1757475]
+
+Threads with active compile tasks:
+C2 CompilerThread04770       4       groovyjarjarantlr4.v4.runtime.atn.PredictionContext::(null) (297 bytes)
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007f482400ffd0] ExceptionCache_lock - owner thread: 0x00007f4824fda000
+
+OutOfMemory and StackOverflow Exception counts:
+OutOfMemoryError java_heap_errors=1
+LinkageErrors=41
+
+Heap address: 0x0000000080000000, size: 2048 MB, Compressed Oops mode: 32-bit
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 3
+Compressed class space size: 1073741824 Address: 0x0000000100000000
+
+Heap:
+ def new generation   total 153728K, used 57103K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,  39% used [0x0000000080000000, 0x0000000083461770, 0x0000000088580000)
+  from space 17024K,  20% used [0x0000000088580000, 0x00000000888e2558, 0x0000000089620000)
+  to   space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+ tenured generation   total 341376K, used 31786K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   9% used [0x00000000aaaa0000, 0x00000000ac9aabf8, 0x00000000ac9aac00, 0x00000000bf800000)
+ Metaspace       used 39121K, capacity 40969K, committed 41256K, reserved 1085440K
+  class space    used 4481K, capacity 5169K, committed 5248K, reserved 1048576K
+
+Card table byte_map: [0x00007f482a702000,0x00007f482ab03000] _byte_map_base: 0x00007f482a302000
+
+Polling page: 0x00007f482d95b000
+
+Metaspace:
+
+Usage:
+  Non-class:     34.96 MB capacity,    33.83 MB ( 97%) used,     1.03 MB (  3%) free+waste,   106.75 KB ( <1%) overhead. 
+      Class:      5.05 MB capacity,     4.38 MB ( 87%) used,   632.48 KB ( 12%) free+waste,    54.94 KB (  1%) overhead. 
+       Both:     40.01 MB capacity,    38.20 MB ( 95%) used,     1.65 MB (  4%) free+waste,   161.69 KB ( <1%) overhead. 
+
+Virtual space:
+  Non-class space:       36.00 MB reserved,      35.16 MB ( 98%) committed 
+      Class space:        1.00 GB reserved,       5.12 MB ( <1%) committed 
+             Both:        1.04 GB reserved,      40.29 MB (  4%) committed 
+
+Chunk freelists:
+   Non-Class:  2.50 KB
+       Class:  1.88 KB
+        Both:  4.38 KB
+
+CodeHeap 'non-profiled nmethods': size=120036Kb used=1668Kb max_used=1668Kb free=118367Kb
+ bounds [0x00007f4814452000, 0x00007f48146c2000, 0x00007f481b98b000]
+CodeHeap 'profiled nmethods': size=120032Kb used=9590Kb max_used=9590Kb free=110442Kb
+ bounds [0x00007f480cf1a000, 0x00007f480d87a000, 0x00007f4814452000]
+CodeHeap 'non-nmethods': size=5692Kb used=2169Kb max_used=2204Kb free=3522Kb
+ bounds [0x00007f480c98b000, 0x00007f480cbfb000, 0x00007f480cf1a000]
+ total_blobs=6503 nmethods=5064 adapters=657
+ compilation: enabled
+              stopped_count=0, restarted_count=0
+ full_count=0
+
+Compilation events (10 events):
+Event: 7.748 Thread 0x00007f48240e8800 5166       2       org.codehaus.groovy.runtime.ScriptBytecodeAdapter::asType (28 bytes)
+Event: 7.748 Thread 0x00007f48240e8800 nmethod 5166 0x00007f480d875d10 code [0x00007f480d875ee0, 0x00007f480d8761d8]
+Event: 7.748 Thread 0x00007f48240e8800 5167       2       jdk.internal.reflect.ClassFileAssembler::opc_athrow (12 bytes)
+Event: 7.748 Thread 0x00007f48240e8800 nmethod 5167 0x00007f480d876390 code [0x00007f480d876540, 0x00007f480d876728]
+Event: 7.751 Thread 0x00007f48240e8800 5168       2       java.lang.AbstractStringBuilder::append (67 bytes)
+Event: 7.751 Thread 0x00007f48240e8800 nmethod 5168 0x00007f480d876810 code [0x00007f480d876a00, 0x00007f480d876c88]
+Event: 7.751 Thread 0x00007f48240e8800 5169       2       java.lang.AbstractStringBuilder::getBytes (44 bytes)
+Event: 7.751 Thread 0x00007f48240e8800 nmethod 5169 0x00007f480d876d90 code [0x00007f480d876f60, 0x00007f480d8771b8]
+Event: 7.752 Thread 0x00007f48240e8800 5170   !   2       org.codehaus.groovy.runtime.callsite.AbstractCallSite::callGroovyObjectGetProperty (33 bytes)
+Event: 7.752 Thread 0x00007f48240e8800 nmethod 5170 0x00007f480d877290 code [0x00007f480d877480, 0x00007f480d8776b8]
+
+GC Heap History (8 events):
+Event: 2.245 GC heap before
+{Heap before GC invocations=0 (full 0):
+ def new generation   total 153600K, used 95507K [0x0000000080000000, 0x000000008a6a0000, 0x00000000aaaa0000)
+  eden space 136576K,  69% used [0x0000000080000000, 0x0000000085d44ff8, 0x0000000088560000)
+  from space 17024K,   0% used [0x0000000088560000, 0x0000000088560000, 0x0000000089600000)
+  to   space 17024K,   0% used [0x0000000089600000, 0x0000000089600000, 0x000000008a6a0000)
+ tenured generation   total 341376K, used 0K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   0% used [0x00000000aaaa0000, 0x00000000aaaa0000, 0x00000000aaaa0200, 0x00000000bf800000)
+ Metaspace       used 20813K, capacity 21116K, committed 21296K, reserved 1069056K
+  class space    used 1968K, capacity 2116K, committed 2176K, reserved 1048576K
+}
+Event: 2.376 GC heap after
+{Heap after GC invocations=1 (full 1):
+ def new generation   total 153728K, used 0K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,   0% used [0x0000000080000000, 0x0000000080000000, 0x0000000088580000)
+  from space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+  to   space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+ tenured generation   total 341376K, used 14275K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   4% used [0x00000000aaaa0000, 0x00000000ab890ea0, 0x00000000ab891000, 0x00000000bf800000)
+ Metaspace       used 20813K, capacity 21116K, committed 21296K, reserved 1069056K
+  class space    used 1968K, capacity 2116K, committed 2176K, reserved 1048576K
+}
+Event: 3.972 GC heap before
+{Heap before GC invocations=1 (full 1):
+ def new generation   total 153728K, used 136704K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K, 100% used [0x0000000080000000, 0x0000000088580000, 0x0000000088580000)
+  from space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+  to   space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+ tenured generation   total 341376K, used 14275K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   4% used [0x00000000aaaa0000, 0x00000000ab890ea0, 0x00000000ab891000, 0x00000000bf800000)
+ Metaspace       used 27752K, capacity 28443K, committed 28672K, reserved 1075200K
+  class space    used 3022K, capacity 3290K, committed 3328K, reserved 1048576K
+}
+Event: 4.048 GC heap after
+{Heap after GC invocations=2 (full 1):
+ def new generation   total 153728K, used 10489K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,   0% used [0x0000000080000000, 0x0000000080000000, 0x0000000088580000)
+  from space 17024K,  61% used [0x0000000089620000, 0x000000008a05e6b0, 0x000000008a6c0000)
+  to   space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+ tenured generation   total 341376K, used 14275K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   4% used [0x00000000aaaa0000, 0x00000000ab890ea0, 0x00000000ab891000, 0x00000000bf800000)
+ Metaspace       used 27752K, capacity 28443K, committed 28672K, reserved 1075200K
+  class space    used 3022K, capacity 3290K, committed 3328K, reserved 1048576K
+}
+Event: 5.744 GC heap before
+{Heap before GC invocations=2 (full 1):
+ def new generation   total 153728K, used 130799K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,  88% used [0x0000000080000000, 0x000000008757d558, 0x0000000088580000)
+  from space 17024K,  61% used [0x0000000089620000, 0x000000008a05e6b0, 0x000000008a6c0000)
+  to   space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+ tenured generation   total 341376K, used 14275K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   4% used [0x00000000aaaa0000, 0x00000000ab890ea0, 0x00000000ab891000, 0x00000000bf800000)
+ Metaspace       used 33950K, capacity 35221K, committed 35496K, reserved 1081344K
+  class space    used 3761K, capacity 4236K, committed 4352K, reserved 1048576K
+}
+Event: 5.874 GC heap after
+{Heap after GC invocations=3 (full 2):
+ def new generation   total 153728K, used 0K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,   0% used [0x0000000080000000, 0x0000000080000000, 0x0000000088580000)
+  from space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+  to   space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+ tenured generation   total 341376K, used 31786K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   9% used [0x00000000aaaa0000, 0x00000000ac9aabf8, 0x00000000ac9aac00, 0x00000000bf800000)
+ Metaspace       used 33950K, capacity 35221K, committed 35496K, reserved 1081344K
+  class space    used 3761K, capacity 4236K, committed 4352K, reserved 1048576K
+}
+Event: 6.958 GC heap before
+{Heap before GC invocations=3 (full 2):
+ def new generation   total 153728K, used 136704K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K, 100% used [0x0000000080000000, 0x0000000088580000, 0x0000000088580000)
+  from space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+  to   space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+ tenured generation   total 341376K, used 31786K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   9% used [0x00000000aaaa0000, 0x00000000ac9aabf8, 0x00000000ac9aac00, 0x00000000bf800000)
+ Metaspace       used 36709K, capacity 38105K, committed 38312K, reserved 1083392K
+  class space    used 4092K, capacity 4580K, committed 4608K, reserved 1048576K
+}
+Event: 6.970 GC heap after
+{Heap after GC invocations=4 (full 2):
+ def new generation   total 153728K, used 3465K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,   0% used [0x0000000080000000, 0x0000000080000000, 0x0000000088580000)
+  from space 17024K,  20% used [0x0000000088580000, 0x00000000888e2558, 0x0000000089620000)
+  to   space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+ tenured generation   total 341376K, used 31786K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   9% used [0x00000000aaaa0000, 0x00000000ac9aabf8, 0x00000000ac9aac00, 0x00000000bf800000)
+ Metaspace       used 36709K, capacity 38105K, committed 38312K, reserved 1083392K
+  class space    used 4092K, capacity 4580K, committed 4608K, reserved 1048576K
+}
+
+Deoptimization events (10 events):
+Event: 6.273 Thread 0x00007f4824014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f4814527b00 method=groovyjarjarantlr4.v4.runtime.atn.ATNConfig.transform(Lgroovyjarjarantlr4/v4/runtime/atn/ATNState;Lgroovyjarjarantlr4/v4/runtime/atn/PredictionContext;Lgroovyjarjarantlr4/v4
+Event: 6.273 Thread 0x00007f4824014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f48145b1bec method=groovyjarjarantlr4.v4.runtime.atn.ATNConfig.hashCode()I @ 67 c2
+Event: 6.367 Thread 0x00007f4824014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f48144c72b0 method=java.lang.StringUTF16.compress([CII)[B @ 13 c2
+Event: 6.541 Thread 0x00007f4824014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f48144ebe6c method=groovy.lang.MetaClassImpl$1MOPIter.processFastArray(Lorg/codehaus/groovy/util/FastArray;)V @ 85 c2
+Event: 6.650 Thread 0x00007f4824014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f4814512e14 method=java.util.concurrent.ConcurrentHashMap.get(Ljava/lang/Object;)Ljava/lang/Object; @ 152 c2
+Event: 6.748 Thread 0x00007f4824014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f48145ddd34 method=groovyjarjarantlr4.v4.runtime.atn.ParserATNSimulator.closure(Lgroovyjarjarantlr4/v4/runtime/atn/ATNConfig;Lgroovyjarjarantlr4/v4/runtime/atn/ATNConfigSet;Lgroovyjarjarantlr4
+Event: 6.863 Thread 0x00007f4824014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f48145a3b58 method=groovyjarjarantlr4.v4.runtime.atn.PredictionContextCache$IdentityCommutativePredictionContextOperands.equals(Ljava/lang/Object;)Z @ 40 c2
+Event: 6.872 Thread 0x00007f4824014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f48145e6bdc method=org.codehaus.groovy.runtime.MetaClassHelper.getClassWithNullAndWrapper(Ljava/lang/Object;)Ljava/lang/Class; @ 1 c2
+Event: 6.872 Thread 0x00007f4824014000 Uncommon trap: reason=null_check action=make_not_entrant pc=0x00007f48145e6778 method=org.codehaus.groovy.runtime.MetaClassHelper.unwrap([Ljava/lang/Object;)V @ 11 c2
+Event: 7.653 Thread 0x00007f4824fd8000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f48145c1acc method=org.codehaus.groovy.util.LockableObject.lock()V @ 6 c2
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 7.659 Thread 0x00007f4824fda000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082e2a000}: nextflow/extension/ChannelExCustomizer> (0x0000000082e2a000) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.c
+Event: 7.659 Thread 0x00007f4824fd7000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082cd8c38}: nextflow/processor/TaskIdCustomizer> (0x0000000082cd8c38) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.cpp,
+Event: 7.663 Thread 0x00007f4824fd7000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082cfb638}: nextflow/processor/TaskStartParamsBeanInfo> (0x0000000082cfb638) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictiona
+Event: 7.663 Thread 0x00007f4824fd7000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082d023a0}: nextflow/processor/TaskStartParamsCustomizer> (0x0000000082d023a0) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictio
+Event: 7.745 Thread 0x00007f4824fda000 Exception <a 'java/lang/ClassNotFoundException'{0x00000000832dfdc0}: nextflow/processor/TaskConfigBeanInfo> (0x00000000832dfdc0) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.cp
+Event: 7.745 Thread 0x00007f4824fda000 Exception <a 'java/lang/ClassNotFoundException'{0x00000000832e6058}: nextflow/processor/LazyMapBeanInfo> (0x00000000832e6058) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.cpp, 
+Event: 7.746 Thread 0x00007f4824fda000 Exception <a 'java/lang/ClassNotFoundException'{0x00000000832ec5b8}: nextflow/processor/LazyMapCustomizer> (0x00000000832ec5b8) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.cpp
+Event: 7.747 Thread 0x00007f4824fda000 Exception <a 'java/lang/ClassNotFoundException'{0x000000008330c960}: nextflow/processor/TaskConfigCustomizer> (0x000000008330c960) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.
+Event: 7.751 Thread 0x00007f4824fda000 Exception <a 'java/lang/ClassNotFoundException'{0x00000000833b4c98}: nextflow/processor/TaskContextBeanInfo> (0x00000000833b4c98) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.c
+Event: 7.751 Thread 0x00007f4824fda000 Exception <a 'java/lang/ClassNotFoundException'{0x00000000833bb3b0}: nextflow/processor/TaskContextCustomizer> (0x00000000833bb3b0) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary
+
+Events (10 events):
+Event: 7.751 loading class nextflow/processor/TaskContextCustomizer
+Event: 7.751 loading class nextflow/processor/TaskContextCustomizer done
+Event: 7.751 Executing VM operation: RevokeBias
+Event: 7.751 Executing VM operation: RevokeBias done
+Event: 7.752 Executing VM operation: RevokeBias
+Event: 7.752 Executing VM operation: RevokeBias done
+Event: 7.753 Executing VM operation: RevokeBias
+Event: 7.753 Executing VM operation: RevokeBias done
+Event: 7.754 Executing VM operation: RevokeBias
+Event: 7.754 Executing VM operation: RevokeBias done
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 00:42 3299053670393                      /data/tfang/conda-envs/nf-training/bin/java
+00601000-00602000 rw-p 00001000 00:42 3299053670393                      /data/tfang/conda-envs/nf-training/bin/java
+011f0000-01211000 rw-p 00000000 00:00 0                                  [heap]
+80000000-8a6c0000 rw-p 00000000 00:00 0 
+8a6c0000-aaaa0000 ---p 00000000 00:00 0 
+aaaa0000-bf800000 rw-p 00000000 00:00 0 
+bf800000-100000000 ---p 00000000 00:00 0 
+100000000-100520000 rw-p 00000000 00:00 0 
+100520000-140000000 ---p 00000000 00:00 0 
+7f47ed9f7000-7f47edb14000 rw-p 00000000 00:00 0 
+7f47edb14000-7f47edb18000 ---p 00000000 00:00 0 
+7f47edb18000-7f47edd02000 rw-p 00000000 00:00 0 
+7f47edd02000-7f47edd06000 ---p 00000000 00:00 0 
+7f47edd06000-7f47ede0b000 rw-p 00000000 00:00 0 
+7f47ede0b000-7f47ede0f000 ---p 00000000 00:00 0 
+7f47ede0f000-7f47edf0c000 rw-p 00000000 00:00 0 
+7f47edf0c000-7f47edf10000 ---p 00000000 00:00 0 
+7f47edf10000-7f47ee00d000 rw-p 00000000 00:00 0 
+7f47ee00d000-7f47ee011000 ---p 00000000 00:00 0 
+7f47ee011000-7f47ee1ee000 rw-p 00000000 00:00 0 
+7f47ee1ee000-7f47ee1f2000 ---p 00000000 00:00 0 
+7f47ee1f2000-7f47ee42f000 rw-p 00000000 00:00 0 
+7f47ee42f000-7f47ee4ef000 ---p 00000000 00:00 0 
+7f47ee4ef000-7f47ee4f3000 ---p 00000000 00:00 0 
+7f47ee4f3000-7f47ee5f0000 rw-p 00000000 00:00 0 
+7f47ee5f0000-7f47ee5f4000 ---p 00000000 00:00 0 
+7f47ee5f4000-7f47ee6f1000 rw-p 00000000 00:00 0 
+7f47ee6f1000-7f47ee6f5000 ---p 00000000 00:00 0 
+7f47ee6f5000-7f47ee7f2000 rw-p 00000000 00:00 0 
+7f47ee7f2000-7f47ee7f3000 r-xp 00000000 00:41 1102918561990              /sctmp/tfang/libjansi-64.so
+7f47ee7f3000-7f47ee9f2000 ---p 00001000 00:41 1102918561990              /sctmp/tfang/libjansi-64.so
+7f47ee9f2000-7f47ee9f3000 rw-p 00000000 00:41 1102918561990              /sctmp/tfang/libjansi-64.so
+7f47ee9f3000-7f47eeaf3000 rw-s 00000000 00:3e 2199127023664              /home/tfang/PPI_Prediction_byCoevolution/scripts/.nextflow/cache/591f071c-02ef-4c05-9bf5-d83f7a558f28/db/MANIFEST-000031
+7f47eeaf3000-7f47eecf3000 rw-p 00000000 00:00 0 
+7f47eecf3000-7f47eedf3000 rw-s 00000000 00:3e 2199127023663              /home/tfang/PPI_Prediction_byCoevolution/scripts/.nextflow/cache/591f071c-02ef-4c05-9bf5-d83f7a558f28/db/000032.log
+7f47eedf3000-7f47eefdd000 rw-p 00000000 00:00 0 
+7f47eefdd000-7f47eeff3000 ---p 00000000 00:00 0 
+7f47eeff3000-7f47eeff8000 r-xp 00000000 00:42 3299053670314              /data/tfang/conda-envs/nf-training/lib/libmanagement_ext.so
+7f47eeff8000-7f47ef1f8000 ---p 00005000 00:42 3299053670314              /data/tfang/conda-envs/nf-training/lib/libmanagement_ext.so
+7f47ef1f8000-7f47ef1f9000 rw-p 00005000 00:42 3299053670314              /data/tfang/conda-envs/nf-training/lib/libmanagement_ext.so
+7f47ef1f9000-7f47ef1fa000 rw-p 00008000 00:42 3299053670314              /data/tfang/conda-envs/nf-training/lib/libmanagement_ext.so
+7f47ef1fa000-7f47ef1fe000 r-xp 00000000 00:42 3299053670313              /data/tfang/conda-envs/nf-training/lib/libmanagement.so
+7f47ef1fe000-7f47ef3fd000 ---p 00004000 00:42 3299053670313              /data/tfang/conda-envs/nf-training/lib/libmanagement.so
+7f47ef3fd000-7f47ef3fe000 rw-p 00003000 00:42 3299053670313              /data/tfang/conda-envs/nf-training/lib/libmanagement.so
+7f47ef3fe000-7f47ef400000 rw-p 00007000 00:42 3299053670313              /data/tfang/conda-envs/nf-training/lib/libmanagement.so
+7f47ef400000-7f47ef600000 rw-p 00000000 00:00 0 
+7f47ef600000-7f47ef800000 rw-p 00000000 00:00 0 
+7f47ef800000-7f47efa00000 rw-p 00000000 00:00 0 
+7f47efa00000-7f47efc00000 rw-p 00000000 00:00 0 
+7f47efc00000-7f47efe00000 rw-p 00000000 00:00 0 
+7f47efe00000-7f47f0000000 rw-p 00000000 00:00 0 
+7f47f0000000-7f47f085a000 rw-p 00000000 00:00 0 
+7f47f085a000-7f47f4000000 ---p 00000000 00:00 0 
+7f47f4000000-7f47f4021000 rw-p 00000000 00:00 0 
+7f47f4021000-7f47f8000000 ---p 00000000 00:00 0 
+7f47f8000000-7f47f8021000 rw-p 00000000 00:00 0 
+7f47f8021000-7f47fc000000 ---p 00000000 00:00 0 
+7f47fc000000-7f47fda9e000 rw-p 00000000 00:00 0 
+7f47fda9e000-7f4800000000 ---p 00000000 00:00 0 
+7f4800000000-7f4800021000 rw-p 00000000 00:00 0 
+7f4800021000-7f4804000000 ---p 00000000 00:00 0 
+7f4804000000-7f4804021000 rw-p 00000000 00:00 0 
+7f4804021000-7f4808000000 ---p 00000000 00:00 0 
+7f4808000000-7f4808083000 rw-p 00000000 00:00 0 
+7f4808083000-7f480c000000 ---p 00000000 00:00 0 
+7f480c000000-7f480c08a000 rw-p 00000000 00:00 0 
+7f480c08a000-7f480c08e000 ---p 00000000 00:00 0 
+7f480c08e000-7f480c38b000 rw-p 00000000 00:00 0 
+7f480c38b000-7f480c58b000 rw-p 00000000 00:00 0 
+7f480c58b000-7f480c78b000 rw-p 00000000 00:00 0 
+7f480c78b000-7f480c98b000 rw-p 00000000 00:00 0 
+7f480c98b000-7f480cbfb000 rwxp 00000000 00:00 0 
+7f480cbfb000-7f480cf1a000 ---p 00000000 00:00 0 
+7f480cf1a000-7f480d87a000 rwxp 00000000 00:00 0 
+7f480d87a000-7f4814452000 ---p 00000000 00:00 0 
+7f4814452000-7f48146c2000 rwxp 00000000 00:00 0 
+7f48146c2000-7f481b98b000 ---p 00000000 00:00 0 
+7f481b98b000-7f4824000000 r--s 00000000 00:42 3299053670391              /data/tfang/conda-envs/nf-training/lib/modules
+7f4824000000-7f4824fe0000 rw-p 00000000 00:00 0 
+7f4824fe0000-7f4828000000 ---p 00000000 00:00 0 
+7f4828000000-7f48280cc000 rw-p 00000000 00:00 0 
+7f48280cc000-7f48280d0000 ---p 00000000 00:00 0 
+7f48280d0000-7f48282ef000 rw-p 00000000 00:00 0 
+7f48282ef000-7f4828320000 rw-p 00000000 00:00 0 
+7f4828320000-7f4828336000 r-xp 00000000 00:42 3299053670325              /data/tfang/conda-envs/nf-training/lib/libnet.so
+7f4828336000-7f4828536000 ---p 00016000 00:42 3299053670325              /data/tfang/conda-envs/nf-training/lib/libnet.so
+7f4828536000-7f4828537000 rw-p 00016000 00:42 3299053670325              /data/tfang/conda-envs/nf-training/lib/libnet.so
+7f4828537000-7f4828539000 rw-p 0001c000 00:42 3299053670325              /data/tfang/conda-envs/nf-training/lib/libnet.so
+7f4828539000-7f4828549000 r-xp 00000000 00:42 3299053670324              /data/tfang/conda-envs/nf-training/lib/libnio.so
+7f4828549000-7f4828748000 ---p 00010000 00:42 3299053670324              /data/tfang/conda-envs/nf-training/lib/libnio.so
+7f4828748000-7f4828749000 rw-p 0000f000 00:42 3299053670324              /data/tfang/conda-envs/nf-training/lib/libnio.so
+7f4828749000-7f482874c000 rw-p 00016000 00:42 3299053670324              /data/tfang/conda-envs/nf-training/lib/libnio.so
+7f482874c000-7f482874f000 rw-p 00000000 00:00 0 
+7f482874f000-7f4828750000 ---p 00000000 00:00 0 
+7f4828750000-7f4828854000 rw-p 00000000 00:00 0 
+7f4828854000-7f4828858000 ---p 00000000 00:00 0 
+7f4828858000-7f4828959000 rw-p 00000000 00:00 0 
+7f4828959000-7f482895d000 ---p 00000000 00:00 0 
+7f482895d000-7f4828a5a000 rw-p 00000000 00:00 0 
+7f4828a5a000-7f4828a5e000 ---p 00000000 00:00 0 
+7f4828a5e000-7f4828b5b000 rw-p 00000000 00:00 0 
+7f4828b5b000-7f4828b5f000 ---p 00000000 00:00 0 
+7f4828b5f000-7f4828c5c000 rw-p 00000000 00:00 0 
+7f4828c5c000-7f4828c60000 ---p 00000000 00:00 0 
+7f4828c60000-7f4828d5d000 rw-p 00000000 00:00 0 
+7f4828d5d000-7f4828d61000 ---p 00000000 00:00 0 
+7f4828d61000-7f4828e5e000 rw-p 00000000 00:00 0 
+7f4828e5e000-7f4828e90000 r--p 00000000 fc:01 14115                      /usr/lib/locale/C.UTF-8/LC_CTYPE
+7f4828e90000-7f4828e91000 r--p 00000000 fc:01 17887                      /usr/lib/locale/C.UTF-8/LC_NUMERIC
+7f4828e91000-7f4828e92000 r--p 00000000 fc:01 18119                      /usr/lib/locale/C.UTF-8/LC_TIME
+7f4828e92000-7f4829005000 r--p 00000000 fc:01 14113                      /usr/lib/locale/C.UTF-8/LC_COLLATE
+7f4829005000-7f482984f000 r--p 00000000 fc:01 2360                       /usr/lib/locale/locale-archive
+7f482984f000-7f4829853000 ---p 00000000 00:00 0 
+7f4829853000-7f4829950000 rw-p 00000000 00:00 0 
+7f4829950000-7f4829954000 ---p 00000000 00:00 0 
+7f4829954000-7f4829a51000 rw-p 00000000 00:00 0 
+7f4829a51000-7f4829a52000 ---p 00000000 00:00 0 
+7f4829a52000-7f482a4fe000 rw-p 00000000 00:00 0 
+7f482a4fe000-7f482a702000 ---p 00000000 00:00 0 
+7f482a702000-7f482a756000 rw-p 00000000 00:00 0 
+7f482a756000-7f482a857000 ---p 00000000 00:00 0 
+7f482a857000-7f482a8fe000 rw-p 00000000 00:00 0 
+7f482a8fe000-7f482ab02000 ---p 00000000 00:00 0 
+7f482ab02000-7f482ab08000 rw-p 00000000 00:00 0 
+7f482ab08000-7f482abee000 ---p 00000000 00:00 0 
+7f482abee000-7f482ac01000 rw-p 00000000 00:00 0 
+7f482ac01000-7f482acd9000 ---p 00000000 00:00 0 
+7f482acd9000-7f482acde000 rw-p 00000000 00:00 0 
+7f482acde000-7f482ace5000 ---p 00000000 00:00 0 
+7f482ace5000-7f482acff000 r-xp 00000000 00:42 3299053670326              /data/tfang/conda-envs/nf-training/lib/libjimage.so
+7f482acff000-7f482aefe000 ---p 0001a000 00:42 3299053670326              /data/tfang/conda-envs/nf-training/lib/libjimage.so
+7f482aefe000-7f482af00000 rw-p 00019000 00:42 3299053670326              /data/tfang/conda-envs/nf-training/lib/libjimage.so
+7f482af00000-7f482af12000 rw-p 00000000 00:00 0 
+7f482af12000-7f482af13000 rw-p 00022000 00:42 3299053670326              /data/tfang/conda-envs/nf-training/lib/libjimage.so
+7f482af13000-7f482af1a000 r-xp 00000000 00:42 3299053670315              /data/tfang/conda-envs/nf-training/lib/libzip.so
+7f482af1a000-7f482b119000 ---p 00007000 00:42 3299053670315              /data/tfang/conda-envs/nf-training/lib/libzip.so
+7f482b119000-7f482b11a000 rw-p 00006000 00:42 3299053670315              /data/tfang/conda-envs/nf-training/lib/libzip.so
+7f482b11a000-7f482b11b000 rw-p 0000a000 00:42 3299053670315              /data/tfang/conda-envs/nf-training/lib/libzip.so
+7f482b11b000-7f482b920000 r--s 00000000 fc:01 2322579                    /var/lib/sss/mc/passwd
+7f482b920000-7f482b926000 r--p 00000000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f482b926000-7f482b94c000 r-xp 00006000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f482b94c000-7f482b958000 r--p 0002c000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f482b958000-7f482b95b000 r--p 00037000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f482b95b000-7f482b95c000 rw-p 0003a000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f482b95c000-7f482b95f000 r--p 00000000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f482b95f000-7f482b966000 r-xp 00003000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f482b966000-7f482b968000 r--p 0000a000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f482b968000-7f482b969000 r--p 0000b000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f482b969000-7f482b96a000 rw-p 0000c000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f482b96a000-7f482b970000 rw-p 00000000 00:00 0 
+7f482b970000-7f482b971000 r--p 00000000 fc:01 17885                      /usr/lib/locale/C.UTF-8/LC_MONETARY
+7f482b971000-7f482b972000 r--p 00000000 fc:01 14118                      /usr/lib/locale/C.UTF-8/LC_MESSAGES/SYS_LC_MESSAGES
+7f482b972000-7f482b973000 r--p 00000000 fc:01 18117                      /usr/lib/locale/C.UTF-8/LC_PAPER
+7f482b973000-7f482b97a000 r--s 00000000 fc:01 34696                      /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+7f482b97a000-7f482b982000 rw-s 00000000 fc:01 774178                     /tmp/hsperfdata_tfang/1757431
+7f482b982000-7f482b9ad000 r-xp 00000000 00:42 3299053670328              /data/tfang/conda-envs/nf-training/lib/libjava.so
+7f482b9ad000-7f482bbad000 ---p 0002b000 00:42 3299053670328              /data/tfang/conda-envs/nf-training/lib/libjava.so
+7f482bbad000-7f482bbaf000 rw-p 0002b000 00:42 3299053670328              /data/tfang/conda-envs/nf-training/lib/libjava.so
+7f482bbaf000-7f482bbb3000 rw-p 00038000 00:42 3299053670328              /data/tfang/conda-envs/nf-training/lib/libjava.so
+7f482bbb3000-7f482bbc0000 r-xp 00000000 00:42 3299053670320              /data/tfang/conda-envs/nf-training/lib/libverify.so
+7f482bbc0000-7f482bdbf000 ---p 0000d000 00:42 3299053670320              /data/tfang/conda-envs/nf-training/lib/libverify.so
+7f482bdbf000-7f482bdc1000 rw-p 0000c000 00:42 3299053670320              /data/tfang/conda-envs/nf-training/lib/libverify.so
+7f482bdc1000-7f482bdc2000 rw-p 00010000 00:42 3299053670320              /data/tfang/conda-envs/nf-training/lib/libverify.so
+7f482bdc2000-7f482bdc4000 r--p 00000000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f482bdc4000-7f482bdc8000 r-xp 00002000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f482bdc8000-7f482bdca000 r--p 00006000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f482bdca000-7f482bdcb000 r--p 00007000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f482bdcb000-7f482bdcc000 rw-p 00008000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f482bdcc000-7f482bdd0000 ---p 00000000 00:00 0 
+7f482bdd0000-7f482becd000 rw-p 00000000 00:00 0 
+7f482becd000-7f482beda000 r--p 00000000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f482beda000-7f482bf81000 r-xp 0000d000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f482bf81000-7f482c01a000 r--p 000b4000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f482c01a000-7f482c01b000 r--p 0014c000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f482c01b000-7f482c01c000 rw-p 0014d000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f482c01c000-7f482d196000 r-xp 00000000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f482d196000-7f482d395000 ---p 0117a000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f482d395000-7f482d475000 r--p 01179000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f482d475000-7f482d4af000 rw-p 01259000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f482d4af000-7f482d51a000 rw-p 00000000 00:00 0 
+7f482d51a000-7f482d51d000 rw-p 01641000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f482d51d000-7f482d51f000 rw-p 00000000 00:00 0 
+7f482d51f000-7f482d541000 r--p 00000000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f482d541000-7f482d6b9000 r-xp 00022000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f482d6b9000-7f482d707000 r--p 0019a000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f482d707000-7f482d70b000 r--p 001e7000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f482d70b000-7f482d70d000 rw-p 001eb000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f482d70d000-7f482d711000 rw-p 00000000 00:00 0 
+7f482d711000-7f482d712000 r--p 00000000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f482d712000-7f482d714000 r-xp 00001000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f482d714000-7f482d715000 r--p 00003000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f482d715000-7f482d716000 r--p 00003000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f482d716000-7f482d717000 rw-p 00004000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f482d717000-7f482d726000 r-xp 00000000 00:42 3299053670321              /data/tfang/conda-envs/nf-training/lib/libjli.so
+7f482d726000-7f482d926000 ---p 0000f000 00:42 3299053670321              /data/tfang/conda-envs/nf-training/lib/libjli.so
+7f482d926000-7f482d927000 rw-p 0000f000 00:42 3299053670321              /data/tfang/conda-envs/nf-training/lib/libjli.so
+7f482d927000-7f482d928000 rw-p 00013000 00:42 3299053670321              /data/tfang/conda-envs/nf-training/lib/libjli.so
+7f482d928000-7f482d92e000 r--p 00000000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f482d92e000-7f482d93f000 r-xp 00006000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f482d93f000-7f482d945000 r--p 00017000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f482d945000-7f482d946000 r--p 0001c000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f482d946000-7f482d947000 rw-p 0001d000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f482d947000-7f482d94b000 rw-p 00000000 00:00 0 
+7f482d94b000-7f482d94c000 r--p 00000000 fc:01 17886                      /usr/lib/locale/C.UTF-8/LC_NAME
+7f482d94c000-7f482d94d000 r--p 00000000 fc:01 14057                      /usr/lib/locale/C.UTF-8/LC_ADDRESS
+7f482d94d000-7f482d94e000 r--p 00000000 fc:01 18118                      /usr/lib/locale/C.UTF-8/LC_TELEPHONE
+7f482d94e000-7f482d94f000 r--p 00000000 fc:01 14117                      /usr/lib/locale/C.UTF-8/LC_MEASUREMENT
+7f482d94f000-7f482d951000 r--p 00000000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f482d951000-7f482d957000 r-xp 00002000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f482d957000-7f482d959000 r--p 00008000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f482d959000-7f482d95a000 r--p 00009000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f482d95a000-7f482d95b000 rw-p 0000a000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f482d95b000-7f482d95c000 ---p 00000000 00:00 0 
+7f482d95c000-7f482d95d000 r--p 00000000 00:00 0 
+7f482d95d000-7f482d960000 r--p 00000000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f482d960000-7f482d96f000 r-xp 00003000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f482d96f000-7f482d976000 r--p 00012000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f482d976000-7f482d977000 r--p 00018000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f482d977000-7f482d978000 rw-p 00019000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f482d978000-7f482d97a000 rw-p 00000000 00:00 0 
+7f482d97a000-7f482d97b000 r--p 00000000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f482d97b000-7f482d99e000 r-xp 00001000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f482d99e000-7f482d9a6000 r--p 00024000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f482d9a6000-7f482d9a7000 r--p 00000000 fc:01 14116                      /usr/lib/locale/C.UTF-8/LC_IDENTIFICATION
+7f482d9a7000-7f482d9a8000 r--p 0002c000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f482d9a8000-7f482d9a9000 rw-p 0002d000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f482d9a9000-7f482d9aa000 rw-p 00000000 00:00 0 
+7ffe680f6000-7ffe6811a000 rw-p 00000000 00:00 0                          [stack]
+7ffe681f2000-7ffe681f6000 r--p 00000000 00:00 0                          [vvar]
+7ffe681f6000-7ffe681f8000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+
+VM Arguments:
+jvm_args: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.nio.file.spi=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.fs=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.ftp=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.file=ALL-UNNAMED --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/java.util.regex=ALL-UNNAMED -Xms500M -Xmx2G -Djava.io.tmpdir=/sctmp/tfang -Djava.library.path=/cluster/22-05-9-1/munge-0.5.15/lib:/cluster/22-05-9-1/slurm-22-05-9-1/lib:/cluster/22-05-9-1/pmix-4.2.3/lib:/cluster/22-05-9-1/libevent-2.1.12/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib -Dfile.encoding=UTF-8 -Dcapsule.app=nextflow_23.04.1 -Djava.awt.headless=true -Dcapsule.jar=/data/tfang/conda-envs/nf-training/share/nextflow/dist/23.04.1/nextflow-23.04.1-one.jar -Dcom.sun.security.enableAIAcaIssuers=true 
+java_command: nextflow.cli.Launcher run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow -c nextflow.config -profile slurm -resume
+java_class_path (initial): /data/tfang/conda-envs/nf-training/share/nextflow/dist/23.04.1/nextflow-23.04.1-one.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/io/nextflow/nextflow/23.04.1/nextflow-23.04.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/apache/ivy/ivy/2.5.1/ivy-2.5.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/io/nextflow/nf-httpfs/23.04.1/nf-httpfs-23.04.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/io/nextflow/nf-commons/23.04.1/nf-commons-23.04.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy-nio/3.0.16/groovy-nio-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy-templates/3.0.16/groovy-templates-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy-xml/3.0.16/groovy-xml-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy-json/3.0.16/groovy-json-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy/3.0.16/groovy-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/slf4j/jcl-over-slf4j/1.7.36/jcl-over-slf4j-1.7.36.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/slf4j/jul-to-slf4j/1.7.36/jul-to-slf4j-1.7.36.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/slf4j/log4j-over-slf4j/1.7.36/log4j-over-slf4j-1.7.36.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/ch/qos/logback/logback-classic/1.2.11/logback-classic-1.2.11.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/ch/qos/logback/logback-core/1.2.11/logback-core-1.2.11.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/gpars/gpars/1.2.1/gpars-1.2.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/ch/artecat/grengine/grengine/
+Launcher Type: SUN_STANDARD
+
+
+[error occurred during error reporting (printing flags), id 0xe0000001, Out of Memory Error (/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/memory/allocation.cpp:46)]
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+JAVA_HOME=/data/tfang/conda-envs/nf-training
+PATH=/data/tfang/conda-envs/nf-training/bin:/apps/opt/spack/linux-ubuntu20.04-x86_64/gcc-9.3.0/anaconda3-2022.10-4zvvyfdmb3tw45xdxcy7vcuhn5nw2s3i/condabin:/cluster/22-05-9-1/slurm-22-05-9-1/bin:/cluster/22-05-9-1/slurm-22-05-9-1/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/var/cfengine/bin:/usr/local/go/bin
+LD_LIBRARY_PATH=/cluster/22-05-9-1/munge-0.5.15/lib:/cluster/22-05-9-1/slurm-22-05-9-1/lib:/cluster/22-05-9-1/pmix-4.2.3/lib:/cluster/22-05-9-1/libevent-2.1.12/lib
+SHELL=/usr/bin/bash
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xe35970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xe35970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0xe35970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0xc2d970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0xc2d970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0xe35970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR2: [libjvm.so+0xc2dc60], sa_mask[0]=00000000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0xc2ddc0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0xc2ddc0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0xc2ddc0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0xc2ddc0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=20.04
+DISTRIB_CODENAME=focal
+DISTRIB_DESCRIPTION="Ubuntu 20.04.6 LTS"
+uname:Linux 5.15.0-83-generic #92~20.04.1-Ubuntu SMP Mon Aug 21 14:00:49 UTC 2023 x86_64
+libc:glibc 2.31 NPTL 2.31 
+rlimit: STACK 8192k, CORE 0k, NPROC 256, NOFILE 1048576, AS 4194304k, DATA infinity, FSIZE infinity
+load average:0.66 0.31 0.16
+
+/proc/meminfo:
+MemTotal:       64293460 kB
+MemFree:        47132356 kB
+MemAvailable:   60256004 kB
+Buffers:          397648 kB
+Cached:         12406136 kB
+SwapCached:            0 kB
+Active:          1714692 kB
+Inactive:       13851756 kB
+Active(anon):       1764 kB
+Inactive(anon):  2770624 kB
+Active(file):    1712928 kB
+Inactive(file): 11081132 kB
+Unevictable:       18480 kB
+Mlocked:           18480 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:               132 kB
+Writeback:             0 kB
+AnonPages:       2781004 kB
+Mapped:           671176 kB
+Shmem:              1640 kB
+KReclaimable:    1043196 kB
+Slab:            1278688 kB
+SReclaimable:    1043196 kB
+SUnreclaim:       235492 kB
+KernelStack:        9344 kB
+PageTables:        69616 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    32146728 kB
+Committed_AS:    3298868 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:       46312 kB
+VmallocChunk:          0 kB
+Percpu:            53440 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:     1238908 kB
+DirectMap2M:    44374016 kB
+DirectMap1G:    19922944 kB
+
+
+/proc/sys/kernel/threads-max (system-wide limit on the number of threads):
+500961
+
+
+/proc/sys/vm/max_map_count (maximum number of memory map areas a process may have):
+65530
+
+
+/proc/sys/kernel/pid_max (system-wide limit on number of process identifiers):
+4194304
+
+
+container (cgroup) information:
+container_type: cgroupv1
+cpu_cpuset_cpus: failed
+cpu_memory_nodes: failed
+active_processor_count: 16
+cpu_quota: -2
+cpu_period: -2
+cpu_shares: -2
+memory_limit_in_bytes: -2
+memory_and_swap_limit_in_bytes: -2
+memory_soft_limit_in_bytes: -2
+memory_usage_in_bytes: -2
+memory_max_usage_in_bytes: -2
+
+
+CPU:total 16 (initial active 1) (1 cores per cpu, 1 threads per core) family 23 model 49 stepping 0, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, mmxext, 3dnowpref, lzcnt, sse4a, tsc, bmi1, bmi2, adx, fma
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 0
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 1
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 2
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 3
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 4
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 4
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 4
+initial apicid	: 4
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 5
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 5
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 5
+initial apicid	: 5
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 6
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 6
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 6
+initial apicid	: 6
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 7
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 7
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 7
+initial apicid	: 7
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 8
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 8
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 8
+initial apicid	: 8
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 9
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 9
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 9
+initial apicid	: 9
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 10
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 10
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 10
+initial apicid	: 10
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 11
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 11
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 11
+initial apicid	: 11
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 12
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 12
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 12
+initial apicid	: 12
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 13
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 13
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 13
+initial apicid	: 13
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 14
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 14
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 14
+initial apicid	: 14
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 15
+vendor_id	: AuthenticAMD
+cpu family	: 23
+model		: 49
+model name	: AMD EPYC 7702 64-Core Processor
+stepping	: 0
+microcode	: 0x1000065
+cpu MHz		: 1996.250
+cache size	: 512 KB
+physical id	: 15
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 15
+initial apicid	: 15
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+bugs		: fxsave_leak sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb
+bogomips	: 3992.50
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+
+Memory: 4k page, physical 64293460k(47132356k free), swap 0k(0k free)
+
+vm_info: OpenJDK 64-Bit Server VM (11.0.1+13-LTS) for linux-amd64 JRE (11.0.1+13-LTS), built on Oct 19 2018 11:38:45 by "tester" with gcc 4.9.2 20150212 (Red Hat 4.9.2-6)
+
+END.

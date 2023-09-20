@@ -1,0 +1,792 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 32 bytes for AllocateHeap
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Unscaled Compressed Oops mode in which the Java heap is
+#     placed in the first 4GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 4GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (allocation.cpp:46), pid=1755616, tid=1755715
+#
+# JRE version: OpenJDK Runtime Environment (11.0.1+13) (build 11.0.1+13-LTS)
+# Java VM: OpenJDK 64-Bit Server VM (11.0.1+13-LTS, mixed mode, tiered, compressed oops, serial gc, linux-amd64)
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E" (or dumping to /home/tfang/PPI_Prediction_byCoevolution/scripts/core.1755616)
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.nio.file.spi=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.fs=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.ftp=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.file=ALL-UNNAMED --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/java.util.regex=ALL-UNNAMED -Xms500M -Xmx2G -Djava.io.tmpdir=/sctmp/tfang -Djava.library.path=/cluster/22-05-9-1/munge-0.5.15/lib:/cluster/22-05-9-1/slurm-22-05-9-1/lib:/cluster/22-05-9-1/pmix-4.2.3/lib:/cluster/22-05-9-1/libevent-2.1.12/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib -Dfile.encoding=UTF-8 -Dcapsule.app=nextflow_23.04.1 -Djava.awt.headless=true -Dcapsule.jar=/data/tfang/conda-envs/nf-training/share/nextflow/dist/23.04.1/nextflow-23.04.1-one.jar -Dcom.sun.security.enableAIAcaIssuers=true nextflow.cli.Launcher run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow -c nextflow.config -profile slurm -resume
+
+Host: AMD EPYC 7702 64-Core Processor, 16 cores, 61G, Ubuntu 20.04.6 LTS
+Time: Wed Sep 20 17:39:06 2023 CEST elapsed time: 7 seconds (0d 0h 0m 7s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f3a8904a000):  JavaThread "Actor Thread 4" daemon [_thread_in_vm, id=1755715, stack(0x00007f3a51dd7000,0x00007f3a51ed8000)]
+
+Stack: [0x00007f3a51dd7000,0x00007f3a51ed8000],  sp=0x00007f3a51ed4330,  free space=1012k
+Native frames: (J=compiled Java code, A=aot compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0xe34b81]  VMError::report_and_die(int, char const*, char const*, __va_list_tag*, Thread*, unsigned char*, void*, void*, char const*, int, unsigned long)+0x161
+V  [libjvm.so+0xe3592b]  VMError::report_and_die(Thread*, char const*, int, unsigned long, VMErrorType, char const*, __va_list_tag*)+0x2b
+V  [libjvm.so+0x6e7d58]  report_vm_out_of_memory(char const*, int, unsigned long, VMErrorType, char const*, ...)+0xd8
+V  [libjvm.so+0x455b5c]  AllocateHeap(unsigned long, MemoryType, AllocFailStrategy::AllocFailEnum)+0x9c
+V  [libjvm.so+0x85be4d]  Hashtable<InstanceKlass*, (MemoryType)1>::allocate_new_entry(unsigned int, InstanceKlass*)+0x1d
+V  [libjvm.so+0x7758ec]  Dictionary::add_klass(unsigned int, Symbol*, InstanceKlass*)+0x1c
+V  [libjvm.so+0xd92c11]  SystemDictionary::update_dictionary(unsigned int, int, unsigned int, InstanceKlass*, Handle, Thread*)+0x101
+V  [libjvm.so+0xd980f5]  SystemDictionary::resolve_instance_class_or_null(Symbol*, Handle, Handle, Thread*)+0x935
+V  [libjvm.so+0xd981e2]  SystemDictionary::resolve_array_class_or_null(Symbol*, Handle, Handle, Thread*)+0x82
+V  [libjvm.so+0xd9b1c1]  SystemDictionary::resolve_or_fail(Symbol*, Handle, Handle, bool, Thread*)+0x3c1
+V  [libjvm.so+0xcccebe]  get_parameter_types(methodHandle const&, int, oopDesc**, Thread*)+0x3ce
+V  [libjvm.so+0xccd6fd]  Reflection::new_constructor(methodHandle const&, Thread*)+0x7d
+V  [libjvm.so+0x975ecb]  get_class_declared_methods_helper(JNIEnv_*, _jclass*, unsigned char, bool, Klass*, Thread*)+0x41b
+V  [libjvm.so+0x9761c8]  JVM_GetClassDeclaredConstructors+0xa8
+J 2488  java.lang.Class.getDeclaredConstructors0(Z)[Ljava/lang/reflect/Constructor; java.base@11.0.1 (0 bytes) @ 0x00007f3a784fc7eb [0x00007f3a784fc740+0x00000000000000ab]
+J 2375 c1 java.lang.Class.privateGetDeclaredConstructors(Z)[Ljava/lang/reflect/Constructor; java.base@11.0.1 (79 bytes) @ 0x00007f3a7134bad4 [0x00007f3a7134b980+0x0000000000000154]
+J 4470 c1 java.lang.Class.getConstructor0([Ljava/lang/Class;I)Ljava/lang/reflect/Constructor; java.base@11.0.1 (83 bytes) @ 0x00007f3a7168e1fc [0x00007f3a7168e0a0+0x000000000000015c]
+j  java.lang.Class.getConstructor([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;+24 java.base@11.0.1
+j  org.codehaus.groovy.reflection.ClassLoaderForClassArtifacts.defineClassAndGetConstructor(Ljava/lang/String;[B)Ljava/lang/reflect/Constructor;+49
+j  org.codehaus.groovy.runtime.callsite.CallSiteGenerator.compilePogoMethod(Lorg/codehaus/groovy/reflection/CachedMethod;)Ljava/lang/reflect/Constructor;+38
+J 5101 c1 org.codehaus.groovy.reflection.CachedMethod.createPogoMetaMethodSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/MetaClassImpl;[Ljava/lang/Class;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (128 bytes) @ 0x00007f3a7181c74c [0x00007f3a7181c600+0x000000000000014c]
+j  org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite.createCachedMethodSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/MetaClassImpl;Lorg/codehaus/groovy/reflection/CachedMethod;[Ljava/lang/Class;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite;+44
+J 5068 c1 groovy.lang.MetaClassImpl.createPogoCallSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (109 bytes) @ 0x00007f3a718080a4 [0x00007f3a71807c80+0x0000000000000424]
+J 5054 c1 org.codehaus.groovy.runtime.callsite.CallSiteArray.createPogoSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (53 bytes) @ 0x00007f3a71801f7c [0x00007f3a71801e00+0x000000000000017c]
+J 3949 c1 org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (64 bytes) @ 0x00007f3a715d4c0c [0x00007f3a715d4b20+0x00000000000000ec]
+J 4730 c1 org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (7 bytes) @ 0x00007f3a7174844c [0x00007f3a717483e0+0x000000000000006c]
+J 5020 c1 org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(Ljava/lang/Object;)Ljava/lang/Object; (9 bytes) @ 0x00007f3a717ed4ac [0x00007f3a717ed440+0x000000000000006c]
+j  nextflow.processor.TaskContext.<init>(Lnextflow/processor/TaskProcessor;Ljava/util/Map;)V+201
+j  nextflow.processor.TaskContext.<init>(Lnextflow/processor/TaskProcessor;)V+20
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x8c0a52]  JavaCalls::call_helper(JavaValue*, methodHandle const&, JavaCallArguments*, Thread*)+0x3c2
+V  [libjvm.so+0xcc8d27]  invoke(InstanceKlass*, methodHandle const&, Handle, bool, objArrayHandle, BasicType, objArrayHandle, bool, Thread*)+0x547
+V  [libjvm.so+0xccb40f]  Reflection::invoke_constructor(oopDesc*, objArrayHandle, Thread*)+0x26f
+V  [libjvm.so+0x9721dd]  JVM_NewInstanceFromConstructor+0xad
+J 2451  jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Ljava/lang/reflect/Constructor;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (0 bytes) @ 0x00007f3a784fb298 [0x00007f3a784fb1c0+0x00000000000000d8]
+J 2139 c1 jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (89 bytes) @ 0x00007f3a712ef714 [0x00007f3a712ef3c0+0x0000000000000354]
+J 4214 c1 jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (9 bytes) @ 0x00007f3a7859df84 [0x00007f3a7859df40+0x0000000000000044]
+J 5030 c1 org.codehaus.groovy.reflection.CachedConstructor.invoke([Ljava/lang/Object;)Ljava/lang/Object; (113 bytes) @ 0x00007f3a717f646c [0x00007f3a717f6260+0x000000000000020c]
+J 5079 c1 org.codehaus.groovy.runtime.callsite.ConstructorSite$ConstructorSiteNoUnwrapNoCoerce.callConstructor(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (31 bytes) @ 0x00007f3a7180d694 [0x00007f3a7180d600+0x0000000000000094]
+j  org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallConstructor(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+11
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+3
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+33
+j  nextflow.processor.TaskProcessor.createTaskRun(Lnextflow/processor/TaskStartParams;)Lnextflow/processor/TaskRun;+134
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x8c0a52]  JavaCalls::call_helper(JavaValue*, methodHandle const&, JavaCallArguments*, Thread*)+0x3c2
+V  [libjvm.so+0xcc8d27]  invoke(InstanceKlass*, methodHandle const&, Handle, bool, objArrayHandle, BasicType, objArrayHandle, bool, Thread*)+0x547
+V  [libjvm.so+0xccb013]  Reflection::invoke_method(oopDesc*, Handle, objArrayHandle, Thread*)+0x183
+V  [libjvm.so+0x971ee1]  JVM_InvokeMethod+0x1b1
+J 3647  jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (0 bytes) @ 0x00007f3a78563730 [0x00007f3a78563640+0x00000000000000f0]
+J 3646 c1 jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (104 bytes) @ 0x00007f3a7156fc2c [0x00007f3a7156f8a0+0x000000000000038c]
+J 4318 c1 jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (10 bytes) @ 0x00007f3a785b9784 [0x00007f3a785b9740+0x0000000000000044]
+J 2603 c1 java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (65 bytes) @ 0x00007f3a713abf94 [0x00007f3a713abe80+0x0000000000000114]
+j  org.codehaus.groovy.runtime.callsite.PlainObjectMetaMethodSite.doInvoke(Ljava/lang/Object;[Ljava/lang/Object;Ljava/lang/reflect/Method;)Ljava/lang/Object;+3
+j  org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite$PogoCachedMethodSiteNoUnwrapNoCoerce.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+J 5124 c1 org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite.callCurrent(Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object; (29 bytes) @ 0x00007f3a718291dc [0x00007f3a71829100+0x00000000000000dc]
+j  org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object;+17
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object;+3
+J 5152 c1 org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(Lgroovy/lang/GroovyObject;Ljava/lang/Object;)Ljava/lang/Object; (37 bytes) @ 0x00007f3a70f1b41c [0x00007f3a70f1b260+0x00000000000001bc]
+j  nextflow.processor.TaskProcessor.invokeTask([Ljava/lang/Object;)V+335
+j  nextflow.processor.InvokeTaskAdapter.call([Ljava/lang/Object;)Ljava/lang/Object;+5
+j  groovyx.gpars.dataflow.operator.DataflowOperatorActor.startTask(Ljava/util/List;)V+19
+j  groovyx.gpars.dataflow.operator.ForkingDataflowOperatorActor.access$001(Lgroovyx/gpars/dataflow/operator/ForkingDataflowOperatorActor;Ljava/util/List;)V+2
+j  groovyx.gpars.dataflow.operator.ForkingDataflowOperatorActor$1.run()V+8
+j  java.util.concurrent.ThreadPoolExecutor.runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V+92 java.base@11.0.1
+j  java.util.concurrent.ThreadPoolExecutor$Worker.run()V+5 java.base@11.0.1
+j  java.lang.Thread.run()V+11 java.base@11.0.1
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x8c0a52]  JavaCalls::call_helper(JavaValue*, methodHandle const&, JavaCallArguments*, Thread*)+0x3c2
+V  [libjvm.so+0x8beb50]  JavaCalls::call_virtual(JavaValue*, Handle, Klass*, Symbol*, Symbol*, Thread*)+0x1d0
+V  [libjvm.so+0x96846a]  thread_entry(JavaThread*, Thread*)+0x8a
+V  [libjvm.so+0xdd0e28]  JavaThread::thread_main_inner()+0x108
+V  [libjvm.so+0xdd10e0]  JavaThread::run()+0x270
+V  [libjvm.so+0xc37082]  thread_native_entry(Thread*)+0xf2
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 2488  java.lang.Class.getDeclaredConstructors0(Z)[Ljava/lang/reflect/Constructor; java.base@11.0.1 (0 bytes) @ 0x00007f3a784fc778 [0x00007f3a784fc740+0x0000000000000038]
+J 2375 c1 java.lang.Class.privateGetDeclaredConstructors(Z)[Ljava/lang/reflect/Constructor; java.base@11.0.1 (79 bytes) @ 0x00007f3a7134bad4 [0x00007f3a7134b980+0x0000000000000154]
+J 4470 c1 java.lang.Class.getConstructor0([Ljava/lang/Class;I)Ljava/lang/reflect/Constructor; java.base@11.0.1 (83 bytes) @ 0x00007f3a7168e1fc [0x00007f3a7168e0a0+0x000000000000015c]
+j  java.lang.Class.getConstructor([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;+24 java.base@11.0.1
+j  org.codehaus.groovy.reflection.ClassLoaderForClassArtifacts.defineClassAndGetConstructor(Ljava/lang/String;[B)Ljava/lang/reflect/Constructor;+49
+j  org.codehaus.groovy.runtime.callsite.CallSiteGenerator.compilePogoMethod(Lorg/codehaus/groovy/reflection/CachedMethod;)Ljava/lang/reflect/Constructor;+38
+J 5101 c1 org.codehaus.groovy.reflection.CachedMethod.createPogoMetaMethodSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/MetaClassImpl;[Ljava/lang/Class;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (128 bytes) @ 0x00007f3a7181c74c [0x00007f3a7181c600+0x000000000000014c]
+j  org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite.createCachedMethodSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/MetaClassImpl;Lorg/codehaus/groovy/reflection/CachedMethod;[Ljava/lang/Class;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite;+44
+J 5068 c1 groovy.lang.MetaClassImpl.createPogoCallSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (109 bytes) @ 0x00007f3a718080a4 [0x00007f3a71807c80+0x0000000000000424]
+J 5054 c1 org.codehaus.groovy.runtime.callsite.CallSiteArray.createPogoSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (53 bytes) @ 0x00007f3a71801f7c [0x00007f3a71801e00+0x000000000000017c]
+J 3949 c1 org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallSite(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Lorg/codehaus/groovy/runtime/callsite/CallSite; (64 bytes) @ 0x00007f3a715d4c0c [0x00007f3a715d4b20+0x00000000000000ec]
+J 4730 c1 org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (7 bytes) @ 0x00007f3a7174844c [0x00007f3a717483e0+0x000000000000006c]
+J 5020 c1 org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(Ljava/lang/Object;)Ljava/lang/Object; (9 bytes) @ 0x00007f3a717ed4ac [0x00007f3a717ed440+0x000000000000006c]
+j  nextflow.processor.TaskContext.<init>(Lnextflow/processor/TaskProcessor;Ljava/util/Map;)V+201
+j  nextflow.processor.TaskContext.<init>(Lnextflow/processor/TaskProcessor;)V+20
+v  ~StubRoutines::call_stub
+J 2451  jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Ljava/lang/reflect/Constructor;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (0 bytes) @ 0x00007f3a784fb223 [0x00007f3a784fb1c0+0x0000000000000063]
+J 2139 c1 jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (89 bytes) @ 0x00007f3a712ef714 [0x00007f3a712ef3c0+0x0000000000000354]
+J 4214 c1 jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (9 bytes) @ 0x00007f3a7859df84 [0x00007f3a7859df40+0x0000000000000044]
+J 5030 c1 org.codehaus.groovy.reflection.CachedConstructor.invoke([Ljava/lang/Object;)Ljava/lang/Object; (113 bytes) @ 0x00007f3a717f646c [0x00007f3a717f6260+0x000000000000020c]
+J 5079 c1 org.codehaus.groovy.runtime.callsite.ConstructorSite$ConstructorSiteNoUnwrapNoCoerce.callConstructor(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (31 bytes) @ 0x00007f3a7180d694 [0x00007f3a7180d600+0x0000000000000094]
+j  org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallConstructor(Lorg/codehaus/groovy/runtime/callsite/CallSite;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+11
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+3
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+33
+j  nextflow.processor.TaskProcessor.createTaskRun(Lnextflow/processor/TaskStartParams;)Lnextflow/processor/TaskRun;+134
+v  ~StubRoutines::call_stub
+J 3647  jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (0 bytes) @ 0x00007f3a785636b7 [0x00007f3a78563640+0x0000000000000077]
+J 3646 c1 jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (104 bytes) @ 0x00007f3a7156fc2c [0x00007f3a7156f8a0+0x000000000000038c]
+J 4318 c1 jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (10 bytes) @ 0x00007f3a785b9784 [0x00007f3a785b9740+0x0000000000000044]
+J 2603 c1 java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; java.base@11.0.1 (65 bytes) @ 0x00007f3a713abf94 [0x00007f3a713abe80+0x0000000000000114]
+j  org.codehaus.groovy.runtime.callsite.PlainObjectMetaMethodSite.doInvoke(Ljava/lang/Object;[Ljava/lang/Object;Ljava/lang/reflect/Method;)Ljava/lang/Object;+3
+j  org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite$PogoCachedMethodSiteNoUnwrapNoCoerce.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+J 5124 c1 org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite.callCurrent(Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object; (29 bytes) @ 0x00007f3a718291dc [0x00007f3a71829100+0x00000000000000dc]
+j  org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(Lorg/codehaus/groovy/runtime/callsite/CallSite;Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object;+17
+j  org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(Lgroovy/lang/GroovyObject;[Ljava/lang/Object;)Ljava/lang/Object;+3
+J 5152 c1 org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(Lgroovy/lang/GroovyObject;Ljava/lang/Object;)Ljava/lang/Object; (37 bytes) @ 0x00007f3a70f1b41c [0x00007f3a70f1b260+0x00000000000001bc]
+j  nextflow.processor.TaskProcessor.invokeTask([Ljava/lang/Object;)V+335
+j  nextflow.processor.InvokeTaskAdapter.call([Ljava/lang/Object;)Ljava/lang/Object;+5
+j  groovyx.gpars.dataflow.operator.DataflowOperatorActor.startTask(Ljava/util/List;)V+19
+j  groovyx.gpars.dataflow.operator.ForkingDataflowOperatorActor.access$001(Lgroovyx/gpars/dataflow/operator/ForkingDataflowOperatorActor;Ljava/util/List;)V+2
+j  groovyx.gpars.dataflow.operator.ForkingDataflowOperatorActor$1.run()V+8
+j  java.util.concurrent.ThreadPoolExecutor.runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V+92 java.base@11.0.1
+j  java.util.concurrent.ThreadPoolExecutor$Worker.run()V+5 java.base@11.0.1
+j  java.lang.Thread.run()V+11 java.base@11.0.1
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007f3a51a3e010, length=20, elements={
+0x00007f3a88014000, 0x00007f3a880ca000, 0x00007f3a880ce800, 0x00007f3a880e5000,
+0x00007f3a880e6800, 0x00007f3a880e8800, 0x00007f3a880ea800, 0x00007f3a88193800,
+0x00007f3a8819a800, 0x00007f3a8842c800, 0x00007f3a88ce4000, 0x00007f3a88d70000,
+0x00007f3a88fcf000, 0x00007f3a88fd0800, 0x00007f3a8903e000, 0x00007f3a89046800,
+0x00007f3a89048000, 0x00007f3a8904a000, 0x00007f3a51c9c800, 0x00007f3a51ca0800
+}
+
+Java Threads: ( => current thread )
+  0x00007f3a88014000 JavaThread "main" [_thread_blocked, id=1755680, stack(0x00007f3a8fc43000,0x00007f3a8fd44000)]
+  0x00007f3a880ca000 JavaThread "Reference Handler" daemon [_thread_blocked, id=1755682, stack(0x00007f3a8d7c7000,0x00007f3a8d8c8000)]
+  0x00007f3a880ce800 JavaThread "Finalizer" daemon [_thread_blocked, id=1755683, stack(0x00007f3a8d6c6000,0x00007f3a8d7c7000)]
+  0x00007f3a880e5000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=1755684, stack(0x00007f3a8cbd4000,0x00007f3a8ccd5000)]
+  0x00007f3a880e6800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=1755685, stack(0x00007f3a8cad3000,0x00007f3a8cbd4000)]
+  0x00007f3a880e8800 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=1755686, stack(0x00007f3a8c9d2000,0x00007f3a8cad3000)]
+  0x00007f3a880ea800 JavaThread "Sweeper thread" daemon [_thread_blocked, id=1755687, stack(0x00007f3a8c8d1000,0x00007f3a8c9d2000)]
+  0x00007f3a88193800 JavaThread "Common-Cleaner" daemon [_thread_blocked, id=1755688, stack(0x00007f3a8c7d0000,0x00007f3a8c8d1000)]
+  0x00007f3a8819a800 JavaThread "Service Thread" daemon [_thread_blocked, id=1755689, stack(0x00007f3a8c6cb000,0x00007f3a8c7cc000)]
+  0x00007f3a8842c800 JavaThread "process reaper" daemon [_thread_blocked, id=1755698, stack(0x00007f3a8c143000,0x00007f3a8c165000)]
+  0x00007f3a88ce4000 JavaThread "Thread-1" daemon [_thread_blocked, id=1755699, stack(0x00007f3a8c036000,0x00007f3a8c137000)]
+  0x00007f3a88d70000 JavaThread "AnsiLogObserver" [_thread_blocked, id=1755703, stack(0x00007f3a525f1000,0x00007f3a526f2000)]
+  0x00007f3a88fcf000 JavaThread "Task monitor" [_thread_blocked, id=1755710, stack(0x00007f3a524f0000,0x00007f3a525f1000)]
+  0x00007f3a88fd0800 JavaThread "Task submitter" daemon [_thread_blocked, id=1755711, stack(0x00007f3a523ef000,0x00007f3a524f0000)]
+  0x00007f3a8903e000 JavaThread "Actor Thread 1" daemon [_thread_blocked, id=1755712, stack(0x00007f3a520ee000,0x00007f3a521ef000)]
+  0x00007f3a89046800 JavaThread "Actor Thread 2" daemon [_thread_blocked, id=1755713, stack(0x00007f3a51fe2000,0x00007f3a520e3000)]
+  0x00007f3a89048000 JavaThread "Actor Thread 3" daemon [_thread_blocked, id=1755714, stack(0x00007f3a51edb000,0x00007f3a51fdc000)]
+=>0x00007f3a8904a000 JavaThread "Actor Thread 4" daemon [_thread_in_vm, id=1755715, stack(0x00007f3a51dd7000,0x00007f3a51ed8000)]
+  0x00007f3a51c9c800 JavaThread "Actor Thread 5" daemon [_thread_blocked, id=1755716, stack(0x00007f3a51b5e000,0x00007f3a51c5f000)]
+  0x00007f3a51ca0800 JavaThread "Actor Thread 6" daemon [_thread_blocked, id=1755717, stack(0x00007f3a51a4d000,0x00007f3a51b4e000)]
+
+Other Threads:
+  0x00007f3a880c2000 VMThread "VM Thread" [stack: 0x00007f3a8d8ca000,0x00007f3a8d9ca000] [id=1755681]
+  0x00007f3a8819c800 WatcherThread [stack: 0x00007f3a8c5c8000,0x00007f3a8c6c8000] [id=1755690]
+
+Threads with active compile tasks:
+C2 CompilerThread05166 %     4       java.util.TimSort::binarySort @ 69 (223 bytes)
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007f3a8800f9a0] SystemDictionary_lock - owner thread: 0x00007f3a8904a000
+[0x00007f3a880110b0] Compile_lock - owner thread: 0x00007f3a8904a000
+[0x00007f3a88011260] MethodCompileQueue_lock - owner thread: 0x00007f3a880e6800
+
+OutOfMemory and StackOverflow Exception counts:
+OutOfMemoryError java_heap_errors=2
+LinkageErrors=41
+
+Heap address: 0x0000000080000000, size: 2048 MB, Compressed Oops mode: 32-bit
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 3
+Compressed class space size: 1073741824 Address: 0x0000000100000000
+
+Heap:
+ def new generation   total 153728K, used 52951K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,  36% used [0x0000000080000000, 0x0000000083043fd8, 0x0000000088580000)
+  from space 17024K,  20% used [0x0000000088580000, 0x00000000888f1ec0, 0x0000000089620000)
+  to   space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+ tenured generation   total 341376K, used 31939K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   9% used [0x00000000aaaa0000, 0x00000000ac9d0c08, 0x00000000ac9d0e00, 0x00000000bf800000)
+ Metaspace       used 39100K, capacity 40918K, committed 41256K, reserved 1085440K
+  class space    used 4481K, capacity 5173K, committed 5248K, reserved 1048576K
+
+Card table byte_map: [0x00007f3a8e579000,0x00007f3a8e97a000] _byte_map_base: 0x00007f3a8e179000
+
+Polling page: 0x00007f3a917d2000
+
+Metaspace:
+
+Usage:
+  Non-class:     34.91 MB capacity,    33.81 MB ( 97%) used,  1018.57 KB (  3%) free+waste,   106.88 KB ( <1%) overhead. 
+      Class:      5.05 MB capacity,     4.38 MB ( 87%) used,   636.59 KB ( 12%) free+waste,    55.06 KB (  1%) overhead. 
+       Both:     39.96 MB capacity,    38.18 MB ( 96%) used,     1.62 MB (  4%) free+waste,   161.94 KB ( <1%) overhead. 
+
+Virtual space:
+  Non-class space:       36.00 MB reserved,      35.16 MB ( 98%) committed 
+      Class space:        1.00 GB reserved,       5.12 MB ( <1%) committed 
+             Both:        1.04 GB reserved,      40.29 MB (  4%) committed 
+
+Chunk freelists:
+   Non-Class:  1.38 KB
+       Class:  1.38 KB
+        Both:  2.75 KB
+
+CodeHeap 'non-profiled nmethods': size=120036Kb used=1644Kb max_used=1761Kb free=118391Kb
+ bounds [0x00007f3a78452000, 0x00007f3a786c2000, 0x00007f3a7f98b000]
+CodeHeap 'profiled nmethods': size=120032Kb used=8770Kb max_used=9329Kb free=111261Kb
+ bounds [0x00007f3a70f1a000, 0x00007f3a7183a000, 0x00007f3a78452000]
+CodeHeap 'non-nmethods': size=5692Kb used=2180Kb max_used=2204Kb free=3511Kb
+ bounds [0x00007f3a7098b000, 0x00007f3a70bfb000, 0x00007f3a70f1a000]
+ total_blobs=6538 nmethods=4809 adapters=657
+ compilation: enabled
+              stopped_count=0, restarted_count=0
+ full_count=0
+
+Compilation events (10 events):
+Event: 7.360 Thread 0x00007f3a880e8800 5169       2       java.lang.Character::isLetterOrDigit (5 bytes)
+Event: 7.361 Thread 0x00007f3a880e8800 nmethod 5169 0x00007f3a71836210 code [0x00007f3a718363e0, 0x00007f3a71836598]
+Event: 7.361 Thread 0x00007f3a880e8800 5168       2       java.lang.AbstractStringBuilder::getBytes (44 bytes)
+Event: 7.361 Thread 0x00007f3a880e8800 nmethod 5168 0x00007f3a71836690 code [0x00007f3a71836860, 0x00007f3a71836ab8]
+Event: 7.361 Thread 0x00007f3a880e8800 5170   !   2       org.codehaus.groovy.runtime.callsite.AbstractCallSite::callGroovyObjectGetProperty (33 bytes)
+Event: 7.361 Thread 0x00007f3a880e8800 nmethod 5170 0x00007f3a71836b90 code [0x00007f3a71836d80, 0x00007f3a71836fb8]
+Event: 7.364 Thread 0x00007f3a880e6800 nmethod 5060 0x00007f3a7847b610 code [0x00007f3a7847b9c0, 0x00007f3a7847dd10]
+Event: 7.365 Thread 0x00007f3a880e6800 5164       4       org.codehaus.groovy.runtime.MetaClassHelper::unwrap (36 bytes)
+Event: 7.367 Thread 0x00007f3a880e6800 nmethod 5164 0x00007f3a78463890 code [0x00007f3a78463a40, 0x00007f3a78463c18]
+Event: 7.367 Thread 0x00007f3a880e6800 5166 %     4       java.util.TimSort::binarySort @ 69 (223 bytes)
+
+GC Heap History (8 events):
+Event: 2.266 GC heap before
+{Heap before GC invocations=0 (full 0):
+ def new generation   total 153600K, used 95507K [0x0000000080000000, 0x000000008a6a0000, 0x00000000aaaa0000)
+  eden space 136576K,  69% used [0x0000000080000000, 0x0000000085d44d00, 0x0000000088560000)
+  from space 17024K,   0% used [0x0000000088560000, 0x0000000088560000, 0x0000000089600000)
+  to   space 17024K,   0% used [0x0000000089600000, 0x0000000089600000, 0x000000008a6a0000)
+ tenured generation   total 341376K, used 0K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   0% used [0x00000000aaaa0000, 0x00000000aaaa0000, 0x00000000aaaa0200, 0x00000000bf800000)
+ Metaspace       used 20810K, capacity 21182K, committed 21296K, reserved 1069056K
+  class space    used 1967K, capacity 2116K, committed 2176K, reserved 1048576K
+}
+Event: 2.374 GC heap after
+{Heap after GC invocations=1 (full 1):
+ def new generation   total 153728K, used 0K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,   0% used [0x0000000080000000, 0x0000000080000000, 0x0000000088580000)
+  from space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+  to   space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+ tenured generation   total 341376K, used 14277K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   4% used [0x00000000aaaa0000, 0x00000000ab8915e0, 0x00000000ab891600, 0x00000000bf800000)
+ Metaspace       used 20810K, capacity 21182K, committed 21296K, reserved 1069056K
+  class space    used 1967K, capacity 2116K, committed 2176K, reserved 1048576K
+}
+Event: 3.869 GC heap before
+{Heap before GC invocations=1 (full 1):
+ def new generation   total 153728K, used 136704K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K, 100% used [0x0000000080000000, 0x0000000088580000, 0x0000000088580000)
+  from space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+  to   space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+ tenured generation   total 341376K, used 14277K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   4% used [0x00000000aaaa0000, 0x00000000ab8915e0, 0x00000000ab891600, 0x00000000bf800000)
+ Metaspace       used 27764K, capacity 28506K, committed 28592K, reserved 1075200K
+  class space    used 3022K, capacity 3290K, committed 3328K, reserved 1048576K
+}
+Event: 3.895 GC heap after
+{Heap after GC invocations=2 (full 1):
+ def new generation   total 153728K, used 10471K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,   0% used [0x0000000080000000, 0x0000000080000000, 0x0000000088580000)
+  from space 17024K,  61% used [0x0000000089620000, 0x000000008a059f98, 0x000000008a6c0000)
+  to   space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+ tenured generation   total 341376K, used 14277K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   4% used [0x00000000aaaa0000, 0x00000000ab8915e0, 0x00000000ab891600, 0x00000000bf800000)
+ Metaspace       used 27764K, capacity 28506K, committed 28592K, reserved 1075200K
+  class space    used 3022K, capacity 3290K, committed 3328K, reserved 1048576K
+}
+Event: 5.482 GC heap before
+{Heap before GC invocations=2 (full 1):
+ def new generation   total 153728K, used 133352K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,  89% used [0x0000000080000000, 0x0000000087800298, 0x0000000088580000)
+  from space 17024K,  61% used [0x0000000089620000, 0x000000008a059f98, 0x000000008a6c0000)
+  to   space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+ tenured generation   total 341376K, used 14277K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   4% used [0x00000000aaaa0000, 0x00000000ab8915e0, 0x00000000ab891600, 0x00000000bf800000)
+ Metaspace       used 34026K, capacity 35293K, committed 35496K, reserved 1081344K
+  class space    used 3768K, capacity 4237K, committed 4352K, reserved 1048576K
+}
+Event: 5.638 GC heap after
+{Heap after GC invocations=3 (full 2):
+ def new generation   total 153728K, used 0K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,   0% used [0x0000000080000000, 0x0000000080000000, 0x0000000088580000)
+  from space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+  to   space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+ tenured generation   total 341376K, used 31939K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   9% used [0x00000000aaaa0000, 0x00000000ac9d0c08, 0x00000000ac9d0e00, 0x00000000bf800000)
+ Metaspace       used 34026K, capacity 35293K, committed 35496K, reserved 1081344K
+  class space    used 3768K, capacity 4237K, committed 4352K, reserved 1048576K
+}
+Event: 6.658 GC heap before
+{Heap before GC invocations=3 (full 2):
+ def new generation   total 153728K, used 136704K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K, 100% used [0x0000000080000000, 0x0000000088580000, 0x0000000088580000)
+  from space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+  to   space 17024K,   0% used [0x0000000088580000, 0x0000000088580000, 0x0000000089620000)
+ tenured generation   total 341376K, used 31939K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   9% used [0x00000000aaaa0000, 0x00000000ac9d0c08, 0x00000000ac9d0e00, 0x00000000bf800000)
+ Metaspace       used 36823K, capacity 38229K, committed 38440K, reserved 1083392K
+  class space    used 4105K, capacity 4620K, committed 4736K, reserved 1048576K
+}
+Event: 6.669 GC heap after
+{Heap after GC invocations=4 (full 2):
+ def new generation   total 153728K, used 3527K [0x0000000080000000, 0x000000008a6c0000, 0x00000000aaaa0000)
+  eden space 136704K,   0% used [0x0000000080000000, 0x0000000080000000, 0x0000000088580000)
+  from space 17024K,  20% used [0x0000000088580000, 0x00000000888f1ec0, 0x0000000089620000)
+  to   space 17024K,   0% used [0x0000000089620000, 0x0000000089620000, 0x000000008a6c0000)
+ tenured generation   total 341376K, used 31939K [0x00000000aaaa0000, 0x00000000bf800000, 0x0000000100000000)
+   the space 341376K,   9% used [0x00000000aaaa0000, 0x00000000ac9d0c08, 0x00000000ac9d0e00, 0x00000000bf800000)
+ Metaspace       used 36823K, capacity 38229K, committed 38440K, reserved 1083392K
+  class space    used 4105K, capacity 4620K, committed 4736K, reserved 1048576K
+}
+
+Deoptimization events (10 events):
+Event: 5.805 Thread 0x00007f3a88014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f3a785cdd4c method=org.codehaus.groovy.runtime.MetaClassHelper.sameClasses([Ljava/lang/Class;[Ljava/lang/Object;Z)Z @ 35 c2
+Event: 5.860 Thread 0x00007f3a88014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f3a78569084 method=groovyjarjarantlr4.v4.runtime.atn.ParserATNSimulator.closure(Lgroovyjarjarantlr4/v4/runtime/atn/ATNConfig;Lgroovyjarjarantlr4/v4/runtime/atn/ATNConfigSet;Lgroovyjarjarantlr4
+Event: 5.959 Thread 0x00007f3a88014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f3a7857ae58 method=groovyjarjarantlr4.v4.runtime.atn.ATNConfig.checkNonGreedyDecision(Lgroovyjarjarantlr4/v4/runtime/atn/ATNConfig;Lgroovyjarjarantlr4/v4/runtime/atn/ATNState;)Z @ 21 c2
+Event: 5.959 Thread 0x00007f3a88014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f3a785b6c6c method=groovyjarjarantlr4.v4.runtime.atn.ATNConfig.hashCode()I @ 67 c2
+Event: 5.962 Thread 0x00007f3a88014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f3a785d1598 method=org.codehaus.groovy.runtime.MetaClassHelper.unwrap([Ljava/lang/Object;)V @ 14 c2
+Event: 6.168 Thread 0x00007f3a88014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f3a78508460 method=groovy.lang.MetaClassImpl$1MOPIter.processFastArray(Lorg/codehaus/groovy/util/FastArray;)V @ 85 c2
+Event: 6.278 Thread 0x00007f3a88014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f3a78520c14 method=java.util.concurrent.ConcurrentHashMap.get(Ljava/lang/Object;)Ljava/lang/Object; @ 152 c2
+Event: 6.482 Thread 0x00007f3a88014000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f3a785a1bfc method=groovyjarjarantlr4.v4.runtime.atn.PredictionContextCache$IdentityCommutativePredictionContextOperands.equals(Ljava/lang/Object;)Z @ 40 c2
+Event: 7.160 Thread 0x00007f3a88014000 Uncommon trap: reason=intrinsic_or_type_checked_inlining action=make_not_entrant pc=0x00007f3a786049a8 method=java.util.Arrays.copyOf([Ljava/lang/Object;ILjava/lang/Class;)[Ljava/lang/Object; @ 35 c2
+Event: 7.165 Thread 0x00007f3a8903e000 Uncommon trap: reason=intrinsic_or_type_checked_inlining action=make_not_entrant pc=0x00007f3a78605df0 method=java.util.ArrayList.toArray([Ljava/lang/Object;)[Ljava/lang/Object; @ 36 c2
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 7.261 Thread 0x00007f3a88ce4000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082bd3b88}: java/util/concurrent/CountDownLatchCustomizer> (0x0000000082bd3b88) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDicti
+Event: 7.263 Thread 0x00007f3a8903e000 Exception <a 'java/lang/ClassNotFoundException'{0x00000000828677c8}: nextflow/processor/TaskStartParamsBeanInfo> (0x00000000828677c8) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictiona
+Event: 7.264 Thread 0x00007f3a8903e000 Exception <a 'java/lang/ClassNotFoundException'{0x000000008286e530}: nextflow/processor/TaskStartParamsCustomizer> (0x000000008286e530) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictio
+Event: 7.280 Thread 0x00007f3a89048000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082e32c60}: nextflow/processor/TaskConfigBeanInfo> (0x0000000082e32c60) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.cp
+Event: 7.281 Thread 0x00007f3a89048000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082e38ef8}: nextflow/processor/LazyMapBeanInfo> (0x0000000082e38ef8) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.cpp, 
+Event: 7.281 Thread 0x00007f3a89048000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082e3f458}: nextflow/processor/LazyMapCustomizer> (0x0000000082e3f458) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.cpp
+Event: 7.281 Thread 0x00007f3a89048000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082e5f800}: nextflow/processor/TaskConfigCustomizer> (0x0000000082e5f800) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.
+Event: 7.359 Thread 0x00007f3a89048000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082f07bb0}: nextflow/processor/TaskContextBeanInfo> (0x0000000082f07bb0) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary.c
+Event: 7.360 Thread 0x00007f3a89048000 Exception <a 'java/lang/ClassNotFoundException'{0x0000000082f0e2c8}: nextflow/processor/TaskContextCustomizer> (0x0000000082f0e2c8) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/classfile/systemDictionary
+Event: 7.361 Thread 0x00007f3a88d70000 Exception <a 'java/io/FileNotFoundException'{0x0000000082bcc9a0}> (0x0000000082bcc9a0) thrown at [/export/home/tester/jenkins/workspace/zulu11-build-linux64/zulu-src/src/hotspot/share/prims/jni.cpp, line 615]
+
+Events (10 events):
+Event: 7.366 Thread 0x00007f3a880ea800 flushing nmethod 0x00007f3a7128a890
+Event: 7.366 Thread 0x00007f3a880ea800 flushing nmethod 0x00007f3a7128ac90
+Event: 7.366 Thread 0x00007f3a880ea800 flushing nmethod 0x00007f3a712f0010
+Event: 7.368 Thread 0x00007f3a880ea800 flushing nmethod 0x00007f3a714d6610
+Event: 7.368 Executing VM operation: RevokeBias
+Event: 7.368 Executing VM operation: RevokeBias done
+Event: 7.369 loading class jline/internal/TerminalLineSettings
+Event: 7.369 loading class jline/internal/TerminalLineSettings done
+Event: 7.370 Executing VM operation: RevokeBias
+Event: 7.370 Executing VM operation: RevokeBias done
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 00:42 3299053670393                      /data/tfang/conda-envs/nf-training/bin/java
+00601000-00602000 rw-p 00001000 00:42 3299053670393                      /data/tfang/conda-envs/nf-training/bin/java
+00812000-00833000 rw-p 00000000 00:00 0                                  [heap]
+80000000-8a6c0000 rw-p 00000000 00:00 0 
+8a6c0000-aaaa0000 ---p 00000000 00:00 0 
+aaaa0000-bf800000 rw-p 00000000 00:00 0 
+bf800000-100000000 ---p 00000000 00:00 0 
+100000000-100520000 rw-p 00000000 00:00 0 
+100520000-140000000 ---p 00000000 00:00 0 
+7f3a5186e000-7f3a5186f000 rw-p 00000000 00:00 0 
+7f3a51870000-7f3a51872000 rw-p 00000000 00:00 0 
+7f3a51876000-7f3a51877000 rw-p 00000000 00:00 0 
+7f3a5187d000-7f3a51881000 rw-p 00000000 00:00 0 
+7f3a51887000-7f3a5188d000 rw-p 00000000 00:00 0 
+7f3a5188e000-7f3a5188f000 rw-p 00000000 00:00 0 
+7f3a51890000-7f3a51a4d000 rw-p 00000000 00:00 0 
+7f3a51a4d000-7f3a51a51000 ---p 00000000 00:00 0 
+7f3a51a51000-7f3a51b5e000 rw-p 00000000 00:00 0 
+7f3a51b5e000-7f3a51b62000 ---p 00000000 00:00 0 
+7f3a51b62000-7f3a51dd7000 rw-p 00000000 00:00 0 
+7f3a51dd7000-7f3a51ddb000 ---p 00000000 00:00 0 
+7f3a51ddb000-7f3a51edb000 rw-p 00000000 00:00 0 
+7f3a51edb000-7f3a51edf000 ---p 00000000 00:00 0 
+7f3a51edf000-7f3a51fe2000 rw-p 00000000 00:00 0 
+7f3a51fe2000-7f3a51fe6000 ---p 00000000 00:00 0 
+7f3a51fe6000-7f3a520ee000 rw-p 00000000 00:00 0 
+7f3a520ee000-7f3a520f2000 ---p 00000000 00:00 0 
+7f3a520f2000-7f3a5232f000 rw-p 00000000 00:00 0 
+7f3a5232f000-7f3a523ef000 ---p 00000000 00:00 0 
+7f3a523ef000-7f3a523f3000 ---p 00000000 00:00 0 
+7f3a523f3000-7f3a524f0000 rw-p 00000000 00:00 0 
+7f3a524f0000-7f3a524f4000 ---p 00000000 00:00 0 
+7f3a524f4000-7f3a525f1000 rw-p 00000000 00:00 0 
+7f3a525f1000-7f3a525f5000 ---p 00000000 00:00 0 
+7f3a525f5000-7f3a526f2000 rw-p 00000000 00:00 0 
+7f3a526f2000-7f3a526f3000 r-xp 00000000 00:41 1102918561990              /sctmp/tfang/libjansi-64.so
+7f3a526f3000-7f3a528f2000 ---p 00001000 00:41 1102918561990              /sctmp/tfang/libjansi-64.so
+7f3a528f2000-7f3a528f3000 rw-p 00000000 00:41 1102918561990              /sctmp/tfang/libjansi-64.so
+7f3a528f3000-7f3a52af3000 rw-p 00000000 00:00 0 
+7f3a52af3000-7f3a52bf3000 rw-s 00000000 00:3e 2199127023654              /home/tfang/PPI_Prediction_byCoevolution/scripts/.nextflow/cache/591f071c-02ef-4c05-9bf5-d83f7a558f28/db/MANIFEST-000029
+7f3a52bf3000-7f3a52df1000 rw-p 00000000 00:00 0 
+7f3a52df1000-7f3a52df3000 ---p 00000000 00:00 0 
+7f3a52df3000-7f3a52df8000 r-xp 00000000 00:42 3299053670314              /data/tfang/conda-envs/nf-training/lib/libmanagement_ext.so
+7f3a52df8000-7f3a52ff8000 ---p 00005000 00:42 3299053670314              /data/tfang/conda-envs/nf-training/lib/libmanagement_ext.so
+7f3a52ff8000-7f3a52ff9000 rw-p 00005000 00:42 3299053670314              /data/tfang/conda-envs/nf-training/lib/libmanagement_ext.so
+7f3a52ff9000-7f3a52ffa000 rw-p 00008000 00:42 3299053670314              /data/tfang/conda-envs/nf-training/lib/libmanagement_ext.so
+7f3a52ffa000-7f3a52ffe000 r-xp 00000000 00:42 3299053670313              /data/tfang/conda-envs/nf-training/lib/libmanagement.so
+7f3a52ffe000-7f3a531fd000 ---p 00004000 00:42 3299053670313              /data/tfang/conda-envs/nf-training/lib/libmanagement.so
+7f3a531fd000-7f3a531fe000 rw-p 00003000 00:42 3299053670313              /data/tfang/conda-envs/nf-training/lib/libmanagement.so
+7f3a531fe000-7f3a53200000 rw-p 00007000 00:42 3299053670313              /data/tfang/conda-envs/nf-training/lib/libmanagement.so
+7f3a53200000-7f3a53400000 rw-p 00000000 00:00 0 
+7f3a53400000-7f3a53600000 rw-p 00000000 00:00 0 
+7f3a53600000-7f3a53800000 rw-p 00000000 00:00 0 
+7f3a53800000-7f3a53a00000 rw-p 00000000 00:00 0 
+7f3a53a00000-7f3a53c00000 rw-p 00000000 00:00 0 
+7f3a53c00000-7f3a53dec000 rw-p 00000000 00:00 0 
+7f3a53dec000-7f3a53e00000 ---p 00000000 00:00 0 
+7f3a53e00000-7f3a54000000 rw-p 00000000 00:00 0 
+7f3a54000000-7f3a54a01000 rw-p 00000000 00:00 0 
+7f3a54a01000-7f3a58000000 ---p 00000000 00:00 0 
+7f3a58000000-7f3a58021000 rw-p 00000000 00:00 0 
+7f3a58021000-7f3a5c000000 ---p 00000000 00:00 0 
+7f3a5c000000-7f3a5c021000 rw-p 00000000 00:00 0 
+7f3a5c021000-7f3a60000000 ---p 00000000 00:00 0 
+7f3a60000000-7f3a6149c000 rw-p 00000000 00:00 0 
+7f3a6149c000-7f3a64000000 ---p 00000000 00:00 0 
+7f3a64000000-7f3a64021000 rw-p 00000000 00:00 0 
+7f3a64021000-7f3a68000000 ---p 00000000 00:00 0 
+7f3a68000000-7f3a68021000 rw-p 00000000 00:00 0 
+7f3a68021000-7f3a6c000000 ---p 00000000 00:00 0 
+7f3a6c000000-7f3a6c0d5000 rw-p 00000000 00:00 0 
+7f3a6c0d5000-7f3a70000000 ---p 00000000 00:00 0 
+7f3a70000000-7f3a7008b000 rw-p 00000000 00:00 0 
+7f3a7008b000-7f3a7018b000 rw-s 00000000 00:3e 2199127023653              /home/tfang/PPI_Prediction_byCoevolution/scripts/.nextflow/cache/591f071c-02ef-4c05-9bf5-d83f7a558f28/db/000030.log
+7f3a7018b000-7f3a7038b000 rw-p 00000000 00:00 0 
+7f3a7038b000-7f3a7058b000 rw-p 00000000 00:00 0 
+7f3a7058b000-7f3a7078b000 rw-p 00000000 00:00 0 
+7f3a7078b000-7f3a7098b000 rw-p 00000000 00:00 0 
+7f3a7098b000-7f3a70bfb000 rwxp 00000000 00:00 0 
+7f3a70bfb000-7f3a70f1a000 ---p 00000000 00:00 0 
+7f3a70f1a000-7f3a7183a000 rwxp 00000000 00:00 0 
+7f3a7183a000-7f3a78452000 ---p 00000000 00:00 0 
+7f3a78452000-7f3a786c2000 rwxp 00000000 00:00 0 
+7f3a786c2000-7f3a7f98b000 ---p 00000000 00:00 0 
+7f3a7f98b000-7f3a88000000 r--s 00000000 00:42 3299053670391              /data/tfang/conda-envs/nf-training/lib/modules
+7f3a88000000-7f3a8904e000 rw-p 00000000 00:00 0 
+7f3a8904e000-7f3a8c000000 ---p 00000000 00:00 0 
+7f3a8c000000-7f3a8c036000 rw-p 00000000 00:00 0 
+7f3a8c036000-7f3a8c03a000 ---p 00000000 00:00 0 
+7f3a8c03a000-7f3a8c143000 rw-p 00000000 00:00 0 
+7f3a8c143000-7f3a8c147000 ---p 00000000 00:00 0 
+7f3a8c147000-7f3a8c197000 rw-p 00000000 00:00 0 
+7f3a8c197000-7f3a8c1ad000 r-xp 00000000 00:42 3299053670325              /data/tfang/conda-envs/nf-training/lib/libnet.so
+7f3a8c1ad000-7f3a8c3ad000 ---p 00016000 00:42 3299053670325              /data/tfang/conda-envs/nf-training/lib/libnet.so
+7f3a8c3ad000-7f3a8c3ae000 rw-p 00016000 00:42 3299053670325              /data/tfang/conda-envs/nf-training/lib/libnet.so
+7f3a8c3ae000-7f3a8c3b0000 rw-p 0001c000 00:42 3299053670325              /data/tfang/conda-envs/nf-training/lib/libnet.so
+7f3a8c3b0000-7f3a8c3c0000 r-xp 00000000 00:42 3299053670324              /data/tfang/conda-envs/nf-training/lib/libnio.so
+7f3a8c3c0000-7f3a8c5bf000 ---p 00010000 00:42 3299053670324              /data/tfang/conda-envs/nf-training/lib/libnio.so
+7f3a8c5bf000-7f3a8c5c0000 rw-p 0000f000 00:42 3299053670324              /data/tfang/conda-envs/nf-training/lib/libnio.so
+7f3a8c5c0000-7f3a8c5c3000 rw-p 00016000 00:42 3299053670324              /data/tfang/conda-envs/nf-training/lib/libnio.so
+7f3a8c5c3000-7f3a8c5c6000 rw-p 00000000 00:00 0 
+7f3a8c5c6000-7f3a8c5c7000 ---p 00000000 00:00 0 
+7f3a8c5c7000-7f3a8c6cb000 rw-p 00000000 00:00 0 
+7f3a8c6cb000-7f3a8c6cf000 ---p 00000000 00:00 0 
+7f3a8c6cf000-7f3a8c7d0000 rw-p 00000000 00:00 0 
+7f3a8c7d0000-7f3a8c7d4000 ---p 00000000 00:00 0 
+7f3a8c7d4000-7f3a8c8d1000 rw-p 00000000 00:00 0 
+7f3a8c8d1000-7f3a8c8d5000 ---p 00000000 00:00 0 
+7f3a8c8d5000-7f3a8c9d2000 rw-p 00000000 00:00 0 
+7f3a8c9d2000-7f3a8c9d6000 ---p 00000000 00:00 0 
+7f3a8c9d6000-7f3a8cad3000 rw-p 00000000 00:00 0 
+7f3a8cad3000-7f3a8cad7000 ---p 00000000 00:00 0 
+7f3a8cad7000-7f3a8cbd4000 rw-p 00000000 00:00 0 
+7f3a8cbd4000-7f3a8cbd8000 ---p 00000000 00:00 0 
+7f3a8cbd8000-7f3a8ccd5000 rw-p 00000000 00:00 0 
+7f3a8ccd5000-7f3a8cd07000 r--p 00000000 fc:01 14115                      /usr/lib/locale/C.UTF-8/LC_CTYPE
+7f3a8cd07000-7f3a8cd08000 r--p 00000000 fc:01 17887                      /usr/lib/locale/C.UTF-8/LC_NUMERIC
+7f3a8cd08000-7f3a8cd09000 r--p 00000000 fc:01 18119                      /usr/lib/locale/C.UTF-8/LC_TIME
+7f3a8cd09000-7f3a8ce7c000 r--p 00000000 fc:01 14113                      /usr/lib/locale/C.UTF-8/LC_COLLATE
+7f3a8ce7c000-7f3a8d6c6000 r--p 00000000 fc:01 2360                       /usr/lib/locale/locale-archive
+7f3a8d6c6000-7f3a8d6ca000 ---p 00000000 00:00 0 
+7f3a8d6ca000-7f3a8d7c7000 rw-p 00000000 00:00 0 
+7f3a8d7c7000-7f3a8d7cb000 ---p 00000000 00:00 0 
+7f3a8d7cb000-7f3a8d8c8000 rw-p 00000000 00:00 0 
+7f3a8d8c8000-7f3a8d8c9000 ---p 00000000 00:00 0 
+7f3a8d8c9000-7f3a8e375000 rw-p 00000000 00:00 0 
+7f3a8e375000-7f3a8e579000 ---p 00000000 00:00 0 
+7f3a8e579000-7f3a8e5cd000 rw-p 00000000 00:00 0 
+7f3a8e5cd000-7f3a8e6ce000 ---p 00000000 00:00 0 
+7f3a8e6ce000-7f3a8e775000 rw-p 00000000 00:00 0 
+7f3a8e775000-7f3a8e979000 ---p 00000000 00:00 0 
+7f3a8e979000-7f3a8e97f000 rw-p 00000000 00:00 0 
+7f3a8e97f000-7f3a8ea65000 ---p 00000000 00:00 0 
+7f3a8ea65000-7f3a8ea78000 rw-p 00000000 00:00 0 
+7f3a8ea78000-7f3a8eb50000 ---p 00000000 00:00 0 
+7f3a8eb50000-7f3a8eb55000 rw-p 00000000 00:00 0 
+7f3a8eb55000-7f3a8eb5c000 ---p 00000000 00:00 0 
+7f3a8eb5c000-7f3a8eb76000 r-xp 00000000 00:42 3299053670326              /data/tfang/conda-envs/nf-training/lib/libjimage.so
+7f3a8eb76000-7f3a8ed75000 ---p 0001a000 00:42 3299053670326              /data/tfang/conda-envs/nf-training/lib/libjimage.so
+7f3a8ed75000-7f3a8ed77000 rw-p 00019000 00:42 3299053670326              /data/tfang/conda-envs/nf-training/lib/libjimage.so
+7f3a8ed77000-7f3a8ed89000 rw-p 00000000 00:00 0 
+7f3a8ed89000-7f3a8ed8a000 rw-p 00022000 00:42 3299053670326              /data/tfang/conda-envs/nf-training/lib/libjimage.so
+7f3a8ed8a000-7f3a8ed91000 r-xp 00000000 00:42 3299053670315              /data/tfang/conda-envs/nf-training/lib/libzip.so
+7f3a8ed91000-7f3a8ef90000 ---p 00007000 00:42 3299053670315              /data/tfang/conda-envs/nf-training/lib/libzip.so
+7f3a8ef90000-7f3a8ef91000 rw-p 00006000 00:42 3299053670315              /data/tfang/conda-envs/nf-training/lib/libzip.so
+7f3a8ef91000-7f3a8ef92000 rw-p 0000a000 00:42 3299053670315              /data/tfang/conda-envs/nf-training/lib/libzip.so
+7f3a8ef92000-7f3a8f797000 r--s 00000000 fc:01 2322579                    /var/lib/sss/mc/passwd
+7f3a8f797000-7f3a8f79d000 r--p 00000000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f3a8f79d000-7f3a8f7c3000 r-xp 00006000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f3a8f7c3000-7f3a8f7cf000 r--p 0002c000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f3a8f7cf000-7f3a8f7d2000 r--p 00037000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f3a8f7d2000-7f3a8f7d3000 rw-p 0003a000 fc:01 16782                      /usr/lib/x86_64-linux-gnu/libnss_systemd.so.2
+7f3a8f7d3000-7f3a8f7d6000 r--p 00000000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f3a8f7d6000-7f3a8f7dd000 r-xp 00003000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f3a8f7dd000-7f3a8f7df000 r--p 0000a000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f3a8f7df000-7f3a8f7e0000 r--p 0000b000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f3a8f7e0000-7f3a8f7e1000 rw-p 0000c000 fc:01 34437                      /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+7f3a8f7e1000-7f3a8f7e7000 rw-p 00000000 00:00 0 
+7f3a8f7e7000-7f3a8f7e8000 r--p 00000000 fc:01 17885                      /usr/lib/locale/C.UTF-8/LC_MONETARY
+7f3a8f7e8000-7f3a8f7e9000 r--p 00000000 fc:01 14118                      /usr/lib/locale/C.UTF-8/LC_MESSAGES/SYS_LC_MESSAGES
+7f3a8f7e9000-7f3a8f7ea000 r--p 00000000 fc:01 18117                      /usr/lib/locale/C.UTF-8/LC_PAPER
+7f3a8f7ea000-7f3a8f7f1000 r--s 00000000 fc:01 34696                      /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+7f3a8f7f1000-7f3a8f7f9000 rw-s 00000000 fc:01 816113                     /tmp/hsperfdata_tfang/1755616
+7f3a8f7f9000-7f3a8f824000 r-xp 00000000 00:42 3299053670328              /data/tfang/conda-envs/nf-training/lib/libjava.so
+7f3a8f824000-7f3a8fa24000 ---p 0002b000 00:42 3299053670328              /data/tfang/conda-envs/nf-training/lib/libjava.so
+7f3a8fa24000-7f3a8fa26000 rw-p 0002b000 00:42 3299053670328              /data/tfang/conda-envs/nf-training/lib/libjava.so
+7f3a8fa26000-7f3a8fa2a000 rw-p 00038000 00:42 3299053670328              /data/tfang/conda-envs/nf-training/lib/libjava.so
+7f3a8fa2a000-7f3a8fa37000 r-xp 00000000 00:42 3299053670320              /data/tfang/conda-envs/nf-training/lib/libverify.so
+7f3a8fa37000-7f3a8fc36000 ---p 0000d000 00:42 3299053670320              /data/tfang/conda-envs/nf-training/lib/libverify.so
+7f3a8fc36000-7f3a8fc38000 rw-p 0000c000 00:42 3299053670320              /data/tfang/conda-envs/nf-training/lib/libverify.so
+7f3a8fc38000-7f3a8fc39000 rw-p 00010000 00:42 3299053670320              /data/tfang/conda-envs/nf-training/lib/libverify.so
+7f3a8fc39000-7f3a8fc3b000 r--p 00000000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f3a8fc3b000-7f3a8fc3f000 r-xp 00002000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f3a8fc3f000-7f3a8fc41000 r--p 00006000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f3a8fc41000-7f3a8fc42000 r--p 00007000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f3a8fc42000-7f3a8fc43000 rw-p 00008000 fc:01 34444                      /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f3a8fc43000-7f3a8fc47000 ---p 00000000 00:00 0 
+7f3a8fc47000-7f3a8fd44000 rw-p 00000000 00:00 0 
+7f3a8fd44000-7f3a8fd51000 r--p 00000000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f3a8fd51000-7f3a8fdf8000 r-xp 0000d000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f3a8fdf8000-7f3a8fe91000 r--p 000b4000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f3a8fe91000-7f3a8fe92000 r--p 0014c000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f3a8fe92000-7f3a8fe93000 rw-p 0014d000 fc:01 34431                      /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f3a8fe93000-7f3a9100d000 r-xp 00000000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f3a9100d000-7f3a9120c000 ---p 0117a000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f3a9120c000-7f3a912ec000 r--p 01179000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f3a912ec000-7f3a91326000 rw-p 01259000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f3a91326000-7f3a91391000 rw-p 00000000 00:00 0 
+7f3a91391000-7f3a91394000 rw-p 01641000 00:42 3299053670339              /data/tfang/conda-envs/nf-training/lib/server/libjvm.so
+7f3a91394000-7f3a91396000 rw-p 00000000 00:00 0 
+7f3a91396000-7f3a913b8000 r--p 00000000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f3a913b8000-7f3a91530000 r-xp 00022000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f3a91530000-7f3a9157e000 r--p 0019a000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f3a9157e000-7f3a91582000 r--p 001e7000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f3a91582000-7f3a91584000 rw-p 001eb000 fc:01 34429                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f3a91584000-7f3a91588000 rw-p 00000000 00:00 0 
+7f3a91588000-7f3a91589000 r--p 00000000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f3a91589000-7f3a9158b000 r-xp 00001000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f3a9158b000-7f3a9158c000 r--p 00003000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f3a9158c000-7f3a9158d000 r--p 00003000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f3a9158d000-7f3a9158e000 rw-p 00004000 fc:01 34430                      /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f3a9158e000-7f3a9159d000 r-xp 00000000 00:42 3299053670321              /data/tfang/conda-envs/nf-training/lib/libjli.so
+7f3a9159d000-7f3a9179d000 ---p 0000f000 00:42 3299053670321              /data/tfang/conda-envs/nf-training/lib/libjli.so
+7f3a9179d000-7f3a9179e000 rw-p 0000f000 00:42 3299053670321              /data/tfang/conda-envs/nf-training/lib/libjli.so
+7f3a9179e000-7f3a9179f000 rw-p 00013000 00:42 3299053670321              /data/tfang/conda-envs/nf-training/lib/libjli.so
+7f3a9179f000-7f3a917a5000 r--p 00000000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f3a917a5000-7f3a917b6000 r-xp 00006000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f3a917b6000-7f3a917bc000 r--p 00017000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f3a917bc000-7f3a917bd000 r--p 0001c000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f3a917bd000-7f3a917be000 rw-p 0001d000 fc:01 34442                      /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f3a917be000-7f3a917c2000 rw-p 00000000 00:00 0 
+7f3a917c2000-7f3a917c3000 r--p 00000000 fc:01 17886                      /usr/lib/locale/C.UTF-8/LC_NAME
+7f3a917c3000-7f3a917c4000 r--p 00000000 fc:01 14057                      /usr/lib/locale/C.UTF-8/LC_ADDRESS
+7f3a917c4000-7f3a917c5000 r--p 00000000 fc:01 18118                      /usr/lib/locale/C.UTF-8/LC_TELEPHONE
+7f3a917c5000-7f3a917c6000 r--p 00000000 fc:01 14117                      /usr/lib/locale/C.UTF-8/LC_MEASUREMENT
+7f3a917c6000-7f3a917c8000 r--p 00000000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f3a917c8000-7f3a917ce000 r-xp 00002000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f3a917ce000-7f3a917d0000 r--p 00008000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f3a917d0000-7f3a917d1000 r--p 00009000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f3a917d1000-7f3a917d2000 rw-p 0000a000 fc:01 6566                       /usr/lib/x86_64-linux-gnu/libnss_sss.so.2
+7f3a917d2000-7f3a917d3000 ---p 00000000 00:00 0 
+7f3a917d3000-7f3a917d4000 r--p 00000000 00:00 0 
+7f3a917d4000-7f3a917d7000 r--p 00000000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f3a917d7000-7f3a917e6000 r-xp 00003000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f3a917e6000-7f3a917ed000 r--p 00012000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f3a917ed000-7f3a917ee000 r--p 00018000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f3a917ee000-7f3a917ef000 rw-p 00019000 00:42 3299049661293              /data/tfang/conda-envs/nf-training/lib/libz.so.1.2.13
+7f3a917ef000-7f3a917f1000 rw-p 00000000 00:00 0 
+7f3a917f1000-7f3a917f2000 r--p 00000000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f3a917f2000-7f3a91815000 r-xp 00001000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f3a91815000-7f3a9181d000 r--p 00024000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f3a9181d000-7f3a9181e000 r--p 00000000 fc:01 14116                      /usr/lib/locale/C.UTF-8/LC_IDENTIFICATION
+7f3a9181e000-7f3a9181f000 r--p 0002c000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f3a9181f000-7f3a91820000 rw-p 0002d000 fc:01 34425                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f3a91820000-7f3a91821000 rw-p 00000000 00:00 0 
+7ffe1c274000-7ffe1c298000 rw-p 00000000 00:00 0                          [stack]
+7ffe1c2de000-7ffe1c2e2000 r--p 00000000 00:00 0                          [vvar]
+7ffe1c2e2000-7ffe1c2e4000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+
+VM Arguments:
+jvm_args: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.nio.file.spi=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.fs=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.ftp=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.file=ALL-UNNAMED --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/java.util.regex=ALL-UNNAMED -Xms500M -Xmx2G -Djava.io.tmpdir=/sctmp/tfang -Djava.library.path=/cluster/22-05-9-1/munge-0.5.15/lib:/cluster/22-05-9-1/slurm-22-05-9-1/lib:/cluster/22-05-9-1/pmix-4.2.3/lib:/cluster/22-05-9-1/libevent-2.1.12/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib -Dfile.encoding=UTF-8 -Dcapsule.app=nextflow_23.04.1 -Djava.awt.headless=true -Dcapsule.jar=/data/tfang/conda-envs/nf-training/share/nextflow/dist/23.04.1/nextflow-23.04.1-one.jar -Dcom.sun.security.enableAIAcaIssuers=true 
+java_command: nextflow.cli.Launcher run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow -c nextflow.config -profile slurm -resume
+java_class_path (initial): /data/tfang/conda-envs/nf-training/share/nextflow/dist/23.04.1/nextflow-23.04.1-one.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/io/nextflow/nextflow/23.04.1/nextflow-23.04.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/apache/ivy/ivy/2.5.1/ivy-2.5.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/io/nextflow/nf-httpfs/23.04.1/nf-httpfs-23.04.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/io/nextflow/nf-commons/23.04.1/nf-commons-23.04.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy-nio/3.0.16/groovy-nio-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy-templates/3.0.16/groovy-templates-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy-xml/3.0.16/groovy-xml-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy-json/3.0.16/groovy-json-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/groovy/groovy/3.0.16/groovy-3.0.16.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/slf4j/jcl-over-slf4j/1.7.36/jcl-over-slf4j-1.7.36.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/slf4j/jul-to-slf4j/1.7.36/jul-to-slf4j-1.7.36.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/slf4j/log4j-over-slf4j/1.7.36/log4j-over-slf4j-1.7.36.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/ch/qos/logback/logback-classic/1.2.11/logback-classic-1.2.11.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/ch/qos/logback/logback-core/1.2.11/logback-core-1.2.11.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/org/codehaus/gpars/gpars/1.2.1/gpars-1.2.1.jar:/data/tfang/conda-envs/nf-training/share/nextflow/capsule/deps/ch/artecat/grengine/grengine/
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 2                                         {product} {ergonomic}
+   size_t InitialHeapSize                          = 524288000                                 {product} {command line}
+   size_t MaxHeapSize                              = 2147483648                                {product} {command line}
+   size_t MaxNewSize                               = 715784192                                 {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 196608                                    {product} {ergonomic}
+   size_t NewSize                                  = 174718976                                 {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5824844                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122916698                              {pd product} {ergonomic}
+   size_t OldSize                                  = 349569024                                 {product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122916698                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseSerialGC                              = true                                      {product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+JAVA_HOME=/data/tfang/conda-envs/nf-training
+PATH=/data/tfang/conda-envs/nf-training/bin:/apps/opt/spack/linux-ubuntu20.04-x86_64/gcc-9.3.0/anaconda3-2022.10-4zvvyfdmb3tw45xdxcy7vcuhn5nw2s3i/condabin:/cluster/22-05-9-1/slurm-22-05-9-1/bin:/cluster/22-05-9-1/slurm-22-05-9-1/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/var/cfengine/bin:/usr/local/go/bin
+LD_LIBRARY_PATH=/cluster/22-05-9-1/munge-0.5.15/lib:/cluster/22-05-9-1/slurm-22-05-9-1/lib:/cluster/22-05-9-1/pmix-4.2.3/lib:/cluster/22-05-9-1/libevent-2.1.12/lib
+SHELL=/usr/bin/bash
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xe35970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xe35970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0xe35970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0xc2d970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0xc2d970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0xe35970], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR2: [libjvm.so+0xc2dc60], sa_mask[0]=00000000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0xc2ddc0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0xc2ddc0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0xc2ddc0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0xc2ddc0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=20.04
+DISTRIB_CODENAME=focal
+DISTRIB_DESCRIPTION="Ubuntu 20.04.6 LTS"
+uname:Linux 5.15.0-83-generic #92~20.04.1-Ubuntu SMP Mon Aug 21 14:00:49 UTC 2023 x86_64
+libc:glibc 2.31 NPTL 2.31 
+rlimit: STACK 8192k, CORE 0k, NPROC 256, NOFILE 1048576, AS 4194304k, DATA infinity, FSIZE infinity
+load average:0.05 0.11 0.09
+
+/proc/meminfo:
+MemTotal:       64293460 kB
+MemFree:        48492028 kB
+MemAvailable:   60276316 kB
+Buffers:          397628 kB
+Cached:         11070016 kB
+SwapCached:            0 kB
+Active:          1710780 kB
+Inactive:       12505504 kB
+Active(anon):       1752 kB
+Inactive(anon):  2756608 kB
+Active(file):    1709028 kB
+Inactive(file):  9748896 kB
+Unevictable:       18480 kB
+Mlocked:           18480 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:               140 kB
+Writeback:             0 kB
+AnonPages:       2767360 kB
+Mapped:           669128 kB
+Shmem:              1636 kB
+KReclaimable:    1039972 kB
+Slab:            1275636 kB
+SReclaimable:    1039972 kB
+SUnreclaim:       235664 kB
+KernelStack:        9248 kB
+PageTables:        69608 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    32146728 kB
+Committed_AS:    3292840 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:       46256 kB
+VmallocChunk:          0 kB
+Percpu:            53440 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:     1238908 kB
+DirectMap2M:    44374016 kB
+DirectMap1G:    19922944 kB
+
+
+/proc/sys/kernel/threads-max (system-wide limit on the number of threads):
+500961
+
+
+/proc/sys/vm/max_map_count (maximum number of memory map areas a process may have):
+65530
+
+
+/proc/sys/kernel/pid_max (system-wide limit on number of process identifiers):
+4194304
+
+
+container (cgroup) information:
+container_type: cgroupv1
+cpu_cpuset_cpus: 0-15
+cpu_memory_nodes: 0
+active_processor_count: 1
+cpu_quota: 100000
+cpu_period: 100000
+cpu_shares: -1
+memory_limit_in_bytes: -1
+memory_and_swap_limit_in_bytes: -1
+memory_soft_limit_in_bytes: -1
+memory_usage_in_bytes: 328273920
+memory_max_usage_in_bytes: 441163776
+
+
+CPU:total 16 (initial active 1) (1 cores per cpu, 1 threads per core) family 23 model 49 stepping 0, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, mmxext, 3dnowpref, lzcnt, sse4a, tsc, bmi1, bmi2, adx, fma
+CPU Model and flags from /proc/cpuinfo:
+model name	: AMD EPYC 7702 64-Core Processor
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ssbd ibrs ibpb vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb xsaveopt xsavec xgetbv1 arat npt nrip_save
+
+Memory: 4k page, physical 64293460k(48492028k free), swap 0k(0k free)
+
+vm_info: OpenJDK 64-Bit Server VM (11.0.1+13-LTS) for linux-amd64 JRE (11.0.1+13-LTS), built on Oct 19 2018 11:38:45 by "tester" with gcc 4.9.2 20150212 (Red Hat 4.9.2-6)
+
+END.

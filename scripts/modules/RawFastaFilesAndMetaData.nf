@@ -23,7 +23,9 @@ process downLoadOtherRawFiles {
     
     script:
     """
-    
+        echo ${params.RawData_Folder}
+        echo $CONDA_DEFAULT_ENV
+        
         wget https://stringdb-downloads.org/download/species.v11.5.txt -O species.v11.5.txt  # here -N is not necesseary since its in temperaroy processing working directoy ,  -N
         wget https://stringdb-downloads.org/download/species.tree.v11.5.txt  -O species.tree.v11.5.txt 
         
@@ -32,11 +34,11 @@ process downLoadOtherRawFiles {
         mkdir -p \${eggNOG_folder} # here -p is not necesseary since its in temperaroy processing working directoy 
         wget https://zenodo.org/record/8279323/files/eggnog5AddSTRING11.5_Species.tar.gz?download=1  -O eggnog5AddSTRING11.5_Species.tar.gz
         tar -xf "eggnog5AddSTRING11.5_Species.tar.gz" -C \${eggNOG_folder} #https://linuxhint.com/solve-gzip-stdin-not-gzip-format-error/. without -v to avoid outut infor -v
-
-
-
     """
 }
+
+
+
 
 
 
@@ -83,7 +85,8 @@ process prepareFastaDataBySpecies {
     // cpus 32
     // memory 100.GB
     
-    conda "/mnt/mnemo5/tao/anaconda3/envs/ipykernel_py3"  // specify conda enviroment here works, but why in configuration file not working , works now 
+    label "simple_process"
+    // conda "/mnt/mnemo5/tao/anaconda3/envs/ipykernel_py3"  // specify conda enviroment here works, but why in configuration file not working , works now 
     debug true //echo true echo directive is deprecated 
     
     input:
@@ -110,6 +113,8 @@ process prepareFastaDataBySpecies {
 
 process moveOnlyBacteriaSepcies {
     publishDir "${params.RawData_Folder}", mode: "copy"
+    label "simple_process"
+    
     
     input: 
         path STR_species_mem
