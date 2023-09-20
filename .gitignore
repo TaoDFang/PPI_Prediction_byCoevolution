@@ -10,4 +10,4 @@ scripts/work/*
 scripts/.nextflow.log*
 scripts/.nextflow.*
 scripts/.nextflow/
-
+notebooks/draft.ipynb
