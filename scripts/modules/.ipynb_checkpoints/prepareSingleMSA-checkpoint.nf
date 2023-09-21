@@ -9,7 +9,7 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
     
     label "simple_py_process"
     
-    conda "/mnt/mnemo5/tao/anaconda3/envs/ipykernel_py3" // seesm configuration here not working , but rather need to be done in configuration file, or need to do both ?
+    // conda "/mnt/mnemo5/tao/anaconda3/envs/ipykernel_py3" // seesm configuration here not working , but rather need to be done in configuration file, or need to do both ?
     // debug true //echo true echo directive is depreca
     
     input: 
@@ -23,6 +23,8 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
     script:
         
     """
+        echo  $CONDA_DEFAULT_ENV
+        
         # cp protein seq of current species  to a new folder and separated them by proteins for later use 
         currentSpeProSeqPath="${currentSpe_TaxID_ch}/" 
         mkdir -p \${currentSpeProSeqPath}
@@ -71,7 +73,7 @@ process prepareSingleMSA_RemoveRedundantProteins {
     """
         currentSpeProSeqPath_DB="${currentSpe_TaxID_ch}DB/${currentSpe_TaxID_ch}"
         mkdir -p \${currentSpeProSeqPath_DB}
-        /mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/makeblastdb -in ${currentSpe_fastaData} -dbtype "prot" \
+        makeblastdb -in ${currentSpe_fastaData} -dbtype "prot" \
         -out \${currentSpeProSeqPath_DB} -parse_seqids
         
         
@@ -79,7 +81,7 @@ process prepareSingleMSA_RemoveRedundantProteins {
         echo \${currentSpe_withinBlastPath}
         mkdir -p \${currentSpe_withinBlastPath}
         
-        /mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/blastp -num_threads 1 -query ${currentSpe_fastaData} \
+        blastp -num_threads 1 -query ${currentSpe_fastaData} \
          -db \${currentSpeProSeqPath_DB} \
          -out "\${currentSpe_withinBlastPath}all2all.txt" \
          -evalue 1e-6  \

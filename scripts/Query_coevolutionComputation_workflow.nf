@@ -96,6 +96,8 @@ workflow {
                                           Query_PairedMSA_preprocessing_workflow_ch.PPIInfoBeforeCoEvoComp_csv,
                                           Query_PairedMSA_preprocessing_workflow_ch.pairedMSA_Nf90_folder,
                                          )
+    
+    
     // here notice, when the workflow/process is from left of "=", we use .currentSpeMSAGapsFilteringMetaFolder
     // but if without assignment, we use .out.currentSpeMSAGapsFilteringMetaFolder,
 

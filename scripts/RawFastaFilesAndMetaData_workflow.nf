@@ -65,6 +65,11 @@ when this folder is in /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
 cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
 nextflow run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow -params-file wc-params.json -c nextflow.config -resume
 
+one hpc cluster 
+cd /home/tfang/PPI_Prediction_byCoevolution/scripts
+conda activate /data/tfang/conda-envs/nf-training
+then run from login ndoe (not from interactive session)
+nextflow run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow  -c nextflow.config -profile slurm  -resume
 
 with "-resume -with-report -with-trace -with-timeline -with-dag dag.png" get more job running report
 to view nextflow log file ,  run "ls -lhtra" ,
