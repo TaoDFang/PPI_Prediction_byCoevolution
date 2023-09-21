@@ -88,5 +88,13 @@ open file ".nextflow.log"
 to run for other species and phylum
 nextflow run Query_PairedMSA_preprocessing_workflow.nf --currentSpe_TaxID "1274374" --current_EggNOG_maxLevel "1239" -params-file wc-params.json -c nextflow.config -resume
 
+
+one hpc cluster 
+cd /home/tfang/PPI_Prediction_byCoevolution/scripts
+conda activate /data/tfang/conda-envs/nf-training
+then run from login ndoe (now from srun interactive session)
+nextflow run Query_PairedMSA_preprocessing_workflow.nf  -c nextflow.config -profile slurm  -resume
+
+
 */
 

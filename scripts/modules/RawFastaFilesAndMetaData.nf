@@ -62,6 +62,7 @@ process downLoadRawFastaFile {
     """
     
     echo process downLoadRawFastaFile started 
+    echo  $CONDA_DEFAULT_ENV
     
     echo ${params.RawData_Folder}  # output: /mnt/mnemo6/tao/nextflow/STRING_Data_11.5/
 
@@ -99,8 +100,8 @@ process prepareFastaDataBySpecies {
     script:
         
     """
-    echo ${rawFasta_file}
-    echo $CONDA_DEFAULT_ENV  # this is not specified  correct conda enviroment, but seem bewlowing python use the correct one 
+    echo  ${rawFasta_file}
+    echo  $CONDA_DEFAULT_ENV  # this is not specified  correct conda enviroment, but seem bewlowing python use the correct one 
     
     #here do not  use params options diretly to be able to  trigle next process  moveOnlyBacteriaSepcies
     STRING_fastaBySpecies_Folder="STRINGSequencesBySpecies/"
