@@ -21,9 +21,10 @@ From: ubuntu:20.04
     bash  Miniconda3-latest-Linux-x86_64.sh -b -u -p /home/miniconda3 # this install to /home
     
     
-    /home/miniconda3/bin/conda init bash # initialize your newly-installed Miniconda, but not working , why 
-    source /home/miniconda3/etc/profile.d/conda.sh # this one works https://stackoverflow.com/questions/59877249/activating-a-conda-environment-in-a-singularity-recipe
-    
+    #/home/miniconda3/bin/conda init bash # initialize your newly-installed Miniconda, but not working , why 
+    #source /home/miniconda3/etc/profile.d/conda.sh # this one works https://stackoverflow.com/questions/59877249/activating-a-conda-environment-in-a-singularity-recipe
+    #in most shell use, use . instead of source ,https://stackoverflow.com/questions/13702425/source-command-not-found-in-sh-shell
+    . /home/miniconda3/etc/profile.d/conda.sh
     
     
     # #install conda enviroment, here if conda is successfull initialised above, could simplly use conda without full path 
