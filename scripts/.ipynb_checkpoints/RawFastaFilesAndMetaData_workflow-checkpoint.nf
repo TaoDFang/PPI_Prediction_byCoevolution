@@ -14,7 +14,7 @@ nextflow.enable.dsl=2
 
 
 
-include {downLoadOtherRawFiles; downLoadRawFastaFile; prepareFastaDataBySpecies;moveOnlyBacteriaSepcies } from './modules/RawFastaFilesAndMetaData.nf' //when this folder is in /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
+include {test_configuration;downLoadOtherRawFiles; downLoadRawFastaFile; prepareFastaDataBySpecies;moveOnlyBacteriaSepcies } from './modules/RawFastaFilesAndMetaData.nf' //when this folder is in /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
 
 
 
@@ -29,6 +29,8 @@ workflow RawFastaFilesAndMetaData_workflow{
 
         // ************Download all metadata and sequencing data**********
 
+        test_configuration()
+    
         downLoadOtherRawFiles_ch=downLoadOtherRawFiles()
 
         //downLoadRawFastaFile_ch=downLoadRawFastaFile(RawData_Folder_ch)
@@ -70,6 +72,12 @@ cd /home/tfang/PPI_Prediction_byCoevolution/scripts
 conda activate /data/tfang/conda-envs/nf-training
 then run from login ndoe (not from interactive session)
 nextflow run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow  -c nextflow.config -profile slurm  -resume
+
+new local configuration file  with singularity 
+conda activate nf-training
+cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
+nextflow run RawFastaFilesAndMetaData_workflow.nf  -entry RawFastaFilesAndMetaData_workflow -c nextflow.config -profile singularity  -with-singularity /mnt/mnemo5/tao/singularity_containers/PPICoe.sif -resume
+
 
 with "-resume -with-report -with-trace -with-timeline -with-dag dag.png" get more job running report
 to view nextflow log file ,  run "ls -lhtra" ,
