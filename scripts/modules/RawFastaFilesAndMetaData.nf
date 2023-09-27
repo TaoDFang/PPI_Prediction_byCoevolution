@@ -20,8 +20,8 @@ process test_configuration {
     script:
     """
         echo ${params.RawData_Folder} >> process_finished.txt 
+        echo $PATH >> process_finished.txt 
         echo $CONDA_DEFAULT_ENV >> process_finished.txt 
-        
         echo process test_configuration finished  >> process_finished.txt 
 
     """
