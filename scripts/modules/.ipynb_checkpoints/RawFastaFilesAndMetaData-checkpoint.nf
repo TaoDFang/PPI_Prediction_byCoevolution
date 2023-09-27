@@ -21,7 +21,11 @@ process test_configuration {
     """
         echo ${params.RawData_Folder} >> process_finished.txt 
         echo $PATH >> process_finished.txt 
-        echo $CONDA_DEFAULT_ENV >> process_finished.txt 
+        echo $CONDA_DEFAULT_ENV >> process_finished.txt  # here problem is to print conda envs of nf-training, but of the current process
+        conda info --envs >> process_finished.txt 
+        python --version >> process_finished.txt  # for nf-training enviroment, python doest work
+        hmmbuild -h  >> process_finished.txt  # this works only for conda envs sequence_tools_conda
+        echo process test_configuration finished  >> process_finished.txt 
         echo process test_configuration finished  >> process_finished.txt 
 
     """

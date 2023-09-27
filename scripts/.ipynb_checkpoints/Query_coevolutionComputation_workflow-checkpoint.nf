@@ -136,9 +136,8 @@ nextflow run Query_coevolutionComputation_workflow.nf  -c nextflow.config -profi
 new local configuration file  with singularity 
 conda activate nf-training
 cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
-nextflow run Query_coevolutionComputation_workflow.nf  -c nextflow.config -profile standard  -with-singularity /mnt/mnemo5/tao/singularity_containers/PPICoe.sif -resume
+nextflow run Query_coevolutionComputation_workflow.nf  -c nextflow.config -profile singularity   -resume
 
-nextflow run Query_coevolutionComputation_workflow.nf  -c nextflow.config -profile singularity  -with-singularity /mnt/mnemo5/tao/singularity_containers/PPICoe.sif -resume
 
 
 one hpc cluster 
