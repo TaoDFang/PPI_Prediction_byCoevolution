@@ -128,6 +128,11 @@ with "-resume -with-report -with-trace -with-timeline -with-dag dag.png" get mor
 to view nextflow log file ,  run "ls -lhtra" ,
 open file ".nextflow.log"
 
+new local configuration file 
+conda activate nf-training
+cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
+nextflow run Query_coevolutionComputation_workflow.nf  -c nextflow.config -profile standard  -resume
+
 
 one hpc cluster 
 cd /home/tfang/PPI_Prediction_byCoevolution/scripts
