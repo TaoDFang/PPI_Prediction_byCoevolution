@@ -176,7 +176,7 @@ process prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas {
         -id ${current_EggNOG_maxLevel_ch} -c ${currentSpe_currentMaxLevel_orthologs} \
         -r ${redundant_proteins_csvFile} -f \${newsingleMSA_RBH_OrthologousGroup_fileName} \
         -fa \${currentSpe_OrthologousGroup_Fa_path} -log \${currentSpe_OrthologousGroup_Fa_logpath} \
-        -b "${origSTRINGBacteriaProSeqPath}/" -n ${params.small_mp_task_nums} -ut ${params.code_utilities_folder}
+        -b "${origSTRINGBacteriaProSeqPath}/" -n ${params.large_mp_task_nums} -ut ${params.code_utilities_folder}
         # here add "/" to the currentSpeProSeqPath_ByProteins, as nextflow remove "/" at the end by default
         
     """

@@ -24,6 +24,9 @@ process test_configuration {
         echo $CONDA_DEFAULT_ENV >> process_finished.txt  # here problem is to print conda envs of nf-training, but of the current process
         conda info --envs >> process_finished.txt 
         python --version >> process_finished.txt  # for nf-training enviroment, python doest work
+        echo ${params.container_path} == '' >> process_finished.txt
+        echo ${workflow.containerEngine } >> process_finished.txt
+        echo ${workflow.container }  >> process_finished.txt
         hmmbuild -h  >> process_finished.txt  # this works only for conda envs sequence_tools_conda
         echo process test_configuration finished  >> process_finished.txt 
         echo process test_configuration finished  >> process_finished.txt 

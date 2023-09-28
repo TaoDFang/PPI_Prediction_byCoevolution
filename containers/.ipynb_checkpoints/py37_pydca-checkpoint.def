@@ -1,8 +1,8 @@
 BootStrap: library
 From: ubuntu:20.04
 
-%files
-    /mnt/mnemo5/tao/conda_envs/py37_pydca_environment.yml      /home/conda_envs/py37_pydca_environment.yml
+# %files
+#     # /mnt/mnemo5/tao/conda_envs/py37_pydca_environment.yml      /home/conda_envs/py37_pydca_environment.yml
 
 %post
     apt-get update && apt-get -y upgrade
@@ -33,10 +33,23 @@ From: ubuntu:20.04
     
     
     # #install conda enviroment, here if conda is successfull initialised above, could simplly use conda without full path 
-    /home/miniconda3/bin/conda env  create  -f /home/conda_envs/py37_pydca_environment.yml
-
+    # /home/miniconda3/bin/conda env  create  -f /home/conda_envs/py37_pydca_environment.yml
+    # pydca's numpy version also cause problme do it from beagging 
+    conda create -n py37_pydca python==3.7
                          
     conda activate py37_pydca
+    
+    pip install pydca
+
+    # conda remove numpy
+    pip uninstall -y numpy 
+    # conda install -c anaconda numpy=1.18.4
+    
+    # conda uninstall -y numba
+    pip uninstall -y numba
+    conda install -c numba numba=0.46.0
+
+
     conda info --envs
     # out put is :
     # # conda environments:
