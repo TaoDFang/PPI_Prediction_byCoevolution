@@ -3,6 +3,37 @@
 //http://localhost:8206/lab/workspaces/auto-Z/tree/code/MNF/notebooks/STRING_Data_11.5/PrepareFastaDataBySpecies.ipynb
 // download all fasta seq data from new string website 
 
+
+
+process test_configuration {
+    
+    label "simple_process"
+    
+    
+    publishDir "${params.RawData_Folder}", mode: "copy" // here params.outdir change to params.RawData_Folde to improve readbility 
+    // if publishDir does not exist , nextflow will create it automaticlly 
+    debug true //echo true echo directive is depreca
+    
+    output:
+        path "process_finished.txt", emit: test_output
+
+    script:
+    """
+        echo ${params.RawData_Folder} >> process_finished.txt 
+        echo $PATH >> process_finished.txt 
+        echo $CONDA_DEFAULT_ENV >> process_finished.txt  # here problem is to print conda envs of nf-training, but of the current process
+        conda info --envs >> process_finished.txt 
+        python --version >> process_finished.txt  # for nf-training enviroment, python doest work
+        echo ${params.container_path} == '' >> process_finished.txt
+        echo ${workflow.containerEngine } >> process_finished.txt
+        echo ${workflow.container }  >> process_finished.txt
+        hmmbuild -h  >> process_finished.txt  # this works only for conda envs sequence_tools_conda
+        echo process test_configuration finished  >> process_finished.txt 
+        echo process test_configuration finished  >> process_finished.txt 
+
+    """
+}
+
 process downLoadOtherRawFiles {
     
     label "simple_process"
@@ -55,7 +86,7 @@ process downLoadRawFastaFile {
         
     //here seem path has to be the output from somewhere in the script , 
     path "protein.sequences.v11.5.fa", emit: rawFasta_file
-    path "process_finished.txt", emit: test_output
+
 
     
     script:
@@ -74,7 +105,6 @@ process downLoadRawFastaFile {
     gunzip -c protein.sequences.v11.5.fa.gz >  protein.sequences.v11.5.fa
     
 
-    echo process downLoadRawFastaFile finished  > process_finished.txt 
     
     """
 }

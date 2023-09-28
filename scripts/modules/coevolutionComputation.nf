@@ -10,6 +10,9 @@ process coevolutionComputation_mfDCA_createdFolder {
     // output:
     script: 
     """      
+    echo process coevolutionComputation_mfDCA_createdFolder
+    echo  $CONDA_DEFAULT_ENV
+    
     mkdir -p ${params.DCA_coevolutoin_path}
     """
 }
