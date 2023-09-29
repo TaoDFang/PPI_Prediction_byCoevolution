@@ -1,7 +1,8 @@
 import argparse
 import os 
 import glob
-import pandas as pd 
+# import pandas as pd , py37_pydca envs dont have pandas package to mess up the numpy version 
+import csv
 import multiprocessing as mp
 from multiprocessing import get_context
 import pickle
@@ -69,9 +70,17 @@ if __name__ == '__main__':
         fasta_protein_lens=pickle.load(handle)
 
     # use  postive and negative ppi to only use pp that have large Nf90 value, and after removing deep homologs  
-    currentSpe_allPPIs_beforeCoEvoComp_frame = pd.read_csv(PPIInfoBeforeCoEvoComp_csv,header=0,index_col=None,sep="\t")
-    print("currentSpe_allPPIs_beforeCoEvoComp_frame.shape:",currentSpe_allPPIs_beforeCoEvoComp_frame.shape)
-    currentSpe_allPPIs_beforeCoEvoComp_info=currentSpe_allPPIs_beforeCoEvoComp_frame.values.tolist()
+    # currentSpe_allPPIs_beforeCoEvoComp_frame = pd.read_csv(PPIInfoBeforeCoEvoComp_csv,header=0,index_col=None,sep="\t")
+    # print("currentSpe_allPPIs_beforeCoEvoComp_frame.shape:",currentSpe_allPPIs_beforeCoEvoComp_frame.shape)
+    # currentSpe_allPPIs_beforeCoEvoComp_info=currentSpe_allPPIs_beforeCoEvoComp_frame.values.tolist()
+    currentSpe_allPPIs_beforeCoEvoComp_info=list()
+    with open(PPIInfoBeforeCoEvoComp_csv, "r") as file:
+        my_reader = csv.reader(file, delimiter="\t")
+        next(my_reader, None)  # skip the headers
+        for row in my_reader:
+            currentSpe_allPPIs_beforeCoEvoComp_info.append(row)
+
+            
     currentSpe_allPPIs_pps=[(p1,p2) for p1, p2,_ in currentSpe_allPPIs_beforeCoEvoComp_info]
     print("len(currentSpe_allPPIs_pps):",len(currentSpe_allPPIs_pps))
     

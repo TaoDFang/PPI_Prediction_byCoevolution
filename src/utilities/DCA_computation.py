@@ -1,6 +1,6 @@
 from pydca.meanfield_dca import meanfield_dca # this need to load in py37_pydca enviroment
 import numpy as np 
-import time 
+# import time 
 
 # def get_maxBetEVscore_dict(record,suffix)
 # check http://localhost:8206/lab/workspaces/auto-I/tree/code/STRING_TAO/PPI_Coevolution/eggNOGfiltering_STRINGRBH_Scripts/Ovchinnikov_eggNOGfilteredData_LargeTest_results_analysis_new.ipynb
