@@ -106,32 +106,32 @@ workflow {
                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
                                  )
     
-        prepareSingleMSA_workflow(Channel.value("${params.subject1_currentSpe_TaxID}"),
-                             Channel.value("${params.subject1_current_EggNOG_maxLevel}"),
-                                  RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
-                                  RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
-                                  RawFastaFilesAndMetaData_workflow.out.species_file,
-                                  RawFastaFilesAndMetaData_workflow.out.species_tree_file,
-                                  RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
-                                 )
+//         prepareSingleMSA_workflow(Channel.value("${params.subject1_currentSpe_TaxID}"),
+//                              Channel.value("${params.subject1_current_EggNOG_maxLevel}"),
+//                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
+//                                   RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
+//                                   RawFastaFilesAndMetaData_workflow.out.species_file,
+//                                   RawFastaFilesAndMetaData_workflow.out.species_tree_file,
+//                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
+//                                  )
     
-        prepareSingleMSA_workflow(Channel.value("${params.subject2_currentSpe_TaxID}"),
-                             Channel.value("${params.subject2_current_EggNOG_maxLevel}"),
-                                  RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
-                                  RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
-                                  RawFastaFilesAndMetaData_workflow.out.species_file,
-                                  RawFastaFilesAndMetaData_workflow.out.species_tree_file,
-                                  RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
-                                 )
+//         prepareSingleMSA_workflow(Channel.value("${params.subject2_currentSpe_TaxID}"),
+//                              Channel.value("${params.subject2_current_EggNOG_maxLevel}"),
+//                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
+//                                   RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
+//                                   RawFastaFilesAndMetaData_workflow.out.species_file,
+//                                   RawFastaFilesAndMetaData_workflow.out.species_tree_file,
+//                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
+//                                  )
     
-        prepareSingleMSA_workflow(Channel.value("${params.subject3_currentSpe_TaxID}"),
-                             Channel.value("${params.subject3_current_EggNOG_maxLevel}"),
-                                  RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
-                                  RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
-                                  RawFastaFilesAndMetaData_workflow.out.species_file,
-                                  RawFastaFilesAndMetaData_workflow.out.species_tree_file,
-                                  RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
-                                 )
+//         prepareSingleMSA_workflow(Channel.value("${params.subject3_currentSpe_TaxID}"),
+//                              Channel.value("${params.subject3_current_EggNOG_maxLevel}"),
+//                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
+//                                   RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
+//                                   RawFastaFilesAndMetaData_workflow.out.species_file,
+//                                   RawFastaFilesAndMetaData_workflow.out.species_tree_file,
+//                                   RawFastaFilesAndMetaData_workflow.out.STRING_fastaByBacteriaSpecies_Folder,
+//                                  )
     
 }
     
@@ -144,8 +144,7 @@ conda activate nf-training
 
 when this folder is in /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
 cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
-nextflow run prepareSingleMSA_workflow.nf  -params-file wc-params.json -c nextflow.config -resume
-
+nextflow run prepareSingleMSA_workflow.nf  -c nextflow.config -profile standard  -resume
 
 with "-resume -with-report -with-trace -with-timeline -with-dag dag.png" get more job running report
 to view nextflow log file ,  run "ls -lhtra" ,

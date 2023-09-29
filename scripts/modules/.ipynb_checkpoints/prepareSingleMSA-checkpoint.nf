@@ -217,7 +217,7 @@ process prepareSingleMSA_SeedAlignment {
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         # here add "/" to the currentSpeProSeqPath_ByProteins, as nextflow remove "/" at the end by default
-        python ${projectDir}/python_scripts/SeedAlignment.py -b "${currentSpeProSeqPath_ByProteins}/" -ofa "${currentSpe_OrthologousGroup_Fa_path}/" \
+        python ${projectDir}/python_scripts/SeedAlignment.py__ -b "${currentSpeProSeqPath_ByProteins}/" -ofa "${currentSpe_OrthologousGroup_Fa_path}/" \
         -out \${currentSpe_phmmer_outPath} -log \${currentSpe_phmmer_logPath} \
         -n ${params.middle_mp_task_nums} -ut ${params.code_utilities_folder} -ph ${params.phmmer_path}
         
