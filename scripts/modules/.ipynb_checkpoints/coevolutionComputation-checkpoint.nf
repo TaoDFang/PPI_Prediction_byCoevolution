@@ -31,10 +31,10 @@ process coevolutionComputation_mfDCA {
     // output:
     script: 
     """      
-        
+        conda info --envs 
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
-
+    
         python ${projectDir}/python_scripts/coevolutionComputation_mfDCA.py -dpath "${DCA_coevolutoin_path}/"  \
         -m "${currentSpeMSAGapsFilteringMetaFolder}/" -acsv ${PPIInfoBeforeCoEvoComp_csv} -nf90f "${pairedMSA_Nf90_folder}/" \
         -n ${params.middle_mp_task_nums}
