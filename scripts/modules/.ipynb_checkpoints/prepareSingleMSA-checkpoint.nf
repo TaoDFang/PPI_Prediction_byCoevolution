@@ -150,15 +150,18 @@ process prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas {
         path origSTRINGBacteriaProSeqPath
         path currentSpe_fastaData
     output:
-        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/",type: "dir",  emit: currentSpeMiddleDataPath
-        path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/newsingleMSA_RBH_OrthologousGroup.csv",type: "file", emit: newsingleMSA_RBH_OrthologousGroup_fileName
+        // path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/",type: "dir",  emit: currentSpeMiddleDataPath
+        // path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/newsingleMSA_RBH_OrthologousGroup.csv",type: "file", emit: newsingleMSA_RBH_OrthologousGroup_fileName
         path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_EggNOG_OrthologousGroup_Fa/", type: "dir", emit: currentSpe_OrthologousGroup_Fa_path
     
+//         currentSpeMiddleDataPath="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/"
+//         mkdir -p \${currentSpeMiddleDataPath} # create the folder to prevent non-existing folder/file problem later
+        
+//         newsingleMSA_RBH_OrthologousGroup_fileName="\${currentSpeMiddleDataPath}newsingleMSA_RBH_OrthologousGroup.csv"
     script: 
     """
-        currentSpeMiddleDataPath="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/"
-        mkdir -p \${currentSpeMiddleDataPath} # create the folder to prevent non-existing folder/file problem later
-        newsingleMSA_RBH_OrthologousGroup_fileName="\${currentSpeMiddleDataPath}newsingleMSA_RBH_OrthologousGroup.csv"
+        
+        newsingleMSA_RBH_OrthologousGroup_fileName="newsingleMSA_RBH_OrthologousGroup.csv"
         
         
  currentSpe_OrthologousGroup_Fa_path="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_EggNOG_OrthologousGroup_Fa/"
@@ -217,7 +220,7 @@ process prepareSingleMSA_SeedAlignment {
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         # here add "/" to the currentSpeProSeqPath_ByProteins, as nextflow remove "/" at the end by default
-        python ${projectDir}/python_scripts/SeedAlignment.py__ -b "${currentSpeProSeqPath_ByProteins}/" -ofa "${currentSpe_OrthologousGroup_Fa_path}/" \
+        python ${projectDir}/python_scripts/SeedAlignment.py -b "${currentSpeProSeqPath_ByProteins}/" -ofa "${currentSpe_OrthologousGroup_Fa_path}/" \
         -out \${currentSpe_phmmer_outPath} -log \${currentSpe_phmmer_logPath} \
         -n ${params.middle_mp_task_nums} -ut ${params.code_utilities_folder} -ph ${params.phmmer_path}
         

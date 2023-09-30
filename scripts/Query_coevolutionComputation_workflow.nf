@@ -26,20 +26,23 @@ include {RawFastaFilesAndMetaData_workflow } from './RawFastaFilesAndMetaData_wo
 include {prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
 include {Query_PairedMSA_preprocessing_workflow} from  "./Query_PairedMSA_preprocessing_workflow.nf"
 
-include {coevolutionComputation_mfDCA_createdFolder;coevolutionComputation_mfDCA} from "./modules/coevolutionComputation"
+include {coevolutionComputation_mfDCA_createdFolder;coevolutionComputation_mfDCA_preparaIndexFile;coevolutionComputation_mfDCA_parallel} from "./modules/coevolutionComputation"
 
 
 
 
 workflow Query_coevolutionComputation_workflow{    
     take:
+        
         DCA_coevolutoin_path_ch
         IndexDCA_idxCH
+        DCA_blockNum_ch
         currentSpeMSAGapsFilteringMetaFolder
         PPIInfoBeforeCoEvoComp_csv
         pairedMSA_Nf90_folder
 
     main:
+        
         println "scriptFile: " + workflow.scriptFile
         println "projectDir: " + workflow.projectDir
         println "launchDir: " + workflow.launchDir
@@ -54,7 +57,7 @@ workflow Query_coevolutionComputation_workflow{
         // but direct use final output folder as the input channel or as input parameters 
         // DCA_coevolutoin_path_ch=Channel.fromPath(params.DCA_coevolutoin_path,type:'dir')
         coevolutionComputation_mfDCA_createdFolder()
-        coevolutionComputation_mfDCA_preparaIndexFile_ch=coevolutionComputation_mfDCA_preparaIndexFile(DCA_coevolutoin_path_ch,currentSpeMSAGapsFilteringMetaFolder,PPIInfoBeforeCoEvoComp_csv,pairedMSA_Nf90_folder)
+        coevolutionComputation_mfDCA_preparaIndexFile_ch=coevolutionComputation_mfDCA_preparaIndexFile(DCA_coevolutoin_path_ch,currentSpeMSAGapsFilteringMetaFolder,PPIInfoBeforeCoEvoComp_csv,pairedMSA_Nf90_folder,DCA_blockNum_ch)
         coevolutionComputation_mfDCA_parallel_ch=coevolutionComputation_mfDCA_parallel(coevolutionComputation_mfDCA_preparaIndexFile_ch.IndexDCA_coevolutoin_path,IndexDCA_idxCH)
 
             // coevolutionComputation_mfDCA_ch=coevolutionComputation_mfDCA(DCA_coevolutoin_path_ch,currentSpeMSAGapsFilteringMetaFolder,PPIInfoBeforeCoEvoComp_csv,pairedMSA_Nf90_folder)
@@ -63,28 +66,6 @@ workflow Query_coevolutionComputation_workflow{
 }
 
 
-process coevolutionComputation_mfDCA_parallel {
-    // adapt from  http://localhost:8206/lab/tree/code/MNF/notebooks/ScienceCluster_code/STRING_Data_11.5/Compute_allPPI.ipynb
-    // publishDir "${params.input_root_folder}",mode: "copy"
-    debug true //echo true echo directive is deprecated
-    
-    label "coevolutionComputation_mfDCA_parallel_process"
-    
-    input: 
-        path IndexDCA_coevolutoin_path
-        val  idx
-    // output:
-    script: 
-    """      
-        conda info --envs 
-        
-        export PYTHONPATH="${projectDir}/../src/utilities/" 
-    
-        python ${projectDir}/python_scripts/coevolutionComputation_mfDCA_parallel.py -dipath "${IndexDCA_coevolutoin_path}/" \
-        -i  "${idx}"
-        
-    """
-}
 
 
 
@@ -123,14 +104,17 @@ workflow {
     // but direct use final output folder as the input channel or as input parameters 
     // DCA_coevolutoin_path_ch=Channel.fromPath(params.DCA_coevolutoin_path,type:'dir')
     DCA_coevolutoin_path_ch=Channel.fromPath(params.DCA_coevolutoin_path,type:'dir')
-    IndexDCA_idxCH=Channel.of(1..${params.DCA_blockSize})
+    IndexDCA_idxCH=Channel.of( 0..params.DCA_blockNum-1 )  // since in the python index starrt from 0
+    IndexDCA_idxCH.view()
+    DCA_blockNum_ch=Channel.value( "${params.DCA_blockNum}" )
     // IndexDCA_coevolutoin_path_ch=Channel.fromPath(params.IndexDCA_coevolutoin_path,type:'dir')
-    Query_coevolutionComputation_workflow(DCA_coevolutoin_path_ch,
-                                          IndexDCA_idxCH,
-                                         query_prepareSingleMSA_workflow.currentSpeMSAGapsFilteringMetaFolder,
-                                          Query_PairedMSA_preprocessing_workflow_ch.PPIInfoBeforeCoEvoComp_csv,
-                                          Query_PairedMSA_preprocessing_workflow_ch.pairedMSA_Nf90_folder,
-                                         )
+   Query_coevolutionComputation_workflow(DCA_coevolutoin_path_ch,
+                                         IndexDCA_idxCH,
+                                         DCA_blockNum_ch,
+                                        query_prepareSingleMSA_workflow.currentSpeMSAGapsFilteringMetaFolder,
+                                         Query_PairedMSA_preprocessing_workflow_ch.PPIInfoBeforeCoEvoComp_csv,
+                                         Query_PairedMSA_preprocessing_workflow_ch.pairedMSA_Nf90_folder,
+                                        )
     
     
     // here notice, when the workflow/process is from left of "=", we use .currentSpeMSAGapsFilteringMetaFolder

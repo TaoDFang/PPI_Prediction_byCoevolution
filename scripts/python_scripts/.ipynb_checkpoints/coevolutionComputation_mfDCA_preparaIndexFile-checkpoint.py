@@ -1,6 +1,8 @@
 import argparse
 import os 
 import glob
+import pandas as pd 
+import numpy as np 
 import csv
 import multiprocessing as mp
 from multiprocessing import get_context
@@ -18,7 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('-m','--currentSpeMSAGapsFilteringMetaFolder', type=str, help='currentSpeMSAGapsFilteringMetaFolder')
     parser.add_argument('-acsv','--PPIInfoBeforeCoEvoComp_csv', type=str, help='PPIInfoBeforeCoEvoComp_csv')
     parser.add_argument('-nf90f','--pairedMSA_Nf90_folder', type=str, help='pairedMSA_Nf90_folder')
-    parser.add_argument('-bs','--blockSize', type=str, help='blockSize')
+    parser.add_argument('-bn','--blockNum', type=str, help='blockNum')
     parser.add_argument('-n','--mp_task_nums', type=str, help='mp_task_nums')
     
     
@@ -28,7 +30,7 @@ if __name__ == '__main__':
     DCA_coevolutoin_path=args.DCA_coevolutoin_path
     IndexDCA_coevolutoin_path=args.IndexDCA_coevolutoin_path
     pairedMSA_Nf90_folder=args.pairedMSA_Nf90_folder
-    blockSize=int(args.blockSize)
+    blockNum=int(args.blockNum)
     mp_task_nums=int(args.mp_task_nums)
 
     
@@ -65,10 +67,10 @@ if __name__ == '__main__':
 
     #%%time 
     currentSpe_allPPIs_pps_forDCA=[pp for pp in currentSpe_allPPIs_pps if pp not in existed_pydcaFNAPC_pp_dict]
-    currentSpe_allPPIs_pps_ArgForDCA=[(p1,p2,fasta_protein_lens[p1],fasta_protein_lens[p2],pairedMSA_Nf90_folder,DCA_coevolutoin_path) for p1 , p2 in currentSpe_allPPIs_pps_forDCA]
+    currentSpe_allPPIs_pps_forDCA=[(p1,p2,fasta_protein_lens[p1],fasta_protein_lens[p2],pairedMSA_Nf90_folder,DCA_coevolutoin_path) for p1 , p2 in currentSpe_allPPIs_pps_forDCA]
     #for dedub reson, delete it later 
-    currentSpe_allPPIs_pps_ArgForDCA=currentSpe_allPPIs_pps_ArgForDCA[0:3]
-    print("len(currentSpe_allPPIs_pps_ArgForDCA):",len(currentSpe_allPPIs_pps_ArgForDCA))
+    currentSpe_allPPIs_pps_forDCA=currentSpe_allPPIs_pps_forDCA[0:6]
+    print("len(currentSpe_allPPIs_pps_forDCA):",len(currentSpe_allPPIs_pps_forDCA))
 
 
 
@@ -78,15 +80,26 @@ if __name__ == '__main__':
     #     os.remove(f)
 
     # blockSize=500
-    index_count=0
-    for bidx in range(0,len(currentSpe_allPPIs_pps_forDCA),blockSize):
-        block_currentSpe_allPPIs_pps_forDCA=currentSpe_allPPIs_pps_forDCA[bidx:(bidx+blockSize)]
-        #print(len(block_currentSpe_allPPIs_pps_forDCA))
+    # index_count=0
+    # for bidx in range(0,len(currentSpe_allPPIs_pps_forDCA),blockSize):
+    #     block_currentSpe_allPPIs_pps_forDCA=currentSpe_allPPIs_pps_forDCA[bidx:(bidx+blockSize)]
+    #     #print(len(block_currentSpe_allPPIs_pps_forDCA))
+    #     block_currentSpe_allPPIs_pps_forDCA_frame=pd.DataFrame(block_currentSpe_allPPIs_pps_forDCA)
+    #     block_currentSpe_allPPIs_pps_forDCA_frame.to_csv(IndexDCA_coevolutoin_path+str(index_count)+".csv",
+    #                                                             header=None,index=None,sep="\t")
+    #     index_count=index_count+1
+    # print("index_count:",index_count)
+    
+    assert blockNum<len(currentSpe_allPPIs_pps_forDCA)
+    
+    block_range=np.linspace(0,len(currentSpe_allPPIs_pps_forDCA),blockNum+1,endpoint=True,dtype=int)
+    for i in range(blockNum):
+        block_currentSpe_allPPIs_pps_forDCA=currentSpe_allPPIs_pps_forDCA[block_range[i]:block_range[i+1]]
         block_currentSpe_allPPIs_pps_forDCA_frame=pd.DataFrame(block_currentSpe_allPPIs_pps_forDCA)
-        block_currentSpe_allPPIs_pps_forDCA_frame.to_csv(IndexDCA_coevolutoin_path+str(index_count)+".csv",
-                                                                header=None,index=None,sep="\t")
-        index_count=index_count+1
+        block_currentSpe_allPPIs_pps_forDCA_frame.to_csv(IndexDCA_coevolutoin_path+str(i)+".csv",
+                                                                header=None,index=None,sep="\t")  
+        
+    # print(len(currentSpe_allPPIs_pps_forDCA),blockNum,block_range,block_range[i+1])
+   
 
-
-    print("index_count:",index_count)
 

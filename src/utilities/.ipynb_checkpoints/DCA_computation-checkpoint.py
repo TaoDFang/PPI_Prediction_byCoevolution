@@ -51,6 +51,7 @@ def post_pydcaFN2array_APC(QueryPro_pro1,QueryPro_pro2,L1,L2,DCA_ori,DCA_folder)
 # this function need conda py37_pydca enviroment 
 def pydca_mfdca_FN_compresse(pp):
     QueryPro_pro1,QueryPro_pro2,L1,L2,final_MSA_folder,DCA_folder=pp
+    L1,L2=int(L1),int(L2)
     
 #     # this check can be avoid now as we check this before this functin to avoid always trasmite large arument and check it many times 
 #     if DCA_folder+QueryPro_pro1+"and"+QueryPro_pro2+"_pydcaFNAPC_array.npz" in existed_pydcaFNAPC_files:
