@@ -115,6 +115,8 @@ process homologousPPDetection_SeqMapping {
     """
         echo "process domologousPPDetection_SeqMapping: ${SubjectProSeqPath_ByProtein_ch}"
         
+        conda list | grep biopython 
+        
         f=\$(basename -- "${SubjectProSeqPath_ByProtein_ch}")  # https://stackoverflow.com/questions/66568781/how-to-call-a-variable-created-in-the-script-in-nextflow
         echo \${f}
         
@@ -129,12 +131,12 @@ process homologousPPDetection_SeqMapping {
         
     current_homologous_SeqMappingPath="\${temp_folder}EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/"
 
-        mkdir -p \${current_homologous_SeqMappingPath} 
+        mkdir  -p \${current_homologous_SeqMappingPath} 
         
         
         export PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/homologousPPDetection_SeqMapping.py -q ${Query_tuple_ch.join("_")}  \
-        -s   ${Subject_tupleList_ch.join("_")} \
+        -s  ${Subject_tupleList_ch.join("_")} \
         -qb "${QueryProSeqPath_ByProtein_ch}/"  -sb "${SubjectProSeqPath_ByProtein_ch}/"  -seqM \${current_homologous_SeqMappingPath} \
         -m "${homologous_allQuery2SubjectPPIMapping_path}/" -bp ${params.blastp_path} -n ${params.middle_mp_task_nums}
                
@@ -225,7 +227,7 @@ process homologousPPDetection_preparePairedMSA {
     script:
         
     """
-        #output this folder to process homologousPPDetection_ComputeHomologousDCA to force it to be executed after current process
+        #output this folder to process homologousPPDetection_ComputeHomologousDCA_preparaIndexFile to force it to be executed after current process
         temp_CoEvo_data_folder="temp_CoEvo_data_folder/"
         mkdir -p \${temp_CoEvo_data_folder}
 
@@ -252,13 +254,12 @@ process homologousPPDetection_preparePairedMSA {
 // in this case, better not use output to the temperory working directory and then copy to publishDir
 // but direct use final output folder(absolute path) as the input channel or as input parameters 
 
-
-process homologousPPDetection_ComputeHomologousDCA {
+process homologousPPDetection_ComputeHomologousDCA_preparaIndexFile {
     // publishDir "${params.input_root_folder}",mode: "copy"
     debug true //echo true echo directive is deprecated
     
     
-    label "coevolutionComputation_mfDCA_process"
+    label "simple_py_process"
     
     input: 
         val Query_tuple_ch
@@ -266,17 +267,96 @@ process homologousPPDetection_ComputeHomologousDCA {
         path newSTRING_rootFolder_ch
         path CoEvo_data_folder_ch
         path temp_CoEvo_data_folder
-    // output:
+        val  DCA_blockNum_ch
+        
+    output:
+        path "temp_IndexDCA_coevolutoin_folder/", emit: temp_IndexDCA_coevolutoin_folder
     script: 
     """      
         echo "temp_CoEvo_data_folder is ${temp_CoEvo_data_folder}"
         
+        #output this folder to process homologousPPDetection_ComputeHomologousDCA_parallel  to force it to be executed after current process
+        temp_IndexDCA_coevolutoin_folder="temp_IndexDCA_coevolutoin_folder/"
+        mkdir -p \${temp_IndexDCA_coevolutoin_folder}
+    
+    
+        CoEvo_data_folder_ch_full=\$(realpath "${CoEvo_data_folder_ch}")
+        echo "CoEvo_data_folder_ch_full:\${CoEvo_data_folder_ch_full}"
+    
         export PYTHONPATH="${projectDir}/../src/utilities/" 
 
-        python ${projectDir}/python_scripts/homologousPPDetection_ComputeHomologousDCA.py \
+        python ${projectDir}/python_scripts/homologousPPDetection_ComputeHomologousDCA_preparaIndexFile.py \
         -q ${Query_tuple_ch.join("_")}     -s ${Subject_tupleList_ch.join("_")} \
-        -f "${newSTRING_rootFolder_ch}/"   -c "${CoEvo_data_folder_ch}/" \
-        -n  ${params.middle_mp_task_nums}
+        -f "${newSTRING_rootFolder_ch}/"   -c "\${CoEvo_data_folder_ch_full}/" \
+        -bn  ${DCA_blockNum_ch}  -n  ${params.middle_mp_task_nums}
         
     """
 }
+
+
+process homologousPPDetection_ComputeHomologousDCA_parallel {
+    // publishDir "${params.input_root_folder}",mode: "copy"
+    debug true //echo true echo directive is deprecated
+    
+    
+    label "coevolutionComputation_mfDCA_parallel_process"
+    
+    input: 
+        val Subject_tupleList_ch
+        path CoEvo_data_folder_ch
+        path temp_IndexDCA_coevolutoin_folder
+        each idxCH
+        
+    // output:
+    script: 
+    """      
+        conda info --envs 
+        
+        echo "temp_IndexDCA_coevolutoin_folder is ${temp_IndexDCA_coevolutoin_folder}"
+        
+    
+    
+        CoEvo_data_folder_ch_full=\$(realpath "${CoEvo_data_folder_ch}")
+        echo "CoEvo_data_folder_ch_full:\${CoEvo_data_folder_ch_full}"
+    
+        export PYTHONPATH="${projectDir}/../src/utilities/" 
+
+        python ${projectDir}/python_scripts/homologousPPDetection_ComputeHomologousDCA_parallel.py \
+        -s ${Subject_tupleList_ch.join("_")} \
+        -c "\${CoEvo_data_folder_ch_full}/" \
+        -i "${idxCH}"
+        
+    """
+}
+
+
+
+    
+
+// process homologousPPDetection_ComputeHomologousDCA {
+//     // publishDir "${params.input_root_folder}",mode: "copy"
+//     debug true //echo true echo directive is deprecated
+    
+    
+//     label "coevolutionComputation_mfDCA_process"
+    
+//     input: 
+//         val Query_tuple_ch
+//         val Subject_tupleList_ch
+//         path newSTRING_rootFolder_ch
+//         path CoEvo_data_folder_ch
+//         path temp_CoEvo_data_folder
+//     // output:
+//     script: 
+//     """      
+//         echo "temp_CoEvo_data_folder is ${temp_CoEvo_data_folder}"
+        
+//         export PYTHONPATH="${projectDir}/../src/utilities/" 
+
+//         python ${projectDir}/python_scripts/homologousPPDetection_ComputeHomologousDCA.py \
+//         -q ${Query_tuple_ch.join("_")}     -s ${Subject_tupleList_ch.join("_")} \
+//         -f "${newSTRING_rootFolder_ch}/"   -c "${CoEvo_data_folder_ch}/" \
+//         -n  ${params.middle_mp_task_nums}
+        
+//     """
+// }

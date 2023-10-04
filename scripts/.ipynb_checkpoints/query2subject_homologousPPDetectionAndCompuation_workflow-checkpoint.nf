@@ -18,7 +18,7 @@ include {prepareSingleMSA_workflow as subject2_prepareSingleMSA_workflow} from '
 include {prepareSingleMSA_workflow as subject3_prepareSingleMSA_workflow} from './prepareSingleMSA_workflow.nf'
 include {Query_PairedMSA_preprocessing_workflow} from  "./Query_PairedMSA_preprocessing_workflow.nf"
 
-include {homologousPPDetection_COG2PPMapping;homologousPPDetection_allQuery2SubjectPPIMapping;homologousPPDetection_SeqMapping;homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous;homologousPPDetection_preparePairedMSA;homologousPPDetection_ComputeHomologousDCA} from "./modules/query2subject_homologousPPDetectionAndCompuation.nf"
+include {homologousPPDetection_COG2PPMapping;homologousPPDetection_allQuery2SubjectPPIMapping;homologousPPDetection_SeqMapping;homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous;homologousPPDetection_preparePairedMSA;homologousPPDetection_ComputeHomologousDCA_preparaIndexFile;homologousPPDetection_ComputeHomologousDCA_parallel} from "./modules/query2subject_homologousPPDetectionAndCompuation.nf"
 
 spe_list_ch= Channel.value( ["${params.query_currentSpe_TaxID}", "${params.subject1_currentSpe_TaxID}", 
                              "${params.subject2_currentSpe_TaxID}", "${params.subject3_currentSpe_TaxID}"] )
@@ -45,6 +45,8 @@ workflow homologousPPDetectionAndCompuation_workflow{
         // homologous_SeqMappingPath_ch
         newSTRING_rootFolder_ch
         CoEvo_data_folder_ch
+        IndexDCA_idxCH
+        DCA_blockNum_ch
         
     main:
         println "scriptFile: " + workflow.scriptFile
@@ -80,21 +82,36 @@ workflow homologousPPDetectionAndCompuation_workflow{
                                                                                                                                            homologousPPDetection_allQuery2SubjectPPIMapping_ch.homologous_allQuery2SubjectPPIMapping_path)
 
         
-        homologousPPDetection_preparePairedMSA_ch=homologousPPDetection_preparePairedMSA(Query_tuple_ch,
-                                                                                    Subject_tupleList_ch,
-                                                                                    newSTRING_rootFolder_ch,
-                                                                                    CoEvo_data_folder_ch,
-                    homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch.homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path)
+//         homologousPPDetection_preparePairedMSA_ch=homologousPPDetection_preparePairedMSA(Query_tuple_ch,
+//                                                                                     Subject_tupleList_ch,
+//                                                                                     newSTRING_rootFolder_ch,
+//                                                                                     CoEvo_data_folder_ch,
+//                     homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch.homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path)
         
-        //problem here is now proceess start without waiting process homologousPPDetection_preparePairedMSA to be fished 
-        homologousPPDetection_ComputeHomologousDCA_ch=homologousPPDetection_ComputeHomologousDCA(Query_tuple_ch,Subject_tupleList_ch,
-                                                                                        newSTRING_rootFolder_ch,
-                                                                                        CoEvo_data_folder_ch,
-                                                                                        homologousPPDetection_preparePairedMSA_ch.temp_CoEvo_data_folder)
+//         //problem here is now proceess start without waiting process homologousPPDetection_preparePairedMSA to be fished 
+//         homologousPPDetection_ComputeHomologousDCA_preparaIndexFile_ch=homologousPPDetection_ComputeHomologousDCA_preparaIndexFile(Query_tuple_ch,
+//                                                                                         Subject_tupleList_ch,
+//                                                                                         newSTRING_rootFolder_ch,
+//                                                                                         CoEvo_data_folder_ch,
+//                                                                                         homologousPPDetection_preparePairedMSA_ch.temp_CoEvo_data_folder,
+//                                                                                         DCA_blockNum_ch)
+//         // homologousPPDetection_ComputeHomologousDCA_parallel_ch=homologousPPDetection_ComputeHomologousDCA_parallel(Subject_tupleList_ch,
+//         //                                                                                 CoEvo_data_folder_ch,
+//         //                                                 homologousPPDetection_ComputeHomologousDCA_preparaIndexFile_ch.temp_IndexDCA_coevolutoin_folder,
+//         //                                                                                 IndexDCA_idxCH
+//         //                                                                                 )
+    
+    
+//         // homologousPPDetection_ComputeHomologousDCA_ch=homologousPPDetection_ComputeHomologousDCA(Query_tuple_ch,Subject_tupleList_ch,
+//         //                                                                                 newSTRING_rootFolder_ch,
+//         //                                                                                 CoEvo_data_folder_ch,
+//         //                                                                                 homologousPPDetection_preparePairedMSA_ch.temp_CoEvo_data_folder)
 
 
     
 }
+
+
 
 workflow {
     
@@ -165,13 +182,19 @@ workflow {
     newSTRING_rootFolder_ch=Channel.fromPath("${params.newSTRING_rootFolder}",type:"dir") 
     CoEvo_data_folder_ch=Channel.fromPath("${params.CoEvo_data_folder}",type:"dir") 
     
+    IndexDCA_idxCH=Channel.of( 0..params.DCA_blockNum-1 )  // since in the python index starrt from 0
+    IndexDCA_idxCH.view()
+    DCA_blockNum_ch=Channel.value( "${params.DCA_blockNum}" )
+    
     homologousPPDetectionAndCompuation_workflow_ch=homologousPPDetectionAndCompuation_workflow(spe_list_ch,RawFastaFilesAndMetaData_workflow.out.eggNOG_folder,
                                                                                      Query_tuple_ch,Subject_tupleList_ch,
                                                                                      Query_PairedMSA_preprocessing_workflow_ch.PPIInfoBeforeCoEvoComp_csv,
                                                                                      SubjectProSeqPath_ByProteins_ch,QueryProSeqPath_ByProtein_ch,
                                                                                      // homologous_SeqMappingPath_ch,
                                                                                      newSTRING_rootFolder_ch,
-                                                                                     CoEvo_data_folder_ch)
+                                                                                     CoEvo_data_folder_ch,
+                                                                                    IndexDCA_idxCH,
+                                                                                    DCA_blockNum_ch)
     
 
     
@@ -186,7 +209,11 @@ workflow {
 * optional: test in a tmux sesssion:  tmux attach -t tmux-nextflow 
 conda activate nf-training
 cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
-nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf -params-file wc-params.json -c nextflow.config -resume
+
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf  -c nextflow.config -profile standard  -resume
+
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf  -c nextflow.config -profile singularity   -resume
+
 with "-resume -with-report -with-trace -with-timeline -with-dag dag.png" get more job running report
 to view nextflow log file ,  run "ls -lhtra" ,
 open file ".nextflow.log"
