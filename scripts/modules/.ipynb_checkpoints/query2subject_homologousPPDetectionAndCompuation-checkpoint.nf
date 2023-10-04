@@ -62,7 +62,7 @@ process homologousPPDetection_allQuery2SubjectPPIMapping {
         mkdir -p \${homologous_allQuery2SubjectPPIMapping_path}
     
 
-        export PYTHONPATH="${projectDir}/../src/utilities/" 
+        export  PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/homologousPPDetection_allQuery2SubjectPPIMapping.py \
         -q ${Query_tuple_ch.join("_")} -s ${Subject_tupleList_ch.join("_")} \
         -p ${PPIInfoBeforeCoEvoComp_csv} -t "${homologous_COG2PP_path}/" \
@@ -108,12 +108,12 @@ process homologousPPDetection_SeqMapping {
     output:
     //     path "${homologous_SeqMappingPath_ch}", emit: homologous_SeqMappingPath_ch
         // path "EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
-        path "temp_folder/*", emit: temp_folder
+        path "temp_folder/*" , emit: temp_folder
         
     script:
         
     """
-        echo "process domologousPPDetection_SeqMapping: ${SubjectProSeqPath_ByProtein_ch}"
+        echo "process homologousPPDetection_SeqMapping: ${SubjectProSeqPath_ByProtein_ch}"
         
         conda list | grep biopython 
         
@@ -134,7 +134,7 @@ process homologousPPDetection_SeqMapping {
         mkdir  -p \${current_homologous_SeqMappingPath} 
         
         
-        export PYTHONPATH="${projectDir}/../src/utilities/" 
+        export  PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/homologousPPDetection_SeqMapping.py -q ${Query_tuple_ch.join("_")}  \
         -s  ${Subject_tupleList_ch.join("_")} \
         -qb "${QueryProSeqPath_ByProtein_ch}/"  -sb "${SubjectProSeqPath_ByProtein_ch}/"  -seqM \${current_homologous_SeqMappingPath} \
@@ -144,6 +144,12 @@ process homologousPPDetection_SeqMapping {
     """
     
 }
+
+//         temp_folder="temp_folder/"
+//         mkdir -p \${temp_folder} 
+        
+//     current_homologous_SeqMappingPath="\${temp_folder}EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/"
+
 
 
 // do protein mapping for homologous pp and single protein mapping, not the one best homologous pp
@@ -160,7 +166,12 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
     input: 
         val Query_tuple_ch
         val Subject_tupleList_ch
-        path temp_folder
+        path all_temp_folder //??!!!! here actully there are three seperated temp_folders from last homologousPPDetection_SeqMapping process
+        // therefore the current folder dont wait untill all the parallel homologousPPDetection_SeqMapping process finished to get statred, this could cause problem 
+        //https://groups.google.com/g/nextflow/c/MhK7boM2c1Y
+        // https://www.biostars.org/p/9569814/
+        // solution is to collect all parallel output process 
+
         path homologous_SeqMappingPath_ch
         path homologous_allQuery2SubjectPPIMapping_path
         
@@ -170,7 +181,9 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
     script:
         
     """
-        echo "temp folder is: ${temp_folder}"
+        echo "all_temp_folder is: ${all_temp_folder}"
+        
+
         homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path="${Query_tuple_ch[1]}_EggNOGmaxLevel${Query_tuple_ch[0]}_allQuery2SubjectPPIMapping_singleProteinBlastp/" 
         mkdir -p \${homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path}
         

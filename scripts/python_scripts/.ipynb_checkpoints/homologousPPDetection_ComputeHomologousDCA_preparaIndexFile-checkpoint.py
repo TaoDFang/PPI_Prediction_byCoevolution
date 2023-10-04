@@ -2,6 +2,7 @@ import argparse
 import os 
 import glob
 import pandas as pd 
+import numpy as np
 import multiprocessing as mp
 from multiprocessing import get_context
 import pickle
