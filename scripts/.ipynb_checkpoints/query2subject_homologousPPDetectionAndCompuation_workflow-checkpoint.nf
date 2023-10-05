@@ -98,11 +98,12 @@ workflow homologousPPDetectionAndCompuation_workflow{
                                                                                         CoEvo_data_folder_ch,
                                                                                         homologousPPDetection_preparePairedMSA_ch.temp_CoEvo_data_folder,
                                                                                         DCA_blockNum_ch)
-        // homologousPPDetection_ComputeHomologousDCA_parallel_ch=homologousPPDetection_ComputeHomologousDCA_parallel(Subject_tupleList_ch,
-        //                                                                                 CoEvo_data_folder_ch,
-        //                                                 homologousPPDetection_ComputeHomologousDCA_preparaIndexFile_ch.temp_IndexDCA_coevolutoin_folder,
-        //                                                                                 IndexDCA_idxCH
-        //                                                                                 )
+    
+        homologousPPDetection_ComputeHomologousDCA_parallel_ch=homologousPPDetection_ComputeHomologousDCA_parallel(Subject_tupleList_ch,
+                                                                                        CoEvo_data_folder_ch,
+                                                        homologousPPDetection_ComputeHomologousDCA_preparaIndexFile_ch.temp_IndexDCA_coevolutoin_folder,
+                                                                                        IndexDCA_idxCH
+                                                                                        )
     
     
         // homologousPPDetection_ComputeHomologousDCA_ch=homologousPPDetection_ComputeHomologousDCA(Query_tuple_ch,Subject_tupleList_ch,

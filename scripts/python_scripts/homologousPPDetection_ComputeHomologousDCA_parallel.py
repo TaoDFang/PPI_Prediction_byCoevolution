@@ -67,13 +67,23 @@ if __name__ == '__main__':
                 
         input_root_folder=CoEvo_data_folder+currentSubject_TaxID+"_EggNOGmaxLevel"+currentSubject_EggNOG_maxLevel+"_eggNOGfilteredData/"
         IndexDCA_coevolutoin_path=input_root_folder+"coevolutoin_computation_IndexDCA/"
+        print("IndexDCA_coevolutoin_path:",IndexDCA_coevolutoin_path)
 
 
-        block_currentSpe_allPPIs_pps_forDCA_frame=pd.read_csv(IndexDCA_coevolutoin_path+str(index_count)+".csv",
-                                                                header=None,index_col=None,sep="\t")
-
-        print("block_currentSpe_allPPIs_pps_forDCA_frame.shape",block_currentSpe_allPPIs_pps_forDCA_frame.shape)
-        block_currentSpe_allPPIs_pps_forCoevolution_list=block_currentSpe_allPPIs_pps_forDCA_frame.values.tolist()
+        # block_currentSpe_allPPIs_pps_forDCA_frame=pd.read_csv(IndexDCA_coevolutoin_path+str(index_count)+".csv",
+        #                                                         header=None,index_col=None,sep="\t")        
+        # print("block_currentSpe_allPPIs_pps_forDCA_frame.shape",block_currentSpe_allPPIs_pps_forDCA_frame.shape)
+        # block_currentSpe_allPPIs_pps_forCoevolution_list=block_currentSpe_allPPIs_pps_forDCA_frame.values.tolist()
+        
+        
+        block_currentSpe_allPPIs_pps_forCoevolution_list=list()
+        with open(IndexDCA_coevolutoin_path+str(index_count)+".csv", "r") as file:
+            my_reader = csv.reader(file, delimiter="\t")
+            # next(my_reader, None)  # skip the headers, no header in this file 
+            for row in my_reader:
+                block_currentSpe_allPPIs_pps_forCoevolution_list.append(row)
+        print("len(block_currentSpe_allPPIs_pps_forCoevolution_list):",len(block_currentSpe_allPPIs_pps_forCoevolution_list))  
+        
 
         now = datetime.now()
         print("Coevolution comp stat now =", now)
