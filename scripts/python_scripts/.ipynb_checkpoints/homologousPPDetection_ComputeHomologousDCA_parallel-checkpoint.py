@@ -63,7 +63,7 @@ if __name__ == '__main__':
     
     
     for currentSubject_EggNOG_maxLevel,currentSubject_TaxID in Subject_tupleList:
-        print(currentSubject_EggNOG_maxLevel,currentSubject_TaxID)
+        print(currentSubject_EggNOG_maxLevel,currentSubject_TaxID,index_count)
                 
         input_root_folder=CoEvo_data_folder+currentSubject_TaxID+"_EggNOGmaxLevel"+currentSubject_EggNOG_maxLevel+"_eggNOGfilteredData/"
         IndexDCA_coevolutoin_path=input_root_folder+"coevolutoin_computation_IndexDCA/"
@@ -77,12 +77,17 @@ if __name__ == '__main__':
         
         
         block_currentSpe_allPPIs_pps_forCoevolution_list=list()
-        with open(IndexDCA_coevolutoin_path+str(index_count)+".csv", "r") as file:
-            my_reader = csv.reader(file, delimiter="\t")
-            # next(my_reader, None)  # skip the headers, no header in this file 
-            for row in my_reader:
-                block_currentSpe_allPPIs_pps_forCoevolution_list.append(row)
-        print("len(block_currentSpe_allPPIs_pps_forCoevolution_list):",len(block_currentSpe_allPPIs_pps_forCoevolution_list))  
+        
+        try:
+            with open(IndexDCA_coevolutoin_path+str(index_count)+".csv", "r") as file:
+                my_reader = csv.reader(file, delimiter="\t")
+                # next(my_reader, None)  # skip the headers, no header in this file 
+                for row in my_reader:
+                    block_currentSpe_allPPIs_pps_forCoevolution_list.append(row)
+            print("len(block_currentSpe_allPPIs_pps_forCoevolution_list):",len(block_currentSpe_allPPIs_pps_forCoevolution_list))  
+        except:
+            assert index_count>0
+            print("It seems now only few samples wait to be compuated, index_count is :",str(index_count))
         
 
         now = datetime.now()

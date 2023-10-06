@@ -81,9 +81,10 @@ if __name__ == '__main__':
 
         #%%time 
         currentSubject_allPPI_forDCA=[pp for pp in Current_Subject_homologousPPs if pp not in existed_pydcaFNAPC_pp_dict] 
+        print("len(currentSubject_allPPI_forDCA):", len(currentSubject_allPPI_forDCA))
         #here 0:3 for testing reson , comment it laterß
         currentSubject_allPPI_ArgForDCA=[(p1,p2,fasta_protein_lens[p1],fasta_protein_lens[p2],pairedMSA_Nf90_folder,DCA_coevolutoin_path) for p1 , p2 in currentSubject_allPPI_forDCA[0:6]]
-        print(len(currentSubject_allPPI_ArgForDCA))
+        print("len(currentSubject_allPPI_ArgForDCA):",len(currentSubject_allPPI_ArgForDCA))
 
 
 
@@ -91,8 +92,12 @@ if __name__ == '__main__':
         IndexDCA_coevolutoin_path_files = glob.glob(IndexDCA_coevolutoin_path+"*.csv")
         for f in IndexDCA_coevolutoin_path_files:
             os.remove(f)
-
-        assert blockNum<len(currentSubject_allPPI_ArgForDCA)
+        
+        try:
+            assert blockNum<len(currentSubject_allPPI_ArgForDCA)
+        except:
+            blockNum=1
+            print("reset blokcNum due to few samples to be computed for DCA ")
 
         block_range=np.linspace(0,len(currentSubject_allPPI_ArgForDCA),blockNum+1,endpoint=True,dtype=int)
         for i in range(blockNum):

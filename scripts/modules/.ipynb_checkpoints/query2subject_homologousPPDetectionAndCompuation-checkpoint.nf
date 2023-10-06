@@ -77,7 +77,15 @@ process homologousPPDetection_allQuery2SubjectPPIMapping {
 // do blastp/mapping between single query proteins and single subject proteins 
 process homologousPPDetection_SeqMapping {
     
-    publishDir "${params.homologous_SeqMappingPath}",mode: "copy", saveAs: { filename ->  filename.substring(12) } 
+    // publishDir "${params.homologous_SeqMappingPath}",mode: "copy", saveAs: { filename ->  filename.substring(12) } 
+    // even with homologousPPDetection_SeqMapping_ch.collect(),, 
+    // the next process start before all file fnished copy. mayby here use link, not copy ? ,does it matter ?
+    // and then make the copy in the end ?
+    // or actually move data in the begining of next process 
+    
+    // Warning
+    // Files are copied into the specified directory in an asynchronous manner, so they may not be immediately available in the published directory at the end of the process execution. For this reason, downstream processes should not try to access output files through the publish directory, but through channels.
+    
     // publishDir "${homologous_SeqMappingPath}", mode: "copy" , here the output is aboluste path so we dont need to publish data
     // the reason we do this is that this process need to be run multiple times parallely and need to write to same same folder, 
     // this cause problems 
@@ -134,7 +142,7 @@ process homologousPPDetection_SeqMapping {
         mkdir  -p \${current_homologous_SeqMappingPath} 
         
         
-        export  PYTHONPATH="${projectDir}/../src/utilities/" 
+        export   PYTHONPATH="${projectDir}/../src/utilities/" 
         python ${projectDir}/python_scripts/homologousPPDetection_SeqMapping.py -q ${Query_tuple_ch.join("_")}  \
         -s  ${Subject_tupleList_ch.join("_")} \
         -qb "${QueryProSeqPath_ByProtein_ch}/"  -sb "${SubjectProSeqPath_ByProtein_ch}/"  -seqM \${current_homologous_SeqMappingPath} \
@@ -183,6 +191,13 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
     """
         echo "all_temp_folder is: ${all_temp_folder}"
         
+        
+        for each in ${all_temp_folder.join(' ')}
+        do
+          echo "each is : \${each}"         
+          rsync -aq "\${each}" "${homologous_SeqMappingPath_ch}/"
+        done
+        
 
         homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path="${Query_tuple_ch[1]}_EggNOGmaxLevel${Query_tuple_ch[0]}_allQuery2SubjectPPIMapping_singleProteinBlastp/" 
         mkdir -p \${homologous_allQuery2SubjectPPIMapping_singleProteinBlastp_path}
@@ -191,7 +206,7 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
         mkdir   -p \${homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path}
 
 
-        export PYTHONPATH="${projectDir}/../src/utilities/" 
+        export  PYTHONPATH="${projectDir}/../src/utilities/" 
         python   ${projectDir}/python_scripts/homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous.py  \
         -q ${Query_tuple_ch.join("_")}   -s ${Subject_tupleList_ch.join("_")} \
         -seqM  "${homologous_SeqMappingPath_ch}/"   -m "${homologous_allQuery2SubjectPPIMapping_path}/" \
@@ -201,6 +216,9 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
     """
     
 }
+// cp -r -n "\${each}" "${homologous_SeqMappingPath_ch}/"
+//           each_full=\$(realpath "\${each}")
+//           echo "each_full:\${each_full}"
 
 
 // // dont includ this step in the computation pipeline but as the post-preporcess steps
