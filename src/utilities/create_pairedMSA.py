@@ -80,7 +80,8 @@ def getComStrSpeForPairedPro_Save(spe_TaxID,hmmalign_path,QueryPro_pro1,QueryPro
             return (None)
 
 
-    except OSError as e:
+    # except OSError as e:
+    except Exception  as e:  # By this way we can know about the type of error occurring
         print("weird thing happens here, this two MSA dont contain  current species as thier common species ",QueryPro_pro1,QueryPro_pro2,e)
         # print("len(alignment1),len(alignment2):",len(alignment1),len(alignment2))
         #happend when single msa of  one of protein is missing (didnt pass filtering steps)

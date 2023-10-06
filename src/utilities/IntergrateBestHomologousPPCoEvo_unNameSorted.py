@@ -298,3 +298,105 @@ def chooseBestHomologousPP(Query_PP,Subject_PPs,Query2Subject_homologous_ignoreS
                     BestHomologousPP_bestHspBits=(cur_QuerySubjectPP1_bestHspBits,cur_QuerySubjectPP2_bestHspBits) 
                     
     return(BestHomologousPP)
+
+
+
+
+
+def getMetaFrame_FullBestHomologousPP(Query_tuple,EggNOG_maxLevel,currentSpe_TaxID,STRING_Version,
+                                      benchmark_suffix="STRINPhyPPI_Benchmark/",
+                                     smallPhylum="",
+                                     BestHomologousPP_filePrefix="BestHomologousPP",
+                                        CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
+                                     ):
+    '''
+    here full BestHomologousPP means all BestHomologous pp compared with Query speceis
+    It does not include all pp in origin indepenpendt benchmark dataset 
+    '''
+    #CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING"+STRING_Version+"/"
+    input_root_folder=CoEvo_data_folder+smallPhylum+currentSpe_TaxID+"_EggNOGmaxLevel"+EggNOG_maxLevel+"_eggNOGfilteredData/"
+
+    
+    Subect_BestHomologousPP_prefix="BestHomologousPPFor"+Query_tuple[1]+"AtEggNOGmaxLevel"+Query_tuple[0]+"_"
+    BestHomologousPP_Benchmark_folder=input_root_folder+Subect_BestHomologousPP_prefix+benchmark_suffix #
+    print("BestHomologousPP_Benchmark_folder:",BestHomologousPP_Benchmark_folder)
+        
+    allPPI_allInfo_frame=pd.read_csv(BestHomologousPP_Benchmark_folder+BestHomologousPP_filePrefix+"_allPPI_allInfo_frame.csv",
+                                 header=0,index_col=None,sep="\t")
+    
+    
+    print("allPPI_allInfo_frame.shape:",allPPI_allInfo_frame.shape)
+    
+    if benchmark_suffix == "STRINPhyPPI_Benchmark/":
+        Pos_allPPI_allInfo_frame=allPPI_allInfo_frame.loc[allPPI_allInfo_frame['benchmark_status']=="P",:]
+        #print("Pos_allPPI_allInfo_frame.shape:",Pos_allPPI_allInfo_frame.shape)
+        Pos_allPPI_allInfo_frame=Pos_allPPI_allInfo_frame.sort_values(by="maxBetDCA_score",ascending=False)
+
+        Neg_allPPI_allInfo_frame=allPPI_allInfo_frame.loc[allPPI_allInfo_frame['benchmark_status']=="N",:]
+        #print("Neg_allPPI_allInfo_frame.shape:",Neg_allPPI_allInfo_frame.shape)
+
+        Neg_allPPI_allInfo_frame=Neg_allPPI_allInfo_frame.sort_values(by="maxBetDCA_score",ascending=False)
+
+        allPPI_allInfo_frame= pd.concat([Pos_allPPI_allInfo_frame,Neg_allPPI_allInfo_frame])
+    elif benchmark_suffix == "KEGG_Benchmark/":
+        allPPI_allInfo_frame=allPPI_allInfo_frame.sort_values(by="maxBetDCA_score",ascending=False)
+    elif benchmark_suffix == "QianCong_Benchmark/":
+        allPPI_allInfo_frame=allPPI_allInfo_frame.sort_values(by="maxBetDCA_score",ascending=False)
+        
+    else:
+        return(allPPI_allInfo_frame)
+    
+
+    
+    return(allPPI_allInfo_frame)
+
+
+
+
+
+
+def collect_BestHomologousDCAs_OneSpeOneScore_OnlyTopPosNeg(allPPI_allInfoFrame,
+                                                      Query_BestHomologousDCAs_dict,
+                                                      ML_inputPath,CoEvo_type="DCA",
+                                                           BestHomologousDCAs_dict_withStatus=True):
+
+
+    X_fileName=ML_inputPath+"OnlyTopPosNeg_NonPara_X_BestHomologous"+CoEvo_type+"s_OneSpeOneScore.npy"
+    Y_fileName=ML_inputPath+"OnlyTopPosNeg_NonPara_Y_BestHomologous"+CoEvo_type+"s_OneSpeOneScore.npy"
+    #if not os.path.exists(X_fileName):
+
+
+
+    NonPara_allPPI_info=allPPI_allInfoFrame.loc[:,["STRING_ID1","STRING_ID2","benchmark_status"]].values.tolist()
+
+
+
+    if BestHomologousDCAs_dict_withStatus:
+        OnlyTopPosNeg_NonPara_X=np.zeros((len(NonPara_allPPI_info),len(list(Query_BestHomologousDCAs_dict.values())[0])-1))
+        OnlyTopPosNeg_NonPara_Y=np.zeros((len(NonPara_allPPI_info),1))
+        for idx,l in enumerate(NonPara_allPPI_info):
+            p1, p2 , label=l
+            numeric_lable=1 if label=="P" else 0
+
+            OnlyTopPosNeg_NonPara_X[idx,:]=Query_BestHomologousDCAs_dict[(p1,p2)][1:]
+            OnlyTopPosNeg_NonPara_Y[idx]=numeric_lable
+    else:
+        OnlyTopPosNeg_NonPara_X=np.zeros((len(NonPara_allPPI_info),len(list(Query_BestHomologousDCAs_dict.values())[0])))
+        OnlyTopPosNeg_NonPara_Y=np.zeros((len(NonPara_allPPI_info),1))
+        for idx,l in enumerate(NonPara_allPPI_info):
+            p1, p2 , label=l
+            numeric_lable=1 if label=="P" else 0
+
+            OnlyTopPosNeg_NonPara_X[idx,:]=Query_BestHomologousDCAs_dict[(p1,p2)]
+            OnlyTopPosNeg_NonPara_Y[idx]=numeric_lable
+
+
+    np.save(X_fileName,OnlyTopPosNeg_NonPara_X)
+    np.save(Y_fileName,OnlyTopPosNeg_NonPara_Y)
+
+    OnlyTopPosNeg_NonPara_XtopCoEvos=np.load(X_fileName)
+
+    OnlyTopPosNeg_NonPara_YtopCoEvos=np.load(Y_fileName)
+    OnlyTopPosNeg_NonPara_YtopCoEvos=np.reshape(OnlyTopPosNeg_NonPara_YtopCoEvos,(OnlyTopPosNeg_NonPara_YtopCoEvos.shape[0],))#
+    
+    return(OnlyTopPosNeg_NonPara_XtopCoEvos,OnlyTopPosNeg_NonPara_YtopCoEvos)

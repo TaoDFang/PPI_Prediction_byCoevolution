@@ -2,6 +2,8 @@ import pickle
 from Bio.Blast import NCBIXML
 
 import subprocess
+import os
+import sys
 
 # code adapted  from /code/MNF/src/tao_utilities/protein_otherFeatures.py
 # and /code/MNF/notebooks/Ecoli_PDB/Physical_Distance_Calculation.ipynb
@@ -36,7 +38,8 @@ def twoSepMapping(record):
 
 
     blastXMLOutput_cmd = [
-        "/mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/blastp", 
+        "blastp", 
+        # "/mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/blastp", 
         '-query',query_fastaPath+query_proID+".fa",
         '-subject',subject_fastaPath+subject_proID+".fa",
         '-evalue',str(1e-6),# to make sure only meaningful hit are returned 
@@ -74,11 +77,27 @@ def twoSepMapping(record):
         if overlap_method=="keep":
             #here sorted hsps by thier bits scores from smallest to largest
             # so if these hsps overlaps , the residue mapping realtion in best hsp are used 
+            
             sorted_alignment_hsps=sorted(alignment.hsps,key=lambda hsp: hsp.bits) 
         elif overlap_method=="remove":
             # there sorted hsp by their bits scores from largest to smallest
             # if there are overlap. remove hsp with lower bits score
+            # try: 
             sorted_alignment_hsps=sorted(alignment.hsps,key=lambda hsp: hsp.bits,reverse=True) 
+            # this bug should never happe, but sometimes NCBIXML.read set the bit score as none, https://github.com/biopython/biopython/issues/2179
+            # need biopython version more than biopython=1.74
+            # except Exception  as e: 
+            #     print(e)
+            #     print(outputPath+query_proID+"and"+subject_proID+".xml")
+            #     print(blast_record.alignments)
+            #     for alignment in blast_record.alignments:
+            #         # print(list(alignment.hsps))
+            #         for hsp in alignment.hsps:
+            #             print('score:', hsp.score)
+            #             print('gaps:', hsp.gaps)
+            #             print('bits:', hsp.bits)
+
+                
             best_hsp=sorted_alignment_hsps[0]
             keeped_subjectHSP_pos=[(best_hsp.sbjct_start,best_hsp.sbjct_end)] 
             keeped_queryHSP_pos=[(best_hsp.query_start,best_hsp.query_end)]  # notice here keeped_subjectHSP_pos and keeped_queryHSP_pos always have same length
