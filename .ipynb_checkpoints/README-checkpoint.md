@@ -33,6 +33,7 @@ then run one of the following:
 nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf  -c nextflow.config -profile singularity   -resume (on local machine) \
 nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf  -c nextflow.config -profile slurm_withSingularity  -resume (On HPC with slurm)
 ```
+here add more paramerter setting from here and introduce some pamameters 
 
 
 ## Paper figures
@@ -52,5 +53,6 @@ then inside container run:
 jupyter notebook --no-browser --port=8036 \
 ```
 then the notebooks are accessiable at: http://localhost:8036/ \
+Remember to set variable "notebookData_folder" to the path where you save the data 
 check how to change or remove password here password here  
 
