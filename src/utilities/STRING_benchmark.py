@@ -51,3 +51,22 @@ def add_STRINGPhyPPI_status(input_dataframe,STRINGcurrentSpePhyPPI_posPPI_dict,)
             
     metapdb_frame["STRINGPhy_status"]=meta_status
     return(metapdb_frame)
+
+
+def get_string_score_dict(file_name="/mnt/mnemo6/tao/PPI_Coevolution/STRING_data_11.5/511145.protein.links.detailed.v11.5.txt.gz",
+                         column_name_list=None):
+
+    string_score=pd.read_csv(file_name,
+                                   header=0,index_col=None,sep=" ")
+    if column_name_list is None:
+        string_column_names=string_score.columns.values.tolist()[2:]
+    else:
+        string_column_names=column_name_list
+    
+    string_score_dict=dict()
+
+    for name in string_column_names:
+        string_score_list=string_score.loc[:,["protein1","protein2",name]].values.tolist()
+        string_score_dict[name]=dict([((p1,p2),s)for p1, p2, s in string_score_list])
+
+    return(string_score_dict)

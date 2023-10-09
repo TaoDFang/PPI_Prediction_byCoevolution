@@ -27,10 +27,11 @@ def get_pydcaFNAPC_betArray(Coevo_path,Query_pro1,Query_pro2,
 # #         print(f"excepttion error:{e}")
 # #         print(f"corrupted_data_fileName:{corrupted_data_fileName}")
 # #         print(f"dest:{dest}")
-
+        print(data_fileName)
         return None # for now just to check how many corrupt data i have 
     except IOError as e:
         #print(f"excepttion error:{e}")
+        print(data_fileName)
         return None
 #        pass
 #         print(data_fileName)
@@ -185,3 +186,31 @@ def collect_topCoEvos_OnlyTopPosNeg(topCoEvoScore_frame,allPPI_allInfoFrame,CoEv
     OnlyTopPosNeg_NonPara_YtopCoEvos=np.reshape(OnlyTopPosNeg_NonPara_YtopCoEvos,(OnlyTopPosNeg_NonPara_YtopCoEvos.shape[0],))#
 
     return(OnlyTopPosNeg_NonPara_XtopCoEvos,OnlyTopPosNeg_NonPara_YtopCoEvos)
+
+
+
+
+
+def get_topRankingBetValue_dict_PosInSingleMSA_framArray(bet_data_array,topNum=50):
+
+    ascending_bet_data_array=np.sort(bet_data_array.flatten())
+    descending_bet_data_array=ascending_bet_data_array[::-1]
+    #returnList=[Query_pro1,Query_pro2]
+    returnList=[]
+    esisted_top_values=set()
+    for j in range(topNum):
+        top_value=descending_bet_data_array[j]
+        if top_value not in esisted_top_values:
+            topIdx=np.where(bet_data_array==top_value)
+            for i in range(len(topIdx[0])):
+                topRow,topCol=topIdx[0][i],topIdx[1][i]
+                #topCol += L1
+                #print(top_value,topRow,topCol)
+                if len(returnList)<(2+topNum*3):
+                    returnList.extend((top_value,topRow,topCol))
+            esisted_top_values.add(top_value)
+
+        if len(returnList)>(2+topNum*3):
+            break
+            
+    return(returnList)
