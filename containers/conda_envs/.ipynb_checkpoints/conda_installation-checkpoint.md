@@ -16,7 +16,7 @@ conda activate py37_pydca
 pip install pydca
 
 pip uninstall -y numpy 
-
 pip uninstall -y numba
+
 conda install -c numba numba=0.46.0
 ```

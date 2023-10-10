@@ -10,6 +10,7 @@ Nextflow installtion:
 or simpley done via [conda install](https://anaconda.org/bioconda/nextflow):  
 ```
 conda install -c bioconda nextflow=23.04.1
+conda create -n py_nextflow --channel bioconda python=3.8 nextflow=23.04.1
 ```
 
 The simplese strategy to use all necessery softwares and libraries for this project is to use the singularity container that we have built
@@ -18,12 +19,15 @@ Singularity installtaion:
 or simply via [conda install](https://anaconda.org/conda-forge/singularity):  
 ```
 conda install -c conda-forge singularity=3.8.7
+conda create -n py_singularity --channel conda-forge python=3.8 singularity=3.8.7
 ```
+
+the problem with conda installation, is that when then singulartyi is avaiable
 mention here singularity is not necesseary 
 (Havent test this myself)
 
 If one has probelm to install singularity, all necessery softwares and library can be installed via conda. \
-Check documentation "containers/conda_envs/conda_installation.md" in this repository .
+Check more details in documentation "containers/conda_envs/conda_installation.md" in this repository .
 
 
 ## Raw data and result computation 
@@ -67,3 +71,8 @@ then the notebooks are accessiable at: http://localhost:8036/ \
 Remember to set variable "notebookData_folder" to the path where you save the data 
 check how to change or remove password here password here  
 
+
+
+# Testing
+
+nextflow run Query_coevolutionComputation_workflow.nf --root_folder "/Users/taof/Documents/PhD_Data" -c nextflow.config -profile singularity  -resume
