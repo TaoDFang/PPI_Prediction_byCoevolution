@@ -1,5 +1,6 @@
 # PPI_Prediction_byCoevolution
 
+in the end, copy paste to remmove all spelling error 
 
 ## enviroment setup 
 To run this repository, Nextflow and Singularity need to be insalled.
