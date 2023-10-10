@@ -75,4 +75,6 @@ check how to change or remove password here password here
 
 # Testing
 
-nextflow run Query_coevolutionComputation_workflow.nf --root_folder "/Users/taof/Documents/PhD_Data" -c nextflow.config -profile singularity  -resume
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/mnt/mnemo6/tao" --conda_envs_path "/mnt/mnemo5/tao/anaconda3/envs" -c nextflow.config -profile standard  -resume
+
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/mnt/mnemo6/tao"  -c nextflow.config -profile singularity  -resume
