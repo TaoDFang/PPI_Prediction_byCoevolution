@@ -12,6 +12,7 @@ or simpley done via [conda install](https://anaconda.org/bioconda/nextflow):
 conda install -c bioconda nextflow=23.04.1
 ```
 
+The simplese strategy to use all necessery softwares and libraries for this project is to use the singularity container that we have built
 Singularity installtaion:
 [Official documentation](https://docs.sylabs.io/guides/latest/user-guide/quick_start.html) \
 or simply via [conda install](https://anaconda.org/conda-forge/singularity):  
@@ -20,6 +21,10 @@ conda install -c conda-forge singularity=3.8.7
 ```
 mention here singularity is not necesseary 
 (Havent test this myself)
+
+If one has probelm to install singularity, all necessery softwares and library can be installed via conda. \
+Check documentation "containers/conda_envs/conda_installation.md" in this repository .
+
 
 ## Raw data and result computation 
 mention time and size 
@@ -37,6 +42,8 @@ or via nextflow the command line (e.g. --root_folder= "path to the location wher
 
 here add more paramerter setting from here and introduce some pamameters , or direct add as comment line "scripts/nextflow.config" 
 
+
+mention colabfold here
 
 ## Paper figures
 Download singularity container for this :  
