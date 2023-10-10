@@ -29,10 +29,6 @@ Subject_tupleList_ch=Channel.value(["${params.subject1_current_EggNOG_maxLevel}"
                                 "${params.subject3_current_EggNOG_maxLevel}","${params.subject3_currentSpe_TaxID}"])
 
 
-// the main logic is from http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/test_phylumeffect_homologousPPDetection.ipynb
-// and/or mainly from  http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/test_phylumeffect_homologousPPDetection_STRINGPhyBalancePhyla.ipynb
-// and http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/Compute_allPPI_homologousPPDetection.ipynb
-
 workflow homologousPPDetectionAndCompuation_workflow{    
     take:
         spe_list_ch
@@ -72,10 +68,6 @@ workflow homologousPPDetectionAndCompuation_workflow{
 
         
     
-        // homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
-        //here homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous actuall get output from homologousPPDetection_SeqMapping
-        // it has to be after homologousPPDetection_SeqMapping process, while current usuage homologous_SeqMappingPath_ch make it kind of parallel
-        // solution change output of process homologousPPDetection_SeqMapping
         homologousPPDetection_SeqMapping_ch.collect().view()  // this is to force all parallel SeqMapping to finished before start next process 
         homologous_SeqMappingPath_ch=Channel.fromPath("${params.homologous_SeqMappingPath}",type:"dir")
         homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch=homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous(Query_tuple_ch,
@@ -91,7 +83,6 @@ workflow homologousPPDetectionAndCompuation_workflow{
                                                                                     CoEvo_data_folder_ch,
                     homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous_ch.homologous_allQuery2SubjectPPIMapping_bestHomologousPP_path)
         
-        //problem here is now proceess start without waiting process homologousPPDetection_preparePairedMSA to be fished 
         homologousPPDetection_ComputeHomologousDCA_preparaIndexFile_ch=homologousPPDetection_ComputeHomologousDCA_preparaIndexFile(Query_tuple_ch,
                                                                                         Subject_tupleList_ch,
                                                                                         newSTRING_rootFolder_ch,
@@ -106,13 +97,6 @@ workflow homologousPPDetectionAndCompuation_workflow{
                                                                                         )
     
     
-        // homologousPPDetection_ComputeHomologousDCA_ch=homologousPPDetection_ComputeHomologousDCA(Query_tuple_ch,Subject_tupleList_ch,
-        //                                                                                 newSTRING_rootFolder_ch,
-        //                                                                                 CoEvo_data_folder_ch,
-        //                                                                                 homologousPPDetection_preparePairedMSA_ch.temp_CoEvo_data_folder)
-
-
-    
 }
 
 
@@ -124,8 +108,6 @@ workflow {
     RawFastaFilesAndMetaData_workflow() 
     
    // ************Prepare single MSA **********
-    //http://localhost:8206/lab/workspaces/auto-I/tree/code/MNF/notebooks/STRING_Data_11.5/CoEvo_EggNOG_preprocessing_STRING1105_varyEggNOGMaxLevels_prepareSTRINPhyPPIBenchmark.ipynb
-    //http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/script_CoEvo_EggNOG_preprocessing_STRING1105_varyEggNOGMaxLevels_prepareSTRINPhyPPIBenchmark.py
     query_prepareSingleMSA_workflow=prepareSingleMSA_workflow(Channel.value("${params.query_currentSpe_TaxID}"),
                          Channel.value("${params.query_current_EggNOG_maxLevel}"),
                               RawFastaFilesAndMetaData_workflow.out.STRING_fastaBySpecies_Folder,
@@ -165,10 +147,6 @@ workflow {
                              )
 
     // ************Prepare paired MSA of qurey speceis, then later detect all subject homologous pp for these pp in query species**********
-    // http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/script_allPPI_CoEvo_EggNOG_preprocessing_STRING1105_varyEggNOGMaxLevels.py
-    // here for the because the output generate millions of output,  to prevent completely re-run of progrom in case of accidentaly interuption?
-    // some input channle should be the final output path, not the the temperaoy woring directory of previous path 
-    // but actully if last step finished correctly , its okay, more the problem of last step compute DCA
     Query_PairedMSA_preprocessing_workflow_ch=Query_PairedMSA_preprocessing_workflow(Channel.value("${params.query_currentSpe_TaxID}"),
                                            query_prepareSingleMSA_workflow.currentSpeMSAGapsFilteringMetaFolder,
                                            query_prepareSingleMSA_workflow.currentSpe_msa_removeGaps_path)
@@ -210,9 +188,9 @@ workflow {
 
 
 /*
-* optional: test in a tmux sesssion:  tmux attach -t tmux-nextflow 
+
 conda activate nf-training
-cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/scripts
+cd ~/PPI_Prediction_byCoevolution/scripts
 
 nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf  -c nextflow.config -profile standard  -resume
 

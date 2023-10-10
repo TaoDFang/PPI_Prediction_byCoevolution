@@ -65,8 +65,7 @@ if __name__ == '__main__':
 
 
 
-#     # AA level mapping.
-#     see http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/test_phylumeffect_homologousPPDetection_STRINGPhyBalancePhyla.ipynb
+
     Query2Subject_QueSpeAllPPI_homologous_singleProteinMaping_Query2Subject_AAmapDic_listDict,Query2Subject_QueSpeAllPPI_homologous_singleProteinMaping_Subject2Query_AAmapDic_listDict=Query2Subject_AAmapDic(Query_speID,Subject_tupleList,
                            homologous_SeqMappingPath,
                            Query2Subject_QueSpeAllPPI_homologous_singleProteinMaping_listDict)

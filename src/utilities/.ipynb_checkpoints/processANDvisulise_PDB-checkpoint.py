@@ -4,7 +4,6 @@ import xpdb
 # import py3Dmol
 
 
-# also check  in  local computer http://localhost:8888/lab/tree/Documents/PhD_Tao/Classes/PyMOL/plot_3d_PDBStructure.py
 
 def read_allres_pdbformat_data(file_name):
     """
@@ -98,12 +97,7 @@ def show_pdb(pdb_file,selected_chains,
             view_width=600,
             view_height=600):
     import py3Dmol
-    # adapted from http://localhost:8206/lab/workspaces/auto-K/tree/code/MNF/src/tao_utilities/py3Dmol_functions.py show_pdb()
-    
-    #view = py3Dmol.view(js='https://3dmol.org/build/3Dmol.js',)
-    # view = py3Dmol.view(js="https://cdn.jsdelivr.net/npm/3dmol@1.8.0/build/3Dmol-min.min.js") # https://github.com/3dmol/3Dmol.js/issues/635 and https://github.com/TaoDFang/MNF/issues/73
-    #py3Dmol.view(query='mmtf:1ycr',js='https://cdn.jsdelivr.net/npm/3dmol@1.8.0/build/3Dmol-min.min.js'), download to /code/MNF/src/tao_utilities/3dmol%401.8.0%3Abuild%3A3Dmol-min.min.js?_xsrf=2%7Cda02d2d0%7Ca680e32e07e55cf9e801615f13db74f6%7C1672739124
-    # view = py3Dmol.view(width=view_width, height=view_height,)
+
     view = py3Dmol.view(width=view_width, height=view_height,
                        js="https://cdn.jsdelivr.net/npm/3dmol@1.8.0/build/3Dmol-min.min.js")
     
@@ -111,9 +105,7 @@ def show_pdb(pdb_file,selected_chains,
     view.removeAllModels()
     view.addModel(open(pdb_file,'r').read(),'pdb')
     
-    #view.getModel().hide()
-    
-    #https://pymolwiki.org/index.php/Color_Values
+
     if colors is None:
         colors=["purple	","blue","red","green","yellow","gray","black",][0:len(selected_chains)]
     

@@ -27,28 +27,14 @@ from sklearn.impute import KNNImputer
 
 
 
-# from collect_topCoEvos import get_topRankingBetValue_dict
-# from collect_topCoEvos import get_topRankingBetValue_dict_PosInSingleMSA
-# from collect_topCoEvos import collect_topCoEvos_OnlyTopPosNeg
-# from collect_topCoEvos import get_topRanking_CoEvo_file
-# from collect_topCoEvos import get_topRanking_CoEvo_PosInSingleMSA_file
-
-
 from EggNOGGroup_RelatedFuncs import return_cogPairs_fromproPair
 from EggNOGGroup_RelatedFuncs import sepCogPairs_train_test_split
 
-# from biasCheck import phylaIntegration_replacingDCAScores
-# from biasCheck import phylaIntegration_replacingSubjectSpeDCAScores
-# from biasCheck import phylaIntegration_replacingOtherPhalaDCAScores
-
-# from biasCheck import sort_arrayOtherPhyla
-# from biasCheck import sort_arrayAllPhyla
 
 
 from ML_parameters_setting import LR_withGridSearchCV_GroupKFold
 from ML_parameters_setting import RF_withGridSearchCV_GroupKFold
 
-# from read_benchmark_tableformatfile import getMetaFrame_withHighDCA
 from read_benchmark_tableformatfile import getMetaFrame
 
 from EggNOGGroup_RelatedFuncs import sepCogPairs_train_test_split_getTrainandTestPPTuples
@@ -71,7 +57,7 @@ def sepCogPairs_FullBestHomologousPP_BestHomologousDCAs_uniquePhyla_ML_predictio
                 given_benchmark_folder=None,
                 splitPosandNeg=True,
                 sort_frame=True,
-                CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
+                CoEvo_data_folder="CoEvo_data_STRING11.5/",
                 prefix="",
                 benchmark_suffix="STRINPhyPPI_Benchmark/",
                 n_jobs=20,
@@ -107,7 +93,6 @@ def sepCogPairs_FullBestHomologousPP_BestHomologousDCAs_uniquePhyla_ML_predictio
     BestHomologousDCAs_predicted_results=dict()
         
         
-    #here something is wrong ... whats problem. later remember to write down more details if we found problems 
     allPPI_allInfo_frame=getMetaFrame(EggNOG_maxLevel=EggNOG_maxLevel,currentSpe_TaxID=currentSpe_TaxID,
                                                       STRING_Version=STRING_Version,
                                                   DCA_thres=DCA_thres,

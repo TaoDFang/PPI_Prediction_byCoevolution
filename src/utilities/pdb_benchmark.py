@@ -21,11 +21,6 @@ def get_STRING1105_pdb_interact(pdb_interact_filename="/mnt/mnemo6/damian/STRING
                              sep="\t",header=None,index_col=None)
     pdb_interact_full_spe=pdb_interact_full.loc[pdb_interact_full.iloc[:,1]==retrieve_spe,:]
 
-    
-    # pdb_interact_full_spe_list=pdb_interact_full_spe.values.tolist()
-    # pdb_interact_full_spe_dict=defaultdict(list)
-    # for label,s, p1,p2 ,_,entry in pdb_interact_full_spe_list:
-    #     pdb_interact_full_spe_dict[("511145."+p1,"511145."+p2)].append([label,entry])
 
     
     pdb_interact_PPs=get_pps_withcertaintype(pdb_interact_full_spe,typelabel="complex_contact")
@@ -68,7 +63,6 @@ def get_filter_pdbBenchmark(input_dataframe,
             meta_status.append("N")  
     metapdb_frame["pdb_status"]=meta_status
     
-    # sel_idx=[i for i,s in enumerate(metapdb_frame.pdb_status) if (s==pos_lable) or (s=="N")]
     pos_idx=[i for i,s in enumerate(metapdb_frame.pdb_status) if (s==pos_lable)]
     
     if downsample_Ratio:

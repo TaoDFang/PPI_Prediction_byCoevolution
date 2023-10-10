@@ -65,22 +65,18 @@ def get_msa_statistics_dict(l):
     '''converts list of sequences to msa'''
     pp1,pp2, msa_path=l
     msa_filename=msa_path+pp1+"and"+pp2+".fasta"
-    #msa = AlignIO.read(msa_path+pp1+"and"+pp2+".fasta", "fasta")
-    #print(len(msa))
     names,seqs=parse_fasta(msa_filename)
     
     msa_ori = []
     for seq in seqs:
         msa_ori.append([aa2num(aa) for aa in seq])
     msa_ori = np.array(msa_ori)
-    #print(msa_ori.shape)
     
     # compute seq distancre
     msa_dists = get_dist(msa_ori)
     
     # compute colentropy
     msa_colentropy=get_msa_colentropy(msa_ori)
-    #print(msa_colentropy.shape)
     
     mean_msa_dists=np.mean(np.triu(msa_dists, 0))
     mean_msa_colentropy=np.mean(msa_colentropy)
@@ -99,14 +95,12 @@ def downsample_msa(l):
     random.seed(0)
     
     if len(msa)<base_msanum:
-        #print("exception",pp1,pp2,len(msa),base_msanum)
         downsample_idx =random.sample(range(len(msa)),len(msa))
     else:
         downsample_idx =random.sample(range(len(msa)),base_msanum)
     downsample_msa=MultipleSeqAlignment([]) 
     
     if base_msanum ==1:
-        #print(downsample_idx)
         idx=downsample_idx[0]
         downsample_msa.append(msa[idx,:])
         downsample_msa.append(msa[idx,:])

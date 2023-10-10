@@ -25,19 +25,12 @@ def getComStrSpeForPairedPro_Save(spe_TaxID,hmmalign_path,QueryPro_pro1,QueryPro
 
         proNames1=[record.id for record in alignment1]
         StrSpeID1=[int(retemp.match(pro).group(1)) for pro in proNames1]
-        #StrSpe1=list(STRING_id2newname_dict.loc[StrSpeID1,'name'])
-        #StrSpe1=[STRING_id2newname_dict[sid] for sid in StrSpeID1]
+
 
         proNames2=[record.id for record in alignment2]
         StrSpeID2=[int(retemp.match(pro).group(1)) for pro in proNames2]
-        #StrSpe2=list(STRING_id2newname_dict.loc[StrSpeID2,'name'])
-        #StrSpe2=[STRING_id2newname_dict[sid] for sid in StrSpeID2]
 
         comStrSpe=list(set(StrSpeID1).intersection(set(StrSpeID2)))
-        #print(comStrSpe)
-        #print(spe_TaxID)
-        #print(comStrSpe.index(int(spe_TaxID)))
-        # move QueryPro to first position
         comStrSpe.insert(0,comStrSpe.pop(comStrSpe.index(int(spe_TaxID))))
 
 
@@ -181,8 +174,6 @@ def getSameProteinRatio(record):
         if record_ids[0]==record_ids[1]:
             sameProtein_count +=1
     sameProtein_ratio=sameProtein_count/len(msa)
-    #print(sameProtein_ratio)
-    #sameProtein_ratio_dict[(pp1,pp2)]=sameProtein_ratio
     return([pp1,pp2,sameProtein_ratio])
             
             

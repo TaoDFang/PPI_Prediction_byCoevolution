@@ -5,13 +5,8 @@ import subprocess
 import os
 import sys
 
-# code adapted  from /code/MNF/src/tao_utilities/protein_otherFeatures.py
-# and /code/MNF/notebooks/Ecoli_PDB/Physical_Distance_Calculation.ipynb
-
-
-#here chante the name query and subject in old script to the subject and query (reverse it to fit to  the usually customer)
 def twoSepMapping(record):
-    '''this function was also used in /code/MNF/notebooks/STRING_Data_11.5/test_phylumeffect_intergrationAtResidueLevel.ipynb'''
+    ''''''
     
     query_proID,subject_proID,overlap_method,query_fastaPath, subject_fastaPath,outputPath,blastp_path=record
     
@@ -27,8 +22,7 @@ def twoSepMapping(record):
 
 
     ]
-    
-    # print("    ".join(blastTableOutput_cmd))
+
 
 
     skw = dict(stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -39,7 +33,6 @@ def twoSepMapping(record):
 
     blastXMLOutput_cmd = [
         "blastp", 
-        # "/mnt/mnemo5/tao/BeeiveProgram/ncbi-blast-2.10.0+/bin/blastp", 
         '-query',query_fastaPath+query_proID+".fa",
         '-subject',subject_fastaPath+subject_proID+".fa",
         '-evalue',str(1e-6),# to make sure only meaningful hit are returned 
@@ -55,47 +48,24 @@ def twoSepMapping(record):
     p = subprocess.run(blastXMLOutput_cmd, universal_newlines=True, **skw)
     p.returncode
 
-
-    # use totorial from biopython https://biopython.readthedocs.io/en/latest/chapter_blast.html
     with open( outputPath+query_proID+"and"+subject_proID+".xml") as result_handle:
         blast_record = NCBIXML.read(result_handle)
 
 
-    # one problem here is that if we process by hsp. probabily not all resiiue in queyr protein could be mapped
-    # which is okay,as when two protein are not have same len, of course some residues in short protein  could not be mapped 
+
     subject_hsp_dict=dict()
     query_hsp_dict=dict()
 
-    # ???? here there is a problem is that if blast_record.alignments is None
-    # then this for loop will never get started 
-    # lucky here is oaky as we want subject_hsp_dict and query_hsp_dict are empty dictionary in this case 
+
 
     for alignment in blast_record.alignments:
-#         if len(alignment.hsps)>2:
-#             print(query_proID,subject_proID,query_fastaPath, subject_fastaPath,outputPath)
+
 
         if overlap_method=="keep":
-            #here sorted hsps by thier bits scores from smallest to largest
-            # so if these hsps overlaps , the residue mapping realtion in best hsp are used 
-            
             sorted_alignment_hsps=sorted(alignment.hsps,key=lambda hsp: hsp.bits) 
         elif overlap_method=="remove":
-            # there sorted hsp by their bits scores from largest to smallest
-            # if there are overlap. remove hsp with lower bits score
-            # try: 
+
             sorted_alignment_hsps=sorted(alignment.hsps,key=lambda hsp: hsp.bits,reverse=True) 
-            # this bug should never happe, but sometimes NCBIXML.read set the bit score as none, https://github.com/biopython/biopython/issues/2179
-            # need biopython version more than biopython=1.74
-            # except Exception  as e: 
-            #     print(e)
-            #     print(outputPath+query_proID+"and"+subject_proID+".xml")
-            #     print(blast_record.alignments)
-            #     for alignment in blast_record.alignments:
-            #         # print(list(alignment.hsps))
-            #         for hsp in alignment.hsps:
-            #             print('score:', hsp.score)
-            #             print('gaps:', hsp.gaps)
-            #             print('bits:', hsp.bits)
 
                 
             best_hsp=sorted_alignment_hsps[0]
@@ -117,9 +87,6 @@ def twoSepMapping(record):
                         keeped_sorted_alignment_hsps.append(hsp)
             # this step is not necesseary , just to keep consistent with "overlap_method=="keep""
             sorted_alignment_hsps=sorted(keeped_sorted_alignment_hsps,key=lambda hsp: hsp.bits) 
-
-#         if (overlap_method=="remove") and (len(sorted_alignment_hsps)>1):
-#             print(query_proID,subject_proID,query_fastaPath, subject_fastaPath,outputPath)
 
         for idx,hsp in enumerate(sorted_alignment_hsps):
                 # notice here start and end position aer position in original , position of gaps are not included 
@@ -146,8 +113,7 @@ def twoSepMapping(record):
             # is it possible blast return two gaps in same position ??? even this is the case, my program can deal with this 
             if qlet != "-":
                 # here only work if gaps is in subject and not in sub
-                # this is true for current data is subject is alos after trim ans thus shorter and thus need gaps
-
+                # this is true for current data is subject is also after trim ans thus shorter and thus need gaps
                 #notice here postion are from balst and start from 1 not from 0
                 if slet != "-":
                     subject2query_AAmapDic[qstart+i-subject_gaps_soFar]=sstart+i-query_gaps_soFar
@@ -165,5 +131,4 @@ def twoSepMapping(record):
     #notice here postion are from balst and start from 1 not from 0
     with open(outputPath+query_proID+"and"+subject_proID+"subject2query_AAmapDic_overlapMethod"+overlap_method+".pickle", 'wb') as handle:
         pickle.dump(subject2query_AAmapDic, handle)
-    #return(subject2query_AAmapDic)
 

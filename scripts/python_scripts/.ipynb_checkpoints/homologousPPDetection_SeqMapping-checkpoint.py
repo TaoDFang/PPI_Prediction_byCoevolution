@@ -17,8 +17,6 @@ if __name__ == '__main__':
     parser.add_argument('-s','--Subject_tupleList', type=str, help='Subject_tupleList')
     parser.add_argument('-qb','--QueryProSeqPath_ByProteins', type=str, help='QueryProSeqPath_ByProteins')
     parser.add_argument('-sb','--SubjectProSeqPath_ByProteins', type=str, help='SubjectProSeqPath_ByProteins')
-    # parser.add_argument('-mf','--SubjectSpe_MiddleData_folder', type=str, help='SubjectSpe_MiddleData_folder')
-    # parser.add_argument('-seqM','--homologous_SeqMappingPath', type=str, help='homologous_SeqMappingPath')
     parser.add_argument('-seqM','--current_homologous_SeqMappingPath', type=str, help='current_homologous_SeqMappingPath')
     parser.add_argument('-m','--homologous_allQuery2SubjectPPIMapping_path', type=str, help='homologous_allQuery2SubjectPPIMapping_path')  
     parser.add_argument('-bp','--blastp_path', type=str, help='blastp_path')  
@@ -37,11 +35,6 @@ if __name__ == '__main__':
     
     overlap_method="remove"
 
-#     print(SubjectSpe_MiddleData_folder) 
-#     # sre=re.compile("([\d+])[^0-9]+")
-#     sre=re.compile("([0-9]+)[^0-9]+")
-#     Subject_speID,Subject_phylum=sre.findall(SubjectSpe_MiddleData_folder)
-#     print("Subject_speID,Subject_phylum:",Subject_speID,Subject_phylum)
 
 
 
@@ -73,24 +66,6 @@ if __name__ == '__main__':
     with open(homologous_allQuery2SubjectPPIMapping_path+"NameUnsorted_Query2Subject_QueSpeAllPPI_homologous_singleProteinMaping_listDict.pickle", 'rb') as handle:
         Query2Subject_SubSpeAllPPI_homologous_singleProteinMaping_listDict=pickle.load(handle)
         
-
-
-    # here there is a problem, new STRIN_rootfodler is a big folder , how to use it in this process witout danger to be trigerd later by other process 
-    # unless all new process dont go to the newstrin foot foler anymore 
-    # ah ah, use path with wildld card "*", but then the proble is  how to performance for loop ,in nextflow , dont need for loop:
-    # check input files secction in https://carpentries-incubator.github.io/workflows-nextflow/05-processes-part1/index.html, use "each" ?
-
-    # old code at : http://localhost:8206/lab/workspaces/auto-j/tree/code/MNF/notebooks/STRING_Data_11.5/test_phylumeffect_homologousPPDetection.ipynb
-    # for phylum, Subject_speID in Subject_tupleList:
-    #     print(phylum, Subject_speID)
-    #     QueryProSeqPath_ByProteins=newSTRING_rootFolder+Query_speID+"ByProteins/"
-    #     SubjectProSeqPath_ByProteins=newSTRING_rootFolder+Subject_speID+"ByProteins/"
-
-#     current_homologous_SeqMappingPath=homologous_SeqMappingPath+"EggNogMaxLevel2_QuerySpe_ID"+Query_speID+"and"+"SubjectSpe_ID"+Subject_speID+'/'
-#     print(current_homologous_SeqMappingPath)
-
-#     if not os.path.exists(current_homologous_SeqMappingPath):
-#         os.makedirs(current_homologous_SeqMappingPath)
 
     current_homologous_SeqMappingPath_results=glob.glob(current_homologous_SeqMappingPath+"*.pickle")
     current_homologous_SeqMappingPath_resultsDic={f:1 for f in current_homologous_SeqMappingPath_results}

@@ -117,7 +117,6 @@ def sepCogPairs_ML_predictions_allTypeFeas(currentSpe_TaxID,
         topFeas_predicted_results["RF"]["RF_ytopFeas_predict_prob_train"]=RF_ytopFeas_predict_prob_train
         
         allPPI_allInfo_frame_deepcp["RF_onesProb"]=RFtopFeas_model.predict_proba(X_matrix)[:,1]
-        #topDCAs_predicted_results["FullDatasetPredictedProb"]["RF"]=RFtopDCAs_model.predict_proba(OnlyTopPosNeg_NonPara_XtopDCAs)
     topFeas_predicted_results["updated_allPPI_allInfo_frame"]=allPPI_allInfo_frame_deepcp
 
     return topFeas_predicted_results

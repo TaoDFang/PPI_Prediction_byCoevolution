@@ -54,9 +54,6 @@ if __name__ == '__main__':
     Subject_allProteins_msa2orig_listDict=defaultdict(dict)
     for phylum_speID,currentSubject_proteins in Subject_allProteins.items():
         print(phylum_speID)
-        #this results is generated from previous process, here use newSTRING_rootFolder directly as i dont want to use nextlfow parallel and multiple inputs 
-        #but  newSTRING_rootFolder is a big folder , it will be get triged again and again, move current processs to the end of pipeline or dont include into pipeline
-        
         currentSubject_msa_trackGapsPos_path=newSTRING_rootFolder+phylum_speID[1]+"_EggNOGmaxLevel"+phylum_speID[0]+"_newSingleMSA_hmmalign_removeGaps_trackGapPos/"   
         for Subject_pro in currentSubject_proteins:
             Subject_pro_trackGapsPos_file=currentSubject_msa_trackGapsPos_path+Subject_pro+'_allSeq_keptAA_posInOrigalPro.pickle'
@@ -73,8 +70,6 @@ if __name__ == '__main__':
             pickle.dump(Query_allProteins_msa2orig_dict,handle)
 
 
-    # this part need to rename when we start to thiiking using other speceis as Query speceis
-    # otherwise only one file will be saved and all others will be overwriten
     with open(homologous_msa2origMappingPath+"QueSpeAllPPI"+"Subject_allProteins_msa2orig_listDict.pickle", 'wb') as handle:
             pickle.dump(Subject_allProteins_msa2orig_listDict,handle)
         

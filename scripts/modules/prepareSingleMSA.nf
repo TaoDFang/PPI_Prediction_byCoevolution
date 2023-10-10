@@ -1,7 +1,6 @@
 
 // ************Prepare single MSA **********
 
-//section ParseEcoliFastaByProtein, need in phmmer section to 
 process prepareSingleMSA_ParseCurSpeFastaByProteins {
     
     publishDir "${params.newSTRING_rootFolder}", mode: "copy"
@@ -9,8 +8,7 @@ process prepareSingleMSA_ParseCurSpeFastaByProteins {
     
     label "simple_py_process"
     
-    // conda "/mnt/mnemo5/tao/anaconda3/envs/ipykernel_py3" // seesm configuration here not working , but rather need to be done in configuration file, or need to do both ?
-    // debug true //echo true echo directive is depreca
+
     
     input: 
         val currentSpe_TaxID_ch
@@ -61,7 +59,6 @@ process prepareSingleMSA_RemoveRedundantProteins {
     // debug true //echo true echo directive is deprecated
     
     input: 
-        //path newSTRING_rootFolder  // when downstreaing process add more content to this folder, this process will be trigered and re-run, how to deal with this problem ?? best maynot seprated new folder and this folder, but this will cause too many folders which I dont like ,!!! ah the sollution is change the publishDir to this folder, but remver this folder from the temporary folder in current process !!!, simpleput , the output chanel of new process dont changle the real output , but only go to the temperory working directory, and the inpuzt channel of new process alway avoid to a big folder . 
         val currentSpe_TaxID_ch
         path currentSpe_fastaData
     output:
@@ -98,7 +95,6 @@ process prepareSingleMSA_RemoveRedundantProteins {
 
         
 //then preprocess eggNOG othologous group , to make sure for each orthologous group ,only one protein fro one speices 
-
 //this substep take long time , so put it in one single process for easy debugging  
 process prepareSingleMSA_PreprocessEggnogOrthologGroup_chooseOrthologs {
     publishDir "${params.newSTRING_rootFolder}",mode: "copy"
@@ -150,14 +146,7 @@ process prepareSingleMSA_PreprocessEggnogOrthologGroup_collectingOGFastas {
         path origSTRINGBacteriaProSeqPath
         path currentSpe_fastaData
     output:
-        // path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/",type: "dir",  emit: currentSpeMiddleDataPath
-        // path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/newsingleMSA_RBH_OrthologousGroup.csv",type: "file", emit: newsingleMSA_RBH_OrthologousGroup_fileName
         path "${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_newSingleMSA_EggNOG_OrthologousGroup_Fa/", type: "dir", emit: currentSpe_OrthologousGroup_Fa_path
-    
-//         currentSpeMiddleDataPath="${currentSpe_TaxID_ch}_EggNOGmaxLevel${current_EggNOG_maxLevel_ch}_MiddleData/"
-//         mkdir -p \${currentSpeMiddleDataPath} # create the folder to prevent non-existing folder/file problem later
-        
-//         newsingleMSA_RBH_OrthologousGroup_fileName="\${currentSpeMiddleDataPath}newsingleMSA_RBH_OrthologousGroup.csv"
     script: 
     """
         

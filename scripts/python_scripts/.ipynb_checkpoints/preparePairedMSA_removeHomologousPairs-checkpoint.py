@@ -26,8 +26,6 @@ if __name__ == '__main__':
     PPIInfoBeforeCoEvoComp_csv=args.PPIInfoBeforeCoEvoComp_csv
     mp_task_nums=int(args.mp_task_nums)
     
-    # get postivte and negative ppi  second setp (after get all needed final paired MSA)
-    # by  same protein ratio on two side of MSA 
 
 
     # first need to update postive and negative ppi to only use pp that have large Nf90 value 
@@ -40,19 +38,12 @@ if __name__ == '__main__':
 
 
 
-    #heck paired MSA of homologus , if same proteins from same species in both side
+    #check paired MSA of homologus , if same proteins from same species in both side
     if not os.path.exists(pairedMSA_sameProteinRatio_csv):
         with open(pairedMSA_sameProteinRatio_csv, 'w') as fp:
             pass  
     #in the nextflow piple, this block is meaningless as everytime the process start from begining and preprall all possible ppi 
     pairedMSA_sameProteinRatio_dict=dict()
-    # if os.path.getsize(pairedMSA_sameProteinRatio_csv) == 0:
-    #     pairedMSA_sameProteinRatio_dict=dict()
-    # else:
-    #     pairedMSA_sameProteinRatio_frame = pd.read_csv(pairedMSA_sameProteinRatio_csv,header=None,index_col=None,sep="\t")
-    #     pairedMSA_sameProteinRatio_list=pairedMSA_sameProteinRatio_frame.values.tolist()
-    #     pairedMSA_sameProteinRatio_dict=dict([((p1,p2),r) for p1 , p2 , r in pairedMSA_sameProteinRatio_list])
-
 
 
     currentSpe_allPPIs_ArgForSamePro=[(p1,p2,pairedMSA_Nf90_folder) for p1, p2, in currentSpe_allPPIs_pps if (p1, p2) not in pairedMSA_sameProteinRatio_dict]

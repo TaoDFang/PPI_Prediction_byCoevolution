@@ -11,14 +11,11 @@ from processANDvisulise_PDB import generate_proximity_matrix
 
 
 def get_interprotein_cm_from_pdb(l): 
-    #pdb_file,p1,p2,len1,len2=l
     prefix,suffix,saved_suffix,p1,p2,len1,len2=l
     pdb_file=prefix+p1+"and"+p2+suffix
     
     processedCMnpz_file=prefix+p1+"and"+p2+saved_suffix
-#     print(f"processedCMnpz_file:{processedCMnpz_file}")
     if not os.path.exists(processedCMnpz_file):
-        #print("file not existed")
         pdb_struc_allRes=read_allres_pdbformat_data(pdb_file)
         contact_map,adjacency_matrix=generate_proximity_matrix(seq_1=pdb_struc_allRes,
                                                            seq_2=pdb_struc_allRes,
@@ -54,8 +51,6 @@ def get_interprotein_contactprob_from_alphafold_distogram(l):
 
     prediction_result=prediction_result_dict['model_3']
 
-    #code from supplementary files of "Computed structures of core eukaryotic protein complexes" 
-    #and  https://github.com/TaoDFang/MNF/issues/31#issuecomment-1161658311
     pdist = prediction_result['distogram']['logits']
     pdist = scipy.special.softmax(pdist, axis=-1)
     prob12 = np.sum(pdist[:,:,:32], axis=-1)
@@ -66,7 +61,7 @@ def get_interprotein_contactprob_from_alphafold_distogram(l):
 
 
 def get_interprotein_contactprob_from_processedalphafoldnpz(l): 
-    # input data get from code/MNF/notebooks/test_alphafold/scipt_ParalleTest_EggNogGenereatedCustomizedMSA_multiplecomplex_deimos.py
+    # input data get from test_alphafold/scipt_ParalleTest_EggNogGenereatedCustomizedMSA_multiplecomplex_deimos.py
     
     prefix,suffix,p1,p2,len1,len2=l
     contact12_npz_file=prefix+p1+"and"+p2+suffix
@@ -92,7 +87,6 @@ def simple_precision(data,label,threshold):
 def get_ptm_from_scoreFile(l): 
     colab_outputPath,p1,p2=l
     score_file = f"{colab_outputPath}{p1}and{p2}.custom_unrelaxed_rank_1_model_3_scores.json"
-    #predicted_aligned_error_file = f"{colab_outputPath}{p1}and{p2}.custom_predicted_aligned_error_v1.json"
     with open(score_file) as json_file:
         pdb_scores = json.load(json_file)
     ptm=pdb_scores["ptm"]

@@ -8,15 +8,11 @@ import sys
 import xpdb
 
 
-# code transfer from http://localhost:8206/lab/tree/code/MNF/notebooks/test_alphafold/test_installation_deimos.ipynb
 def show_pdb(pdb_file,chains,
              # start,end,
              show_sidechains=False, show_mainchains=False, color="lDDT",
             view_width=600,
             view_height=600):
-    #view = py3Dmol.view(js='https://3dmol.org/build/3Dmol.js',)
-    # view = py3Dmol.view(width=view_width, height=view_height,)
-    # view = py3Dmol.view(width=view_width, height=view_height,)
     view = py3Dmol.view(width=view_width, height=view_height,
                        js="https://cdn.jsdelivr.net/npm/3dmol@1.8.0/build/3Dmol-min.min.js")
     
@@ -126,7 +122,6 @@ def py3Dmol_addLines(view,
     
     return(view)
 
-#http://localhost:8206/lab/tree/code/MNF/notebooks/test_alphafold/test_MMseqsGenereatedCustomizedMSA_multiplecomplex_deimos.ipynb
 def show_alphfold_plot(figure_fileName):
 
     img = mpimg.imread(figure_fileName)

@@ -36,8 +36,7 @@ if __name__ == '__main__':
     pool = mp.Pool(mp_task_nums)
     pool.map(removeGapsANDtrackAAPosOfSeqInMSA, hmmalign_sto_files_ArgForremoeGaps)
     pool.close()
-    # CPU times: user 3.73 s, sys: 3.18 s, total: 6.9 s
-    # Wall time: 17min 22s
+
 
 
     # # get final single MSA len

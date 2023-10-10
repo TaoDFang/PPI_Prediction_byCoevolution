@@ -8,6 +8,8 @@
 #SBATCH --mail-user=tao.fang@uzh.ch
 #SBATCH --mail-type=ALL
 
+# sometimes HPC dont allow nextflow lauching from login node
+# here is an example that submit as an slurm job 
 
 
 # Use a conda environment where you have installed Nextflow
@@ -23,9 +25,7 @@ cd /home/tfang/PPI_Prediction_byCoevolution/scripts
 pwd
 echo $CONDA_DEFAULT_ENV
 
-#nextflow run Query_coevolutionComputation_workflow.nf -c nextflow.config -profile slurm  -resume
-# nextflow run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow --root_folder "/shares/von-mering.imls.uzh/tao" -c nextflow.config -profile slurm_withSingularity  -resume
-# nextflow run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow --root_folder "/shares/von-mering.imls.uzh/tao" --conda_envs_path "/data/tfang/conda-envs" -c nextflow.config -profile slurm  -resume
+
 
 nextflow run Query_coevolutionComputation_workflow.nf --root_folder "/shares/von-mering.imls.uzh/tao" -c nextflow.config -profile slurm_withSingularity  -resume
 
@@ -33,5 +33,5 @@ nextflow run Query_coevolutionComputation_workflow.nf --root_folder "/shares/von
 
 
 # then run it by 
-# chmod +x /home/tfang/PPI_Prediction_byCoevolution/scripts/NextflowWithSlurm.sh
-# sbatch  /home/tfang/PPI_Prediction_byCoevolution/scripts/NextflowWithSlurm.sh
+# chmod +x ~/PPI_Prediction_byCoevolution/scripts/NextflowWithSlurm.sh
+# sbatch  ~/PPI_Prediction_byCoevolution/scripts/NextflowWithSlurm.sh

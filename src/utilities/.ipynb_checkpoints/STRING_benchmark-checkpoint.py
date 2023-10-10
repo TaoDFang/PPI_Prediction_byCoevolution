@@ -1,7 +1,7 @@
 import pandas as pd 
 import copy 
 
-def get_STRING1105_physical_interact(data_folder="/net/cephfs/shares/von-mering.imls.uzh/tao/STRING_derived_v11.5/download_files/protein.physical.links.v11.5/",
+def get_STRING1105_physical_interact(data_folder="",
                                 retrieve_spe=511145,
                                      combined_score_thres=500,
                                      inputFrameIsReversed=True,
@@ -53,7 +53,7 @@ def add_STRINGPhyPPI_status(input_dataframe,STRINGcurrentSpePhyPPI_posPPI_dict,)
     return(metapdb_frame)
 
 
-def get_string_score_dict(file_name="/mnt/mnemo6/tao/PPI_Coevolution/STRING_data_11.5/511145.protein.links.detailed.v11.5.txt.gz",
+def get_string_score_dict(file_name="511145.protein.links.detailed.v11.5.txt.gz",
                          column_name_list=None):
 
     string_score=pd.read_csv(file_name,

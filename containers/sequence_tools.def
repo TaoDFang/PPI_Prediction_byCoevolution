@@ -2,7 +2,7 @@ BootStrap: library
 From: ubuntu:20.04
 
 %files
-    /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/containers/conda_envs/sequence_tools_environment.yml  /home/conda_envs/sequence_tools_environment.yml 
+    ~/PPI_Prediction_byCoevolution/containers/conda_envs/sequence_tools_environment.yml  /home/conda_envs/sequence_tools_environment.yml 
 
 %post
     apt-get update && apt-get -y upgrade
@@ -11,31 +11,24 @@ From: ubuntu:20.04
     wget \
     less 
     
-    # seem this is singularity comment grammer
-    # problem here the # seem not the total the comment grammar, other section for example in %files
-
     
-    # Installing miniconda, https://stackoverflow.com/questions/54678805/containerize-a-conda-environment-in-a-singularity-container,https://docs.conda.io/projects/miniconda/en/latest/index.html,
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh #-O ~/miniconda3/miniconda.sh, here need to careful with fodler inside container, this comand install to root "/" folder 
+    # Installing miniconda
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh 
     bash  Miniconda3-latest-Linux-x86_64.sh -b -u -p /home/miniconda3 # this install to /home
     
-    
-    #/home/miniconda3/bin/conda init bash # initialize your newly-installed Miniconda, but not working , why 
-    #source /home/miniconda3/etc/profile.d/conda.sh # this one works https://stackoverflow.com/questions/59877249/activating-a-conda-environment-in-a-singularity-recipe
-    #in most shell use, use . instead of source ,https://stackoverflow.com/questions/13702425/source-command-not-found-in-sh-shell
+
     . /home/miniconda3/etc/profile.d/conda.sh
     
-    #https://saturncloud.io/blog/activating-conda-environment-on-execution-of-singularity-container-in-nextflow-a-guide/
-    #https://stackoverflow.com/questions/56446195/activate-conda-environment-on-execution-of-singularity-container-in-nextflow
+
     # this is necessary for nextlfow, so the need envs is activated without extra operation
     echo ". /home/miniconda3/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
     echo "conda activate sequence_tools" >> $SINGULARITY_ENVIRONMENT
     
     
-    # #install conda enviroment, here if conda is successfull initialised above, could simplly use conda without full path 
+    # #install conda enviroment, here if conda is successfull initialised above, could simply use conda without full path 
     /home/miniconda3/bin/conda env  create  -f /home/conda_envs/sequence_tools_environment.yml
     
-    conda activate sequence_tools  # problem is this semm only work at the build time
+    conda activate sequence_tools 
            
     conda info --envs
     
@@ -51,11 +44,8 @@ From: ubuntu:20.04
 %runscript
     echo "this section defines actions for the container to take when it is executed. (These commands will therefore not be run at build time.)"
     
-    # no need this for nextflow , set SINGULARITY_ENVIRONMENT above
-    # . /home/miniconda3/etc/profile.d/conda.sh  #https://saturncloud.io/blog/containerizing-a-conda-environment-in-a-singularity-container-a-guide/
-    # conda activate sequence_tools
-    # exec "$@"
 
-# cd /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/containers
-# or  singularity build --fakeroot /mnt/mnemo5/tao/singularity_containers/sequence_tools.sif /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/containers/sequence_tools.def
-# or  singularity build --remote  /mnt/mnemo5/tao/singularity_containers/sequence_tools.sif /mnt/mnemo5/tao/PPI_Prediction_byCoevolution/containers/sequence_tools.def
+
+# cd ~/PPI_Prediction_byCoevolution/containers
+# or  singularity build --fakeroot ~/singularity_containers/sequence_tools.sif ~/PPI_Prediction_byCoevolution/containers/sequence_tools.def
+# or  singularity build --remote  ~/singularity_containers/sequence_tools.sif ~/PPI_Prediction_byCoevolution/containers/sequence_tools.def

@@ -18,9 +18,12 @@ or simply via [conda install](https://anaconda.org/conda-forge/singularity):
 ```
 conda install -c conda-forge singularity=3.8.7
 ```
+mention here singularity is not necesseary 
 (Havent test this myself)
 
 ## Raw data and result computation 
+mention time and size 
+
 To download all the raw data and to  generate all the data results needed for this project.
 
 got to folder  PPI_Prediction_byCoevolution/scripts \

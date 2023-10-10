@@ -54,27 +54,13 @@ if __name__ == '__main__':
 
     for currentSubject_EggNOG_maxLevel,currentSubject_TaxID in Subject_tupleList:
         print(currentSubject_EggNOG_maxLevel,currentSubject_TaxID)
-        # adjust these three folder to fit to nextlfow convention
-        # newSTRING_rootFolder="/mnt/mnemo6/tao/PPI_Coevolution/STRING_data_11.5/"
-        # CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/"
-        #     input_root_folder=CoEvo_data_folder+currentSubject_TaxID+"_EggNOGmaxLevel"+currentSubject_EggNOG_maxLevel+"_eggNOGfilteredData/"
 
-        #here is che coevo_data_folder is the nextflow  temperaoly folder , 
-        #then the created folder is also in the nextflow temperaroly folder ?
-        
-        #if without prefix, its for subject species 
         input_root_folder=CoEvo_data_folder+currentSubject_TaxID+"_EggNOGmaxLevel"+currentSubject_EggNOG_maxLevel+"_eggNOGfilteredData/"
         pairedMSA_unfiltered_folder=input_root_folder+"pair_MSA_unfiltered_PasteAlign/"
         pairedMSA_hhfilter_folder=input_root_folder+"pair_MSA_hhfilter_PasteAlign/"
         pairedMSA_Nf90_folder = input_root_folder+"pair_MSA_Nf90_PasteAlign/"
 
-        # DCA_coevolutoin_path=input_root_folder+"coevolutoin_result_DCA/"
-        # MI_coevolutoin_path=input_root_folder+"coevolutoin_result_MI/"
 
-        #this two folder denition is inherated from previous pipeline
-        #previous  we run the the created pairedMSA pipeline for subject species independently as we did for query speceis
-        #thats why we have these two folders. but since now i first created paired MSA for all query pp
-        # then we created for all homoglos subject pp of all query pps, we dont need this two step. but no harm to leave them here
         original_pairedMSA_Nf90_csv = input_root_folder+"pair_MSA_Nf90.csv"
         original_pairedMSA_sameProteinRatio_csv = input_root_folder+"sameProteinRatio.csv"
 
@@ -93,11 +79,7 @@ if __name__ == '__main__':
         if not os.path.exists(Benchmark_folder):
             os.makedirs(Benchmark_folder)
 
-#         if not os.path.exists(DCA_coevolutoin_path):
-#             os.makedirs(DCA_coevolutoin_path)
 
-#         if not os.path.exists(MI_coevolutoin_path):
-#             os.makedirs(MI_coevolutoin_path)
 
         if not os.path.exists(pairedMSA_unfiltered_folder):
             os.makedirs(pairedMSA_unfiltered_folder)
@@ -254,10 +236,6 @@ if __name__ == '__main__':
                                 header=None,index=None,sep="\t")
             print("sameProtein_ratio_frame.shape:",sameProtein_ratio_frame.shape)
 
-        # CPU times: user 144 ms, sys: 639 ms, total: 783 ms
-        # Wall time: 53.2 s
-
-
 
         # remove protein pair with same prortein on two side of MSA 
 
@@ -286,9 +264,6 @@ if __name__ == '__main__':
 
 
         Current_Subject_homologousPPs_beforeDCAcomputation_file=Benchmark_folder+"Current_Subject_BestHomologousPPs_beforeDCAcomputation.pickle"
-        # if not os.path.exists(Current_Subject_homologousPPs_beforeDCAcomputation_file):
-        #     with open(Current_Subject_homologousPPs_beforeDCAcomputation_file, 'wb') as handle:
-        #             pickle.dump(Current_Subject_homologousPPs,handle)
         with open(Current_Subject_homologousPPs_beforeDCAcomputation_file, 'wb') as handle:
                 pickle.dump(Current_Subject_homologousPPs,handle)
 

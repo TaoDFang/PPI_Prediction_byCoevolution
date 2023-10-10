@@ -1,6 +1,5 @@
 import argparse
 import os 
-# import pandas as pd , py37_pydca envs dont have pandas package to mess up the numpy version 
 import csv
 from datetime import datetime
 
@@ -17,26 +16,6 @@ os.environ["MKL_NUM_THREADS"] = "4" # export MKL_NUM_THREADS=6
 os.environ["NUMBA_NUM_THREADS"] = "4" # export NUMBA_NUM_THREADS=6
 
 
-
-## to run pydca, its import to make sure these three package are in correct version 
-## use py37_pydca enviroment 
-# (py37_pydca) tao@deimos:~$ conda remove numpy
-# (py37_pydca) tao@deimos:~$ pip uninstall numpy 
-# (py37_pydca) tao@deimos:~$ conda install numpy=1.15.4
-# np.__version__, numba.__version__, llvmlite.__version__
-
-# (py37_pydca) tao@gaia:~$ pip  list | grep  numpy
-# numpy                         1.15.4
-# (py37_pydca) tao@gaia:~$ conda   list | grep  numpy
-# numpy                     1.15.4          py37h8b7e671_1002    conda-forge
-
-# version works 
-# ('1.15.4', '0.46.0', '0.30.0')
-# or ('1.18.4', '0.46.0', '0.30.0')
-# or ('1.19.2', '0.46.0', '0.30.0')
-
-# choosed version 
-# ('1.18.4', '0.46.0', '0.30.0')
 import llvmlite
 import numba
 import numpy as np 
@@ -57,13 +36,6 @@ if __name__ == '__main__':
     index_count=int(args.idx)
 
 
-
-
-    # block_currentSpe_allPPIs_pps_forDCA_frame=pd.read_csv(IndexDCA_coevolutoin_path+str(index_count)+".csv",
-    #                                                         header=None,index_col=None,sep="\t")
-
-    # print("block_currentSpe_allPPIs_pps_forDCA_frame.shape",block_currentSpe_allPPIs_pps_forDCA_frame.shape)
-    # block_currentSpe_allPPIs_pps_forCoevolution_list=block_currentSpe_allPPIs_pps_forDCA_frame.values.tolist()
 
     block_currentSpe_allPPIs_pps_forCoevolution_list=list()
     with open(IndexDCA_coevolutoin_path+str(index_count)+".csv", "r") as file:

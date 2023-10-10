@@ -109,24 +109,6 @@ if __name__ == '__main__':
 
 
 
-    # this is original code, in nextflow , dont need to check file existence since they are in current process working directory , so adapt it 
-    # newsingleMSA_RBH_OrthologousGroup_fileName=currentSpeMiddleDataPath+"newsingleMSA_RBH_OrthologousGroup.csv"
-    # if not os.path.exists(newsingleMSA_RBH_OrthologousGroup_fileName):
-    #     pool = mp.Pool(30) # 
-    #     results = pool.map(getCurrentSpeRBHdict, Unique_currentSpe_Pros) # here many damian generalted files are emply 
-    #     pool.close() 
-
-    #     results=[temp for temp in results if temp is not None]
-    #     print("len(results):",len(results))
-
-
-    #     # only run once as its append mode 
-    #     for RBH_HitsResults_Otholog_dic_temp in results:
-    #         with open(newsingleMSA_RBH_OrthologousGroup_fileName,"a") as file:
-    #             for key in RBH_HitsResults_Otholog_dic_temp.keys():
-    #                 file.write("%s,%s\n" % (key, ",".join(RBH_HitsResults_Otholog_dic_temp[key]))) 
-
-
 
     pool = mp.Pool(mp_task_nums) # 
     results = pool.map(getCurrentSpeRBHdict, Unique_currentSpe_Pros) # here many damian generalted files are emply 

@@ -37,5 +37,3 @@ if __name__ == '__main__':
     pool.map(hmmalign, hmm_files_ArgForhmmalign)
     pool.close()
 
-# CPU times: user 1.2 s, sys: 1.37 s, total: 2.57 s
-# Wall time: 9min 3s

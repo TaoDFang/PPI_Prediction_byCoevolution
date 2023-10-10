@@ -11,26 +11,6 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 
 
-"""
-Benchmakr Principle :
-1. Best to use a benchmark with good pos and neg
-2. When do all to all screen, and we only have a positive control. If we assume all others are neg and check full prediction on this kind of benchmark,  the performance will be much lower than last one , because maybe some positive prediction are true but falsely labeled as negative  . 
-
-	So to show if certain method works or not , use point 1
-	better only use point 2 for discovery and  only report one last point of TP(recall) value , we even don’t want to show precision value as some predictions may falsely labeled as negative and decrease precision a lot  ,the problem become more severe  when  postive control contain less fraction of all P and  negative space contain more falsely labeled  pps 
-	 and when use point 2,  reliability  of TP count and recall  depends on  quality of positive control.
-
-(Better to only consider positive predictions and get recall and precision , this actual just the same as consider all, because when we draw plot, top ranking pps are always positive prediction we made , but will make our plot easier to plot )
-
-
-4. when we using some machine learning models and applly this to all-to-all screening, to prove we dont have overtraining , we need to remove training from all-to-all reuslts, in this case, we need to remove  same ratio of postition and negative samples as in training data set .
-in this case we cant use all-to-all results , what we can do is to creat a new testing dataset with same amout of postive and negative samples  with overlap with machine learning data 
-then this is kind of repeat processing as check performance on machine learning test dataset 
-or creat a machine learning dataset that simulate real pos and neg ration
-for PPI. its around 1:100 ,this may lead to data imblance problem 
-
-"""
-
 
 
 
@@ -109,22 +89,11 @@ def DCA_RocCurve(X_test,Y_test, count_label="rate",legend=None,show_legend=True,
         Y_test=copy.deepcopy(Y_test)
         random.Random(10).shuffle(Y_test)
 
-        
-        
-    # print("AUC:",roc_auc_score(y_true=Y_test,
-    #                  y_score=X_DCA
-    #                       )
-    #     )
-    
-    # TPR_list=[sum(Y_test[:i]==1) for i in range(step,len(Y_test),step)]
-    # FPR_list=[sum(Y_test[:i]==0) for i in range(step,len(Y_test),step)]
+
     
     TPR_step_list=[0]
     FPR_step_list=[0]
     for i in range(step,len(X_DCA),step):
-        #print(i)
-        #top_list=X_DCA[:i]
-        #y_top_list=Y_test[:i]
         y_top_list_rank=Y_test[(i-step):(i)]
 
         TPR_step=sum([1  for  r in y_top_list_rank if  r==1])
@@ -144,11 +113,8 @@ def DCA_RocCurve(X_test,Y_test, count_label="rate",legend=None,show_legend=True,
     PPV_rate_list= [TPR_list[i]/(TPR_list[i]+FPR_list[i]) for i in range(len(TPR_list))] 
         
     if ifplot:
-        #print(TPR_list,FPR_list)
-        #plt.plot(FPR_list,TPR_list,label=legend,color=color)
         if plotType=="ROC":
             if count_label=="count":
-                # figure_handle.xlabel("False positive count")
                 figure_handle.plot(FPR_list,TPR_list,label=legend,color=color)
                 try: # for plt
                     figure_handle.xlabel("False positive count",fontdict=fontdict)
@@ -182,7 +148,6 @@ def DCA_RocCurve(X_test,Y_test, count_label="rate",legend=None,show_legend=True,
 
         if show_legend:
             figure_handle.legend(loc="lower right")
-        #return(FPR_list,TPR_list)
     
         
     if return_metrics:
@@ -191,18 +156,13 @@ def DCA_RocCurve(X_test,Y_test, count_label="rate",legend=None,show_legend=True,
         
         PR_AUC=np.round(np.trapz(PPV_rate_list, x=TPR_rate_list),4)
         
-        
-        # F1_score_list=[F1_score(PPV_rate_list[i],TPR_rate_list[i]) for i in range(len(PPV_rate_list))]
-        # F1_score_lastStep=F1_score_list[-1]
+
         F1_score_lastStep=F1_score(PPV_rate_list[-1],TPR_rate_list[-1])
-        #print("F1_score_lastStep:",F1_score_list[-1])
+
 
         
 
         TNR_list=[N-FP for FP in FPR_list]
-        # ACC_list=[accuracy(TPR_list[i],TNR_list[i],P,N) for i in range(len(TNR_list))]
-        #print("accuracy_lastStep",ACC_list[-1])
-        #ACC_lastStep=ACC_list[-1]
         ACC_lastStep=accuracy(TPR_list[-1],TNR_list[-1],P,N)
         return([ROC_AUC,PR_AUC,F1_score_lastStep,ACC_lastStep])
 
@@ -250,9 +210,6 @@ def Random_RocCurve(ori_Y_test, count_label="rate",legend=None,show_legend=True,
     TPR_step_list=[0]
     FPR_step_list=[0]
     for i in range(step,len(Y_test),step):
-        #print(i)
-        #top_list=X_DCA[:i]
-        #y_top_list=Y_test[:i]
         y_top_list_rank=Y_test[(i-step):(i)]
 
         TPR_step=sum([1  for  r in y_top_list_rank if  r==1])
@@ -272,28 +229,21 @@ def Random_RocCurve(ori_Y_test, count_label="rate",legend=None,show_legend=True,
     FPR_rate_list =[FP/N for FP in FPR_list]
         
 
-    #print(TPR_list,FPR_list)
+
     if count_label=="count":
         plt.plot(FPR_list,TPR_list,label=legend,color=color)
     elif count_label=="rate":
         plt.plot(FPR_rate_list,TPR_rate_list,label=legend,color=color)
         
-    # ident = [0.0, 1.0]
-    # plt.plot(ident,ident,color="r")
-    #plt.legend(loc="upper left")
     if show_legend:
         plt.legend(loc="lower right")
     plt.xlabel("FPR")
     plt.ylabel("TRP")
-    #return(FPR_list,TPR_list)
+
     
     
     
 def get_STRINGScoreFromDict(inputPPList,allSTRING_dict):
-    # returned_score=[[spp0,spp1,allSTRING_dict[(spp0,spp1)]] if \
-    #                             (spp0,spp1) in allSTRING_dictc\
-    #                                else [spp0,spp1,0]
-    #                             for spp0,spp1 in inputPPList ]
     
     returned_score=[allSTRING_dict[(spp0,spp1)] if \
                                 (spp0,spp1) in allSTRING_dict\
@@ -305,63 +255,7 @@ def get_STRINGScoreFromDict(inputPPList,allSTRING_dict):
     
     
     
-    
-def Precison_Recall_RocCurve(X_test,Y_test, legend=None,step=1000,zoom_thres=None):
-    # notice !!! now this function is replaced by DCA_RocCurve 
-    # here has to use rate 
-    
-    TPR_list=list() # recall 
-    PPV_list=list() # precision 
-    ident = [0.0, 1.0]
-    
-    X_test=np.array(X_test)
-    Y_test=np.array(Y_test)
-    if X_test.ndim>1:
-        X_DCA=X_test[:,-1]
-    else:
-        X_DCA=X_test
-    
-    Ascending_orderIdx=np.argsort(X_DCA)
-    Descending_orderIdx=Ascending_orderIdx[::-1]
-    
-    X_DCA=X_DCA[Descending_orderIdx]
-    Y_test=Y_test[Descending_orderIdx]
-    
-    if zoom_thres is not None:
-        X_DCA=X_DCA[0:zoom_thres]
-        Y_test=Y_test[0:zoom_thres]
-    
-    P=sum(Y_test==1)
-    TPR_step_list=[0]
-    for i in range(step,len(X_DCA),step):
-        #print(i)
-        #top_list=X_DCA[:i]
-        #y_top_list=Y_test[:i]
-        y_top_list_rank=Y_test[(i-step):(i)]
 
-        TPR_step=sum([1  for  r in y_top_list_rank if  r==1])
-        TPR=sum(TPR_step_list)+TPR_step
-        
-        TPR_step_list.append(TPR_step)
-  
-
-        TPR,PPV=TPR/P,TPR/i
-        #print(TPR)
-        TPR_list.append(TPR)
-        PPV_list.append(PPV)  
-        
-
-    #print(TPR_list,FPR_list)
-    plt.plot(TPR_list,PPV_list,label=legend)
-    #plt.plot(ident,ident,color="r")
-# plt.axline((1, 1), slope=1,color="r")
-# plt.axhline(y=1, color='r', linestyle='-')
-# plt.axvline(x=1, color='r', linestyle='-')
-    #plt.legend(loc="upper left")
-    plt.legend(loc="lower right")
-    plt.xlabel("Recall/TPR")
-    plt.ylabel("Precision/PPV")
-    #return(FPR_list,TPR_list)
     
 def get_F1_list(PPV_list,TPR_list):
     F1_list=list()
@@ -413,20 +307,7 @@ def Precison_Recall_RocCurve_OnIndepedentBenchmark(Y_Prediction,Y_Prediction_PPs
     
     P=len(IndepedentBenchmark_pps_dict)
     
-#     #modeify code to make it faster
-#     for i in range(step,len(Y_Prediction_PPs),step):
-#         Y_Prediction_PPs_rank=Y_Prediction_PPs[:i]
 
-#         #TPR=0
-#         TPR=sum([1  for  p1,p2 in Y_Prediction_PPs_rank if ((p1, p2) in IndepedentBenchmark_pps_dict) or ((p2, p1) in IndepedentBenchmark_pps_dict) ])
-  
-#         if count_label=="rate":
-#             TPR,PPV=TPR/P,TPR/i
-#         elif count_label=="count":
-#             TPR,PPV=TPR,TPR/i
-#         #print(TPR)
-#         TPR_list.append(TPR)
-#         PPV_list.append(PPV)  
     TPR_step_list=[0]
     for i in range(step,len(Y_Prediction_PPs),step):
         Y_Prediction_PPs_rank=Y_Prediction_PPs[(i-step):(i)]
@@ -447,35 +328,20 @@ def Precison_Recall_RocCurve_OnIndepedentBenchmark(Y_Prediction,Y_Prediction_PPs
         
 
 
-    #print(TPR_list,FPR_list)
     plt.plot(TPR_list,PPV_list,label=legend)
-    #plt.plot(ident,ident,color="r")
-# plt.axline((1, 1), slope=1,color="r")
-# plt.axhline(y=1, color='r', linestyle='-')
-# plt.axvline(x=1, color='r', linestyle='-')
-    #plt.legend(loc="upper left")
     plt.legend(loc="lower right")
     plt.xlabel("Recall/TPR")
     plt.ylabel("Precision/PPV")
-    #return(FPR_list,TPR_list)
     
     if print_results:
-        # print(PPV_list)
-        # print(TPR_list)
         return(PPV_list,TPR_list)
-        # for i in range(len(TPR_list)):
-        #     print(f"Precision:{PPV_list[i]}Recall:{TPR_list[i]}")
-        # print(f"TPR_list:{TPR_list}")
-        # print(f"PPV_list:{PPV_list}")
         
 def Precison_Recall_RocCurve_OnlyGetRecallAndPrecision_OnIndepedentBenchmark(Pos_Prediction,Pos_Prediction_PPs,IndepedentBenchmark_pps_dict, count_label="rate",legend=None,step=1000,zoom_thres=None, filter_thres=None,
                                                                              tiny_randomnoise_range=0,print_results=False,return_bestF1=False):
     # Here Pos_Prediction only contain positive predictions , thats top predictions 
-    #adfssome desdrpt here fom ppt 
     TPR_list=list() # recall 
     PPV_list=list() # precision 
 
-    #ident = [0.0, 1.0]
     Pos_Prediction=np.array(Pos_Prediction)
     Pos_Prediction_PPs=np.array(Pos_Prediction_PPs)
 
@@ -513,22 +379,16 @@ def Precison_Recall_RocCurve_OnlyGetRecallAndPrecision_OnIndepedentBenchmark(Pos
         if count_label=="rate":
             TPR,PPV=TPR/P,TPR/i
         elif count_label=="count":
-            # TPR,PPV=TPR,TPR
             pass
-        #print(TPR)
         TPR_list.append(TPR)
         PPV_list.append(PPV)  
 
-    #print(TPR_list,FPR_list)
     plt.plot(TPR_list,PPV_list,label=legend)
     plt.legend(loc="lower right")
     plt.xlabel("Recall/TPR")
     plt.ylabel("Precision/PPV")
-    #return(FPR_list,TPR_list)
     
     if print_results:
-        # print(PPV_list)
-        # print(TPR_list)
         print(f"{legend}:postiveControlCount:{P};allPredCount:{len(Pos_Prediction_PPs)};")
         
         F1_list=get_F1_list(PPV_list,TPR_list)

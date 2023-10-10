@@ -8,11 +8,6 @@ import numpy as np
 import pandas as pd
 
 def getEggNOG_homologousNameUnSortedPP_COG2PP_reversedPP_dict(record):
-#                                                  QuerySpe_ID="511145",
-#                                                  QuerySpe_ID=None,
-#                                                  max_level="2",
-#                                                  EggNOG_groupPath="/mnt/mnemo6/tao/STRING_Data_11.5/eggnog5AddSTRING11.5_Species/groups/",
-#                                                  homologous_COG2PP_path="/mnt/mnemo6/tao/PPI_Coevolution/STRING_data_11.5/homologous_pp/"
 
     CurrentSpe_ID,max_level,EggNOG_groupPath,homologous_COG2PP_path=record
     
@@ -151,8 +146,6 @@ def allQuery2SubjectSingleProteinMapping(Query2Subject_QueSpeAllPPI_homologous_d
         for Query_pp, Subject_pps in temp_Query2Subject_QueSpeAllPPI_homologous_dict.items():
             Query_pp1,Query_pp2=Query_pp
             for Subject_pp in Subject_pps:
-    #             if(len(Subject_pps)==1):
-    #                 print(Subject_pp)
                 Subject_pp1,Subject_pp2=Subject_pp
 
                 # here we should notice one  single protein can have multiple homologous protein pairs
@@ -185,12 +178,11 @@ def allQuery2SubjectSingleProteinMapping_getBlasp(Query_speID,Subject_tupleList,
                 #print(current_homologous_SeqMappingPath+Query_proID+"and"+Subject_proID+".xml")
                 with open(current_homologous_SeqMappingPath+Query_proID+"and"+Subject_proID+".xml") as handle:
                     blast_record = NCBIXML.read(handle)
-                    #print( blast_record.num_hits)
 
                     # ???? here there is a problem is that if blast_record.alignments is None
                     # then this for loop will never get started and thus sorted_alignment_hsps and beste_hsp
                     # will just be the values from last for loop 
-                    #print(len(blast_record.alignments))
+
                     if len(blast_record.alignments)>0:
                         for alignment in blast_record.alignments:
                             #print("times")
@@ -279,9 +271,6 @@ def chooseBestHomologousPP(Query_PP,Subject_PPs,Query2Subject_homologous_ignoreS
         cur_QuerySubjectPP2_bestHspBits=Query2Subject_homologous_ignoreSubjectDCA_singleProteinMaping_Subject2Query_bestHspBits_dict[(Query_PP[1],Subject_PP[1])]
 
         if not ((np.isnan(cur_QuerySubjectPP1_bestHspBits)) or (np.isnan(cur_QuerySubjectPP2_bestHspBits))) :
-            #print(Subject_PP)
-            #print(cur_QuerySubjectPP1_bestHspBits)
-            #print(cur_QuerySubjectPP2_bestHspBits)
             
             if len(BestHomologousPP)==0:
                 BestHomologousPP=Subject_PP
@@ -307,13 +296,12 @@ def getMetaFrame_FullBestHomologousPP(Query_tuple,EggNOG_maxLevel,currentSpe_Tax
                                       benchmark_suffix="STRINPhyPPI_Benchmark/",
                                      smallPhylum="",
                                      BestHomologousPP_filePrefix="BestHomologousPP",
-                                        CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
+                                        CoEvo_data_folder="CoEvo_data_STRING11.5/",
                                      ):
     '''
     here full BestHomologousPP means all BestHomologous pp compared with Query speceis
     It does not include all pp in origin indepenpendt benchmark dataset 
     '''
-    #CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING"+STRING_Version+"/"
     input_root_folder=CoEvo_data_folder+smallPhylum+currentSpe_TaxID+"_EggNOGmaxLevel"+EggNOG_maxLevel+"_eggNOGfilteredData/"
 
     

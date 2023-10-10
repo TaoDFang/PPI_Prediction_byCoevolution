@@ -39,12 +39,12 @@ from ML_parameters_setting import RF_withGridSearchCV_GroupKFold
 def sepCogPairs_topDCAs_ML_predictions_getTestPPTuples(EggNOG_maxLevel,currentSpe_TaxID,STRING_Version,
                                        EggNOG_group_level2,
                   DCA_thres=1,filterIdx=None,
+                    CoEvo_data_folder="CoEvo_data_STRING11.5/",
                     benchmark_suffix="STRINPhyPPI_Benchmark/"):
     '''
 
     
     '''
-    CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING"+STRING_Version+"/"
     input_root_folder=CoEvo_data_folder+currentSpe_TaxID+"_EggNOGmaxLevel"+EggNOG_maxLevel+"_eggNOGfilteredData/"
     Benchmark_folder=input_root_folder+benchmark_suffix
     DCA_coevolutoin_path=input_root_folder+"coevolutoin_result_DCA/"
@@ -63,9 +63,7 @@ def sepCogPairs_topDCAs_ML_predictions_getTestPPTuples(EggNOG_maxLevel,currentSp
     
 
     allPPI_cogs=return_cogPairs_fromproPair(EggNOG_group_level2,currentSpe_TaxID,allPPI_allInfo_frame)
-    
-    #allPPI_pps=allPPI_allInfo_frame.loc[:,["STRING_ID1","STRING_ID2"]].values.tolist()
-    #allPPI_pps=[tuple(pp) for pp in allPPI_pps]
+
     
     allPPI_PPs=allPPI_allInfo_frame.loc[:,["STRING_ID1","STRING_ID2"]].values.tolist()
     allPPI_PPs=[tuple(pp) for pp in allPPI_PPs]
@@ -85,7 +83,7 @@ def sepCogPairs_topDCAs_ML_predictions(EggNOG_maxLevel,currentSpe_TaxID,STRING_V
                    ML_methods=["LR","RF"],
                     coevo_suffix="_pydcaFNAPC_array",
                   DCA_thres=1,DCA_number=50,selDca_number=20,
-CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
+CoEvo_data_folder="CoEvo_data_STRING11.5/",
                                        prefix="",
                    benchmark_suffix="STRINPhyPPI_Benchmark/",
                                        downsample_prefix="",
@@ -141,8 +139,6 @@ CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
 
     allPPI_cogs=return_cogPairs_fromproPair(EggNOG_group_level2,currentSpe_TaxID,allPPI_allInfo_frame)
     
-    #allPPI_pps=allPPI_allInfo_frame.loc[:,["STRING_ID1","STRING_ID2"]].values.tolist()
-    #allPPI_pps=[tuple(pp) for pp in allPPI_pps]
     
     allPPI_info=allPPI_allInfo_frame.loc[:,["STRING_ID1","STRING_ID2","len1","len2"]].values.tolist()
     print("len(allPPI_info):",len(allPPI_info))
@@ -192,14 +188,10 @@ CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
     topDCAs_predicted_results["ytopDCAs_test"]=ytopDCAs_test
     
     
-    # here add one more element to  topDCAs_predicted_results to be used later 
-    #topDCAs_predicted_results["FullDatasetPredictedProb"]=dict()
-    #topDCAs_predicted_results["FullDatasetPredictedProb"]["pps"]=allPPI_pps
     
     
     if "LR" in ML_methods:
         print("train LR now _:")
-        #clrtopDCAs = LR_withGridSearchCV(XtopDCAs_train,ytopDCAs_train)
         clrtopDCAs = LR_withGridSearchCV_GroupKFold(XtopDCAs_train,ytopDCAs_train,cogs_train_array,n_jobs=n_jobs,scoring_metrics=scoring_metrics)
 
         LR_ytopDCAs_predict=clrtopDCAs.predict(XtopDCAs_test)
@@ -215,7 +207,6 @@ CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
 
     if "RF" in ML_methods:
         print("train RF now _:")
-        #RFtopDCAs_model = RF_withGridSearchCV(XtopDCAs_train,ytopDCAs_train)
         RFtopDCAs_model = RF_withGridSearchCV_GroupKFold(XtopDCAs_train,ytopDCAs_train,cogs_train_array,n_jobs=n_jobs,scoring_metrics=scoring_metrics)
         
         RF_ytopDCAs_predict=RFtopDCAs_model.predict(XtopDCAs_test)

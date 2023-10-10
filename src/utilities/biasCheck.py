@@ -24,9 +24,7 @@ def removeTrainPPfrom_allPredictionResults_ByRemovedPosRatio(result_list,pp_list
     result_list_neg=returnListByIdx(result_list,result_negIdx)
     pp_list_neg=returnListByIdx(pp_list,result_negIdx)
     
-    
-    # trainPP_pos_dict={k:v for k,v in trainPP_dict.items() if k in allPos_dict}
-    # print("len(trainPP_pos_dict):",len(trainPP_pos_dict))
+
     
     # now remove training propertionaly 
     kept_posIdx=[idx for idx,pp in enumerate(pp_list_pos) if pp not in trainPP_dict]
@@ -43,8 +41,6 @@ def removeTrainPPfrom_allPredictionResults_ByRemovedPosRatio(result_list,pp_list
     kept_ratio=nonOverlaped_pos_len/len(pp_list_pos)
     print("kept_ratio:",kept_ratio)
     
-    # removed_negIdx=[idx for idx,pp in enumerate(pp_list_neg) if pp in trainPP_dict]
-    # print(int(len(result_list_neg)*(kept_ratio)),len(removed_negIdx))
     kepted_negIdx_num=int(len(result_list_neg)*(kept_ratio))#-len(removed_negIdx)
     
     shuffle_negIdx=list(range(len(pp_list_neg_kept)))
@@ -76,19 +72,13 @@ def removeTrainPPfrom_allPredictionResults_ByRemovedPosRatio(result_list,pp_list
 def phylaIntegration_replacingDCAScores(ori_inputMatrix,fillDCAValue,fillMissingValue,):
 
     inputMatrix=copy.deepcopy(ori_inputMatrix)
-    #print(inputMatrix)
-    #inputMatrix[np.isnan(inputMatrix)] = fillMissingValue
     inputMatrix[np.where(inputMatrix!=fillMissingValue)] = fillDCAValue
-    #print(inputMatrix)
     return(inputMatrix)
 
 def phylaIntegration_replacingSubjectSpeDCAScores(ori_inputMatrix,fillDCAValue,fillMissingValue,SubjectFeaNum=1):
 
     inputMatrix=copy.deepcopy(ori_inputMatrix)
-    #print(inputMatrix)
-    #inputMatrix[np.isnan(inputMatrix)] = fillMissingValue
     inputMatrix[:,0:SubjectFeaNum]= fillDCAValue
-    #print(inputMatrix)
     return(inputMatrix)
 
 def phylaIntegration_replacingOtherPhalaDCAScores(ori_inputMatrix,fillDCAValue,fillMissingValue,SubjectFeaNum=1):
@@ -165,8 +155,6 @@ def getAllIdxOf_fixed_negVSpos_ratio_keepCombination_from_OriginalFrame(XBestHom
     XBestHomologousDCAs_replace=copy.deepcopy(XBestHomologousDCAs_original)
     YBestHomologousDCAs_replace=copy.deepcopy(YBestHomologousDCAs_original)
     print("YBestHomologousDCAs_replace.shape:",YBestHomologousDCAs_replace.shape)
-    # XBestHomologousDCAs_replace=copy.deepcopy(STRINGFullPhyBalancePhyla_BestHomologousDCAs_top5DCAs_predicted_results['XBestHomologousDCAs'])
-    # YBestHomologousDCAs_replace=copy.deepcopy(STRINGFullPhyBalancePhyla_BestHomologousDCAs_top5DCAs_predicted_results['YBestHomologousDCAs'])
 
     XBestHomologousDCAs_replace[XBestHomologousDCAs_replace!=fillMissingValue]=1
 
@@ -179,7 +167,6 @@ def getAllIdxOf_fixed_negVSpos_ratio_keepCombination_from_OriginalFrame(XBestHom
     for i in range(0,XBestHomologousDCAs_replace.shape[0]):
         i_phyla=XBestHomologousDCAs_replace[i,:]
         i_phyla_ratio=sum(i_phyla==fillMissingValue)/XBestHomologousDCAs_replace.shape[1]
-        #print(i_phyla_ratio)
         i_phyla_label=[str(p) for p in i_phyla]
         i_phyla_label="_".join(i_phyla_label)
 
@@ -199,7 +186,6 @@ def getAllIdxOf_fixed_negVSpos_ratio_keepCombination_from_OriginalFrame(XBestHom
 
     beforeFixRatio_test_Phaly_PPInum_list=list()
     for key in sorted(list(beforeFixRatio_test_Phaly_posPPInum.keys())):
-        #key=key/10
         print(key)
         beforeFixRatio_test_Phaly_PPInum_list.append([key,beforeFixRatio_test_Phaly_posPPInum[key],"P"])
         beforeFixRatio_test_Phaly_PPInum_list.append([key,beforeFixRatio_test_Phaly_negPPInum[key],"N"])
@@ -224,7 +210,6 @@ def getAllIdxOf_fixed_negVSpos_ratio_keepCombination_from_OriginalFrame(XBestHom
                                                                                                )
 
     # here show for visulisation reason 
-    # print("len(fixedNegVSposRratio_keepCombination_allIdx),fixedNegVSposRratio_keepCombination_allIdx[0:3]:",len(fixedNegVSposRratio_keepCombination_allIdx),fixedNegVSposRratio_keepCombination_allIdx[0:3])
     XMarix_fixedNegVSposRratio_keepCombination=XBestHomologousDCAs_replace[fixedNegVSposRratio_keepCombination_allIdx,:]
     YMarix_fixedNegVSposRratio_keepCombination=YBestHomologousDCAs_replace[fixedNegVSposRratio_keepCombination_allIdx]
     print("YMarix_fixedNegVSposRratio_keepCombination.shape:",YMarix_fixedNegVSposRratio_keepCombination.shape)
@@ -238,7 +223,6 @@ def getAllIdxOf_fixed_negVSpos_ratio_keepCombination_from_OriginalFrame(XBestHom
     for i in range(0,XMarix_fixedNegVSposRratio_keepCombination.shape[0]):
         i_phyla=XMarix_fixedNegVSposRratio_keepCombination[i,:]
         i_phyla_ratio=sum(i_phyla==-1)/XMarix_fixedNegVSposRratio_keepCombination.shape[1]
-        #print(i_phyla_ratio)
         i_phyla_label=[str(p) for p in i_phyla]
         i_phyla_label="_".join(i_phyla_label)
 

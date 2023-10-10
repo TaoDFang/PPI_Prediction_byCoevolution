@@ -10,7 +10,9 @@ scripts/work/*
 scripts/.nextflow.log*
 scripts/.nextflow.*
 scripts/.nextflow/
+scripts/NextflowWithSlurm.sh
 notebooks/draft.ipynb
+
 
 notebooks/.ipynb_checkpoints/*
 .ipynb_checkpoints/*

@@ -11,45 +11,9 @@ from collections import defaultdict
 import matplotlib.pyplot as plt 
 
 
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.model_selection import train_test_split
-# from sklearn.model_selection import GridSearchCV
-
-# #from xgboost import XGBClassifier
-
-# from sklearn.impute import SimpleImputer
-# from sklearn.experimental import enable_iterative_imputer
-# from sklearn.impute import IterativeImputer
-# from sklearn.impute import KNNImputer
-
-
-
-
-# sys.path.append('/mnt/mnemo5/tao/code/MNF/src/tao_utilities/')
-
-# from collect_topCoEvos import get_topRankingBetValue_dict
-# from collect_topCoEvos import get_topRankingBetValue_dict_PosInSingleMSA
-# from collect_topCoEvos import collect_topCoEvos_OnlyTopPosNeg
 from collect_topCoEvos import get_topRanking_CoEvo_file
-
-
-# from EggNOGGroup_RelatedFuncs import return_cogPairs_fromproPair
-# from EggNOGGroup_RelatedFuncs import sepCogPairs_train_test_split
-
-# from biasCheck import phylaIntegration_replacingDCAScores
-# from biasCheck import phylaIntegration_replacingQuerySpeDCAScores
-# from biasCheck import phylaIntegration_replacingOtherPhalaDCAScores
-
-# from biasCheck import sort_arrayOtherPhyla
-# from biasCheck import sort_arrayAllPhyla
-
 from IntergrateBestHomologousPPCoEvo_unNameSorted import getMetaFrame_FullBestHomologousPP
-# from IntergrateBestHomologousPPCoEvo_unNameSorted import getMetaFrame_withHighDCA
-# from IntergrateBestHomologousPPCoEvo_unNameSorted import collect_BestHomologousDCAs_OneSpeOneScore_OnlyTopPosNeg
 
-# from ML_parameters_setting import LR_withGridSearchCV_GroupKFold
-# from ML_parameters_setting import RF_withGridSearchCV_GroupKFold
 
 
 def get_SubjectInfo_top5DCAs_FullBestHomologousPP(Query_tuple,Subject_tupleList,
@@ -57,14 +21,13 @@ def get_SubjectInfo_top5DCAs_FullBestHomologousPP(Query_tuple,Subject_tupleList,
                                                 coevo_suffix="_pydcaFNAPC_array",
                                                 benchmark_suffix="STRINPhyPPI_Benchmark/",
                                             BestHomologousPP_filePrefix="BestHomologousPP",
-                                            CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
+                                            CoEvo_data_folder="CoEvo_data_STRING11.5/",
                                                 topDCA_num=5,
                                                 returnDic=False,
                                                 overwrite=True,
                                                 use_multiprocessing=True,
                                                ):
     # for quey data 
-    #CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING"+STRING_version+"/"
     Subect_BestHomologousPP_prefix="BestHomologousPPFor"+Query_tuple[1]+"AtEggNOGmaxLevel"+Query_tuple[0]+"_"
 
     
@@ -136,7 +99,6 @@ def get_BestHomologousDCAs_top5DCAs_fromMultiSpes(Query_allPPI_allInfo_dict,
     Query_BestHomologousDCAs_dict=defaultdict(list)
 
     for sub_PP in Query_allPPI_allInfo_dict:
-        #print(Query_allPPI_allInfo_dict[sub_PP])
         if with_status:
             Query_BestHomologousDCAs_dict[sub_PP]=list(Query_allPPI_allInfo_dict[sub_PP][0])
         else:
@@ -144,14 +106,11 @@ def get_BestHomologousDCAs_top5DCAs_fromMultiSpes(Query_allPPI_allInfo_dict,
             
         Query_BestHomologousDCAs_dict[sub_PP].extend(Query_allPPI_top5DCAs_dict[sub_PP][0:topDCA_num])
 
-        #for Subject_phylum, Subject_speID in Subject_tupleList:
         for Subject_phylum, Subject_speID in Query2Subject_BestHomologous_ignoreSubjectDCA_dict_listDict.keys():
-            #print("Subject_phylum, Subject_speID:",Subject_phylum, Subject_speID)
             BestHomologousPP_Subject_allPPI_top5DCAs_dict=BestHomologousPP_Subject_allPPI_top5DCAs_listDict[(Subject_phylum, Subject_speID)]
             Query2Subject_BestHomologous_ignoreSubjectDCA_dict=Query2Subject_BestHomologous_ignoreSubjectDCA_dict_listDict[(Subject_phylum, Subject_speID)]
 
             best_Subject_PP=Query2Subject_BestHomologous_ignoreSubjectDCA_dict[sub_PP] if sub_PP in Query2Subject_BestHomologous_ignoreSubjectDCA_dict else []
-            #print(best_Subject_PP)
             if len(best_Subject_PP)==0:  # here Subject_PP is tuple with size 2
                 Query_BestHomologousDCAs_dict[sub_PP].extend([np.nan for i in range(topDCA_num)])
             else:

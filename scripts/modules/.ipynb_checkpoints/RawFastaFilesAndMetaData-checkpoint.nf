@@ -1,8 +1,5 @@
 // ************Download all metadata and sequencing data**********
 
-//http://localhost:8206/lab/workspaces/auto-Z/tree/code/MNF/notebooks/STRING_Data_11.5/PrepareFastaDataBySpecies.ipynb
-// download all fasta seq data from new string website 
-
 
 
 process test_configuration {
@@ -10,8 +7,7 @@ process test_configuration {
     label "simple_process"
     
     
-    publishDir "${params.RawData_Folder}", mode: "copy" // here params.outdir change to params.RawData_Folde to improve readbility 
-    // if publishDir does not exist , nextflow will create it automaticlly 
+    publishDir "${params.RawData_Folder}", mode: "copy" 
     debug true //echo true echo directive is depreca
     
     output:
@@ -39,17 +35,15 @@ process downLoadOtherRawFiles {
     label "simple_process"
     
     
-    publishDir "${params.RawData_Folder}", mode: "copy" // here params.outdir change to params.RawData_Folde to improve readbility 
-    // if publishDir does not exist , nextflow will create it automaticlly 
+    publishDir "${params.RawData_Folder}", mode: "copy" 
     debug true //echo true echo directive is depreca
     
     output:
     //stdout
-        
-    //here seem path has to be the output from somewhere in the script , 
+
     path "species.v11.5.txt", type: "file", emit: species_file
     path "species.tree.v11.5.txt", type: "file", emit: species_tree_file
-    path "eggnog5AddSTRING11.5_Species/", type: "dir", emit: eggNOG_folder //here cant not use  path "${params.RawData_Folder}/eggnog5AddSTRING11.5_Species/groups"
+    path "eggnog5AddSTRING11.5_Species/", type: "dir", emit: eggNOG_folder 
 
     
     script:
@@ -113,11 +107,8 @@ process downLoadRawFastaFile {
 process prepareFastaDataBySpecies {
     tag "process  prepareFastaDataBySpecies"
     publishDir "${params.RawData_Folder}" , mode: "copy"
-    // cpus 32
-    // memory 100.GB
     
     label "simple_process"
-    // conda "/mnt/mnemo5/tao/anaconda3/envs/ipykernel_py3"  // specify conda enviroment here works, but why in configuration file not working , works now 
     debug true //echo true echo directive is deprecated 
     
     input:

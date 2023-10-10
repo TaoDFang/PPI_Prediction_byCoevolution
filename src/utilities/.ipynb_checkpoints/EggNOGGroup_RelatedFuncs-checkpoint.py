@@ -26,8 +26,6 @@ def return_cogPairs_fromproPair(EggNOG_group_level2,currentSpe_TaxID,allPPI_allI
     
     CurrentSpe_EggNOG_group_level2_idx=[idx for idx,sid in  enumerate(EggNOG_group_level2_speID) if (sid==currentSpe_TaxID)]
     CurrentSpe_EggNOG_group_level2=EggNOG_group_level2.iloc[CurrentSpe_EggNOG_group_level2_idx,:]
-    #CurrentSpe_EggNOG_group_level2=CurrentSpe_EggNOG_group_level2.sort_values(by=1)
-
 
 
     CurrentSpe_EggNOG_group_level2_values=CurrentSpe_EggNOG_group_level2.iloc[:,[1,3]].values.tolist()

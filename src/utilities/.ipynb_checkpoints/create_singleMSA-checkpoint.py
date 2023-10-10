@@ -255,17 +255,12 @@ def removeGapsANDtrackAAPosOfSeqInMSA(record):
         # remember for paired MSA, first row/currentSpe_pro seq, all gaps shou be already removed 
         # but for others rows, we need to consider gaps 
         
-        #print(keptAA_posInOrigalPro)
     with open(currentSpe_msa_trackGapsPos_path+currentSpe_pro_name+'_allSeq_keptAA_posInOrigalPro.pickle', 'wb') as handle:
         pickle.dump(allSeq_keptAA_posInOrigalPro, handle)
-    #return([currentSpe_pro_name,allSeq_keptAA_posInOrigalPro])
     
     
     # get and save final MSA  to fasta format 
-    
-    #final_seq_array=seq_seq_array[:,ref_col_gaps]
-    #print(ref_col_gaps)
-    #print(seq_seq_array.shape)
+
     final_seq_array=np.delete(seq_seq_array,ref_col_gaps,1)
     final_header_array=seq_header_array
     

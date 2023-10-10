@@ -77,23 +77,6 @@ process homologousPPDetection_allQuery2SubjectPPIMapping {
 // do blastp/mapping between single query proteins and single subject proteins 
 process homologousPPDetection_SeqMapping {
     
-    // publishDir "${params.homologous_SeqMappingPath}",mode: "copy", saveAs: { filename ->  filename.substring(12) } 
-    // even with homologousPPDetection_SeqMapping_ch.collect(),, 
-    // the next process start before all file fnished copy. mayby here use link, not copy ? ,does it matter ?
-    // and then make the copy in the end ?
-    // or actually move data in the begining of next process 
-    
-    // Warning
-    // Files are copied into the specified directory in an asynchronous manner, so they may not be immediately available in the published directory at the end of the process execution. For this reason, downstream processes should not try to access output files through the publish directory, but through channels.
-    
-    // publishDir "${homologous_SeqMappingPath}", mode: "copy" , here the output is aboluste path so we dont need to publish data
-    // the reason we do this is that this process need to be run multiple times parallely and need to write to same same folder, 
-    // this cause problems 
-    // but use abosulut path reduce "explicitely" dependency between process ?, check what is nextflow diagraw looks like here 
-    //while we use fromPath to "implicatily" to capture this dependence ?
-    // or not use SubjectProSeqPath_ByProtein_ch but a list of pure subject ids ???
-    
-    
     label "many_cpu_process"
     
     debug true //echo true echo directive is deprecated
@@ -102,20 +85,12 @@ process homologousPPDetection_SeqMapping {
     input: 
         val Query_tuple_ch
         val Subject_tupleList_ch
-        // path SubjectSpe_MiddleData_ch
         each QueryProSeqPath_ByProtein_ch
-        each SubjectProSeqPath_ByProtein_ch //use each here bacause its the onyl inpuzt channle have multiple element; https://carpentries-incubator.github.io/workflows-nextflow/05-processes-part1/index.html
-    // #before using each keyword, the path  offSubjectProSeqPath_ByProteinSubjectProSeqPath_ByProtein: 411476ByProteins/
-    // #when use each key workd for , we got full path SubjectProSeqPath_ByProtein: /mnt/mnemo6/tao/nextflow/PPI_Coevolution/STRING_data_11.5/411476ByProteins/, become a value channle now ??
+        each SubjectProSeqPath_ByProtein_ch //use each here bacause its the only input channle have multiple element
         path homologous_allQuery2SubjectPPIMapping_path
 
-        
-//     output:
-//         path "${params.homologous_SeqMappingPath}/EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
-    // Subject_speID is defined with bash script, cause problelm, maybe exract diffrect from by SubjectProSeqPath_ByProtein_ch by grooy command
+
     output:
-    //     path "${homologous_SeqMappingPath_ch}", emit: homologous_SeqMappingPath_ch
-        // path "EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/", emit: current_homologous_SeqMappingPath
         path "temp_folder/*" , emit: temp_folder
         
     script:
@@ -153,11 +128,6 @@ process homologousPPDetection_SeqMapping {
     
 }
 
-//         temp_folder="temp_folder/"
-//         mkdir -p \${temp_folder} 
-        
-//     current_homologous_SeqMappingPath="\${temp_folder}EggNogMaxLevel2_QuerySpe_ID${params.query_currentSpe_TaxID}andSubjectSpe_ID\${Subject_speID}/"
-
 
 
 // do protein mapping for homologous pp and single protein mapping, not the one best homologous pp
@@ -176,9 +146,7 @@ process homologousPPDetection_allQuery2SubjectPPIMapping_BestHomologous {
         val Subject_tupleList_ch
         path all_temp_folder //??!!!! here actully there are three seperated temp_folders from last homologousPPDetection_SeqMapping process
         // therefore the current folder dont wait untill all the parallel homologousPPDetection_SeqMapping process finished to get statred, this could cause problem 
-        //https://groups.google.com/g/nextflow/c/MhK7boM2c1Y
-        // https://www.biostars.org/p/9569814/
-        // solution is to collect all parallel output process 
+        // so explicitly copy data at the begining of current process
 
         path homologous_SeqMappingPath_ch
         path homologous_allQuery2SubjectPPIMapping_path
@@ -273,12 +241,6 @@ process homologousPPDetection_preparePairedMSA {
     
 }
 
-// but one problem remain, as input_root_folder is at temp_CoEvo_data_folder from last process, so everrytime
-// DCA_coevolutoin_path fodler will created from empty
-        // #create this folder to fit to nextflow logic (the input to next process is better the output of previous process), but the whole folder not just the conent will be move to ? \${params.CoEvo_data_folder}, try with and without /?
-        // temp_CoEvo_data_folder="temp_CoEvo_data_folder/"
-        // mkdir -p \${temp_CoEvo_data_folder}
-
 
 // !!!!
 //for need to do DCA compuation for millions of PPs , if interupt, better not re-start from scratch 
@@ -361,33 +323,3 @@ process homologousPPDetection_ComputeHomologousDCA_parallel {
 }
 
 
-
-    
-
-// process homologousPPDetection_ComputeHomologousDCA {
-//     // publishDir "${params.input_root_folder}",mode: "copy"
-//     debug true //echo true echo directive is deprecated
-    
-    
-//     label "coevolutionComputation_mfDCA_process"
-    
-//     input: 
-//         val Query_tuple_ch
-//         val Subject_tupleList_ch
-//         path newSTRING_rootFolder_ch
-//         path CoEvo_data_folder_ch
-//         path temp_CoEvo_data_folder
-//     // output:
-//     script: 
-//     """      
-//         echo "temp_CoEvo_data_folder is ${temp_CoEvo_data_folder}"
-        
-//         export PYTHONPATH="${projectDir}/../src/utilities/" 
-
-//         python ${projectDir}/python_scripts/homologousPPDetection_ComputeHomologousDCA.py \
-//         -q ${Query_tuple_ch.join("_")}     -s ${Subject_tupleList_ch.join("_")} \
-//         -f "${newSTRING_rootFolder_ch}/"   -c "${CoEvo_data_folder_ch}/" \
-//         -n  ${params.middle_mp_task_nums}
-        
-//     """
-// }

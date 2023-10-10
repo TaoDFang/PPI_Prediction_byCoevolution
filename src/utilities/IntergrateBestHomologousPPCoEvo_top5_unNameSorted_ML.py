@@ -26,11 +26,6 @@ from sklearn.impute import KNNImputer
 
 
 
-# sys.path.append('/mnt/mnemo5/tao/code/MNF/src/tao_utilities/')
-
-# from collect_topCoEvos import get_topRankingBetValue_dict
-# from collect_topCoEvos import get_topRankingBetValue_dict_PosInSingleMSA
-# from collect_topCoEvos import collect_topCoEvos_OnlyTopPosNeg
 from collect_topCoEvos import get_topRanking_CoEvo_file
 
 
@@ -41,8 +36,6 @@ from biasCheck import phylaIntegration_replacingDCAScores
 from biasCheck import phylaIntegration_replacingSubjectSpeDCAScores
 from biasCheck import phylaIntegration_replacingOtherPhalaDCAScores
 
-# from biasCheck import sort_arrayOtherPhyla
-# from biasCheck import sort_arrayAllPhyla
 
 from IntergrateBestHomologousPPCoEvo_unNameSorted import getMetaFrame_FullBestHomologousPP
 from IntergrateBestHomologousPPCoEvo_unNameSorted import collect_BestHomologousDCAs_OneSpeOneScore_OnlyTopPosNeg
@@ -69,7 +62,7 @@ def VariousReplacing_sepCogPairs_FullBestHomologousPP_BestHomologousDCAs_top5DCA
                 given_benchmark_folder=None,
                 splitPosandNeg=True,
                 sort_frame=True,
-                CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING11.5/",
+                CoEvo_data_folder="CoEvo_data_STRING11.5/",
                 prefix="",
                 benchmark_suffix="STRINPhyPPI_Benchmark/",
                 n_jobs=20,
@@ -86,7 +79,7 @@ def VariousReplacing_sepCogPairs_FullBestHomologousPP_BestHomologousDCAs_top5DCA
     :type DCA_num:  int 
     
     '''
-    CoEvo_data_folder="/mnt/mnemo6/tao/PPI_Coevolution/CoEvo_data_STRING"+STRING_Version+"/"
+    
     input_root_folder=CoEvo_data_folder+currentSpe_TaxID+"_EggNOGmaxLevel"+EggNOG_maxLevel+"_eggNOGfilteredData/"
     
     Subect_prefix="BestHomologousPPFor"+currentSpe_TaxID+"AtEggNOGmaxLevel"+EggNOG_maxLevel+"_"

@@ -27,13 +27,11 @@ def getMetaFrame(EggNOG_maxLevel,currentSpe_TaxID,STRING_Version,DCA_thres=0,
         Predictive_DCA=DCA_thres
 
         Pos_allPPI_allInfo_frame=allPPI_allInfo_frame.loc[allPPI_allInfo_frame['benchmark_status']=="P",:]
-        #print("Pos_allPPI_allInfo_frame.shape:",Pos_allPPI_allInfo_frame.shape)
         Pos_allPPI_allInfo_frame=Pos_allPPI_allInfo_frame.loc[Pos_allPPI_allInfo_frame['maxBetDCA_score']>=Predictive_DCA,:]
         print("Pos_allPPI_allInfo_frame.shape:",Pos_allPPI_allInfo_frame.shape)
 
 
         Neg_allPPI_allInfo_frame=allPPI_allInfo_frame.loc[allPPI_allInfo_frame['benchmark_status']=="N",:]
-        #print("Neg_allPPI_allInfo_frame.shape:",Neg_allPPI_allInfo_frame.shape)
         Neg_allPPI_allInfo_frame=Neg_allPPI_allInfo_frame.loc[Neg_allPPI_allInfo_frame['maxBetDCA_score']>=Predictive_DCA,:]
         print("Neg_allPPI_allInfo_frame.shape:",Neg_allPPI_allInfo_frame.shape)
 

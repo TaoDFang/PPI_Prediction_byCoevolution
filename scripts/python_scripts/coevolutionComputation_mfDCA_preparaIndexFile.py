@@ -37,10 +37,7 @@ if __name__ == '__main__':
     with open(currentSpeMSAGapsFilteringMetaFolder+'fasta_protein_lens_dict.pickle', 'rb') as handle:
         fasta_protein_lens=pickle.load(handle)
 
-    # use  postive and negative ppi to only use pp that have large Nf90 value, and after removing deep homologs  
-    # currentSpe_allPPIs_beforeCoEvoComp_frame = pd.read_csv(PPIInfoBeforeCoEvoComp_csv,header=0,index_col=None,sep="\t")
-    # print("currentSpe_allPPIs_beforeCoEvoComp_frame.shape:",currentSpe_allPPIs_beforeCoEvoComp_frame.shape)
-    # currentSpe_allPPIs_beforeCoEvoComp_info=currentSpe_allPPIs_beforeCoEvoComp_frame.values.tolist()
+
     currentSpe_allPPIs_beforeCoEvoComp_info=list()
     with open(PPIInfoBeforeCoEvoComp_csv, "r") as file:
         my_reader = csv.reader(file, delimiter="\t")
@@ -74,21 +71,6 @@ if __name__ == '__main__':
 
 
 
-    # # here no need anymore, in nextlfow process , each time IndexDCA_coevolutoin_path is a contempory folder 
-    # IndexDCA_coevolutoin_path_files = glob.glob(IndexDCA_coevolutoin_path+"*.csv")
-    # for f in IndexDCA_coevolutoin_path_files:
-    #     os.remove(f)
-
-    # blockSize=500
-    # index_count=0
-    # for bidx in range(0,len(currentSpe_allPPIs_pps_forDCA),blockSize):
-    #     block_currentSpe_allPPIs_pps_forDCA=currentSpe_allPPIs_pps_forDCA[bidx:(bidx+blockSize)]
-    #     #print(len(block_currentSpe_allPPIs_pps_forDCA))
-    #     block_currentSpe_allPPIs_pps_forDCA_frame=pd.DataFrame(block_currentSpe_allPPIs_pps_forDCA)
-    #     block_currentSpe_allPPIs_pps_forDCA_frame.to_csv(IndexDCA_coevolutoin_path+str(index_count)+".csv",
-    #                                                             header=None,index=None,sep="\t")
-    #     index_count=index_count+1
-    # print("index_count:",index_count)
     
     assert blockNum<len(currentSpe_allPPIs_pps_forDCA)
     
@@ -99,7 +81,3 @@ if __name__ == '__main__':
         block_currentSpe_allPPIs_pps_forDCA_frame.to_csv(IndexDCA_coevolutoin_path+str(i)+".csv",
                                                                 header=None,index=None,sep="\t")  
         
-    # print(len(currentSpe_allPPIs_pps_forDCA),blockNum,block_range,block_range[i+1])
-   
-
-

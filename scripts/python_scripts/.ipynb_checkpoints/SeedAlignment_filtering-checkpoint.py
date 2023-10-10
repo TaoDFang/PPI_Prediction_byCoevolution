@@ -16,7 +16,7 @@ def getSpe2pro2seq_dict(record):
     return((SpeName,Spe_index_dict))
 
 
-# keep this funcion heree as it need very larget global variable 
+# keep this funcion here as it need very larget global variable 
 # and using subprocess seem not very fast 
 def newSingleMSA_filterPhmmer_EggNOG_OrthologousGroup_faidx(file_name):
     try:
@@ -52,30 +52,19 @@ def newSingleMSA_filterPhmmer_EggNOG_OrthologousGroup_faidx(file_name):
         print("empty file : "+file_name)
         return
         
-        #print(file_name)
 
 
 
-    #if (phmmer_result.shape[0]>0):
     if (phmmer_result.shape[0]>2500 or phmmer_result.shape[0]>init_OGLen*0.25):
         currentSpe_protein=phmmer_result.iloc[0,3]
         ecoli_dict=SeqIO.index(currentSpeProSeqPath_ByProteins+currentSpe_protein+".fa","fasta")
         ecoli_str=str(ecoli_dict[currentSpe_protein].seq)
         output_str=">"+currentSpe_protein+"\n"+ecoli_str+"\n"
 
-        phmmer_ecoli=phmmer_result.iloc[0,3]
-        #print(phmmer_ecoli)
-        #???!!! here there are duplicete target proteins as it has  more then two domains aligned 
-        # but here we only use unique targert prorteins name and check if duplicted later  
+        phmmer_ecoli=phmmer_result.iloc[0,3] 
         phmmer_OG_Pros=list(set(phmmer_result.iloc[:,0]))
 
 
-    # Here is a little tricky
-    #which is suppose to slover the problem mention in page 21 of suplemntary files of Qians paperif 
-    #First we need to consider alignment(target) overlap in query,  if so, only take on with high identity
-    #Second we need to condiser alignent(target) overlap in target, if so. useing intersection of them.
-    #or orignal sequence of them. if so. the target sequececn len will increase!!
-    #how about only conside the situatin when non overlap in both query and target sequence ?
         for hit_seq in phmmer_OG_Pros: # 
             temp_phmmer_result=phmmer_result.loc[phmmer_result.iloc[:,0]==hit_seq,:].copy()
             if temp_phmmer_result.shape[0]>1:
@@ -83,9 +72,6 @@ def newSingleMSA_filterPhmmer_EggNOG_OrthologousGroup_faidx(file_name):
                 current_index=0
                 keepedIdx=list()
                 for i in range(1,temp_phmmer_result.shape[0]): # get non overlaped  and order segment in query 
-            #         if i>range(temp_phmmer_result.shape[0]):
-            #             break
-            #        else:
                     if temp_phmmer_result.iloc[current_index,15]<=temp_phmmer_result.iloc[i,15]<=temp_phmmer_result.iloc[current_index,16]:# overlap 
                         #print("Im here")
                         if temp_phmmer_result.iloc[current_index,21]<temp_phmmer_result.iloc[i,21]:
@@ -93,8 +79,7 @@ def newSingleMSA_filterPhmmer_EggNOG_OrthologousGroup_faidx(file_name):
                             current_index=i
                         if i==(temp_phmmer_result.shape[0]-1) or (temp_phmmer_result.iloc[i+1,15]>temp_phmmer_result.iloc[current_index,16]):
                             keepedIdx.append(current_index)
-                    elif temp_phmmer_result.iloc[i,15]>temp_phmmer_result.iloc[current_index,16]:   # none overlap and next segment is after current segemtn 
-                  #      keepedIdx.append(current_index) # thi can be omited 
+                    elif temp_phmmer_result.iloc[i,15]>temp_phmmer_result.iloc[current_index,16]:   
                         keepedIdx.append(i)
                         current_index=i
 
@@ -105,9 +90,6 @@ def newSingleMSA_filterPhmmer_EggNOG_OrthologousGroup_faidx(file_name):
                 current_index2=0
                 keepedIdx2=[0]
                 for i in range(1,temp_temp_phmmer_result.shape[0]): # get non overlaped and order segments in target
-    #                 if i>range(temp_temp_phmmer_result.shape[0]):
-    #                     break
-    #                 else:
                     if temp_temp_phmmer_result.iloc[current_index,18]<temp_temp_phmmer_result.iloc[i,17]:
                         current_index2=i
                         keepedIdx2.append(current_index2)
@@ -163,14 +145,6 @@ if __name__ == '__main__':
     getSpe2pro2seq_dict_results=pool.map(getSpe2pro2seq_dict, species_names_ArgForGetSpe2pro2seq)
     pool.close()
     species_indexDict_dict=dict(getSpe2pro2seq_dict_results)
-    # CPU times: user 4min 58s, sys: 30.2 s, total: 5min 28s
-    # Wall time: 5min 36s
-
-    #run once 
-    # now for one species around 3-4 minutes
-    # here many operation involde with find one particular protei seq from on species, 
-    # better to read them in one run 
-    # after read all spefice fasta file, one run takes  3.81 seconds 
     currentSpe_phmmer_files = [f for f in listdir(currentSpe_phmmer_outPath) if isfile(join(currentSpe_phmmer_outPath, f))]
     currentSpe_phmmer_files=[f for f in currentSpe_phmmer_files if "domtblout" in f]
 
@@ -178,7 +152,4 @@ if __name__ == '__main__':
     pool = mp.Pool(mp_task_nums) # here dont use many process here as following functin require large memory 
     pool.map(newSingleMSA_filterPhmmer_EggNOG_OrthologousGroup_faidx, currentSpe_phmmer_files)
     pool.close()
-
-    # CPU times: user 5min 45s, sys: 37.8 s, total: 6min 23s
-    # Wall time: 13min 46s
 

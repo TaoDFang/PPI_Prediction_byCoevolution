@@ -33,5 +33,3 @@ if __name__ == '__main__':
     pool.map(hmmbuild, ClustoMSA_files_ArgForhmmbuild)
     pool.close()
 
-    # CPU times: user 370 ms, sys: 44.7 s, total: 45.1 s
-    # Wall time: 2min 38s

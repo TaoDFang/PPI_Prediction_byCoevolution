@@ -30,15 +30,11 @@ def get_pydcaFNAPC_betArray(Coevo_path,Query_pro1,Query_pro2,
         print(data_fileName)
         return None # for now just to check how many corrupt data i have 
     except IOError as e:
-        #print(f"excepttion error:{e}")
         print(data_fileName)
         return None
-#        pass
-#         print(data_fileName)
-#         sys.exit(f"{data_fileName}")  
+
 
     data_array =data_array_Dig.T + data_array_Dig
-    #np.fill_diagonal(data_array,data_array_Dig.diagonal())#
     np.fill_diagonal(data_array,0)
     bet_data_array=data_array[:L1,L1:]
     
@@ -72,7 +68,7 @@ def get_topRankingBetValue_dict(record,topNum=50):
 
 
     returnList=[Query_pro1,Query_pro2]
-    #here there one problem. if  there are same  top_value
+    #here there one problem. if there are same top_value
     # for each top value, following for loop will find all position of this top value, cause many repeats
     # so here use set to make use each top vop_value only used for once 
     esisted_top_values=set()
@@ -94,8 +90,6 @@ def get_topRankingBetValue_dict(record,topNum=50):
     return(returnList)
 
 
-
-#---------------------------------------------
 def get_topRanking_CoEvo_file(topRanking_CoEvo_file,coevolutoin_path,coevo_suffix,allPPI_info, 
                               returnDic=False,overwrite=True,use_multiprocessing=True):
     # here use_multiprocessing coulde be bool(True or False ), or integeger number which represent how many cpus planed to use 
@@ -106,12 +100,10 @@ def get_topRanking_CoEvo_file(topRanking_CoEvo_file,coevolutoin_path,coevo_suffi
         allPPI_info_ArgForTops=[[p1,p2,L1,L2,coevolutoin_path,coevo_suffix] for p1,p2,L1,L2 in allPPI_info]
     
         if use_multiprocessing:
-            #pool=mp.Pool(50)
             pool=mp.Pool(use_multiprocessing)
             top_CoEvo_list=pool.map(get_topRankingBetValue_dict,allPPI_info_ArgForTops)
             pool.close() 
         else:
-            #print("not using multiprocessing")
             top_CoEvo_list=[get_topRankingBetValue_dict(l) for l in allPPI_info_ArgForTops]
         
         print(f"len(top_CoEvo_list):{len(top_CoEvo_list)}")
@@ -147,7 +139,6 @@ def collect_topCoEvos_OnlyTopPosNeg(topCoEvoScore_frame,allPPI_allInfoFrame,CoEv
     
     X_fileName=ML_inputPath+"DCA_thres_"+str(DCA_thres)+"_NonPara_X_top"+CoEvo_type+"s_Num"+str(CoEvo_number)+".npy"
     Y_fileName=ML_inputPath+"DCA_thres_"+str(DCA_thres)+"_NonPara_Y_top"+CoEvo_type+"s_Num"+str(CoEvo_number)+".npy"
-    #if  not os.path.exists(X_fileName):
     if ifReCollect:
         print("Re collect data ")
         print("X_fileName:",X_fileName)
@@ -195,7 +186,6 @@ def get_topRankingBetValue_dict_PosInSingleMSA_framArray(bet_data_array,topNum=5
 
     ascending_bet_data_array=np.sort(bet_data_array.flatten())
     descending_bet_data_array=ascending_bet_data_array[::-1]
-    #returnList=[Query_pro1,Query_pro2]
     returnList=[]
     esisted_top_values=set()
     for j in range(topNum):
@@ -204,8 +194,6 @@ def get_topRankingBetValue_dict_PosInSingleMSA_framArray(bet_data_array,topNum=5
             topIdx=np.where(bet_data_array==top_value)
             for i in range(len(topIdx[0])):
                 topRow,topCol=topIdx[0][i],topIdx[1][i]
-                #topCol += L1
-                #print(top_value,topRow,topCol)
                 if len(returnList)<(2+topNum*3):
                     returnList.extend((top_value,topRow,topCol))
             esisted_top_values.add(top_value)

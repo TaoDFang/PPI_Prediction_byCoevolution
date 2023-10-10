@@ -6,16 +6,8 @@ def preload_data(groups_folder,species_file,tree_file):
 
     
     # # this three files can be downloaded directly from string and eggnog files directly 
-    # # when I build the pipeline, eggnog is not pubslish for string11.5, but i prepared it by /MNF/notebooks/STRING_Data_11.5/PrepareEggNOGDataForSTRING11.5.ipynb using inhouse pipeline and then compresse it  ("tao@deimos:/mnt/mnemo6/tao/STRING_Data_11.5$ tar -cvf eggnog5AddSTRING11.5_Species.tar.gz -C /mnt/mnemo6/tao/STRING_Data_11.5/eggnog5AddSTRING11.5_Species .")
-    # # and share it at Zenodo:  "https://zenodo.org/record/8279323"
-    # groups_folder = "/mnt/mnemo6/tao/STRING_Data_11.5/eggnog5AddSTRING11.5_Species/groups"
-    # species_file = "/mnt/mnemo6/tao/STRING_Data_11.5/species.v11.5.txt"    
-    # tree_file = "/mnt/mnemo6/tao/STRING_Data_11.5/species.tree.v11.5.txt"
-    
 
-    ##  
-    ## Load all species 
-    ##  
+    
     
     print("Loading taxids for all STRING species...", file=sys.stderr)
     
@@ -146,9 +138,8 @@ def resolve(input_protein, max_level, orthologs):
     
     current_level = input_species
     
-    while current_level != max_level: #?? always linear up, no branching??
-        # check 561 https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Tree&id=561&lvl=3&lin=f&keep=1&srchmode=1&unlock
-        # our ecoli 511145 https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=511145&lvl=3&lin=f&keep=1&srchmode=1&unlock
+    while current_level != max_level:
+        
         
         current_level = tree_up[current_level]
         

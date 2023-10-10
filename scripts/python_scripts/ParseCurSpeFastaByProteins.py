@@ -8,15 +8,6 @@ import glob
 import pandas as pd
 import os
 
-# print("os.getcwd()",os.getcwd())
-# print("print(sys.path):",sys.path) 
-#sys.path.append("../src/utilities") # failed, as current working directory is nextflow temporay working directory
-# default , the path of where the curret python .py script locate is in the sys.path file 
-# the simple solution now is more utilies to the same folder "....../PPI_Prediction_byCoevolution/scripts/python_scripts"
-# but not works to move to "....../PPI_Prediction_byCoevolution/scripts/python_scripts/utilies" only to 
-# ""....../PPI_Prediction_byCoevolution/scripts/python_scripts""
-# or better solution, export python path before run python code, check PPI_Prediction_byCoevolution/scripts/PairedMSA_preprocessing_workflow.nf
-
 
 
 from create_singleMSA import ParseCurSpeFastaByProteins_STRNG1105
@@ -39,8 +30,7 @@ print("currentSpeProSeqPath_ByProteins:",currentSpeProSeqPath_ByProteins)
 pro_num=glob.glob(currentSpeProSeqPath_ByProteins+"*")
 print("len(pro_num):",len(pro_num))
 
-# ParseCurSpeFastaByProteins_STRNG1105 function sometimes dont correctly sperate all single proteins 
-# here to makesure they do  , otherwise throw error 
+
 currentSpe_protein_info_frame=pd.read_csv(currentSpe_protein_info_filename,skiprows=1,
                                           header=None,index_col=None,sep="\t")
 print("currentSpe_protein_info_frame.shape",currentSpe_protein_info_frame.shape)

@@ -1,7 +1,6 @@
 import argparse
 import os 
 import glob
-# import pandas as pd , py37_pydca envs dont have pandas package to mess up the numpy version 
 import csv
 import multiprocessing as mp
 from multiprocessing import get_context
@@ -22,25 +21,7 @@ os.environ["NUMBA_NUM_THREADS"] = "4" # export NUMBA_NUM_THREADS=6
 
 
 
-## to run pydca, its import to make sure these three package are in correct version 
-## use py37_pydca enviroment 
-# (py37_pydca) tao@deimos:~$ conda remove numpy
-# (py37_pydca) tao@deimos:~$ pip uninstall numpy 
-# (py37_pydca) tao@deimos:~$ conda install numpy=1.15.4
-# np.__version__, numba.__version__, llvmlite.__version__
 
-# (py37_pydca) tao@gaia:~$ pip  list | grep  numpy
-# numpy                         1.15.4
-# (py37_pydca) tao@gaia:~$ conda   list | grep  numpy
-# numpy                     1.15.4          py37h8b7e671_1002    conda-forge
-
-# version works 
-# ('1.15.4', '0.46.0', '0.30.0')
-# or ('1.18.4', '0.46.0', '0.30.0')
-# or ('1.19.2', '0.46.0', '0.30.0')
-
-# choosed version 
-# ('1.18.4', '0.46.0', '0.30.0')
 import llvmlite
 import numba
 import numpy as np 
@@ -112,13 +93,6 @@ if __name__ == '__main__':
         print("DCA comp stat now =", now)
 
         pool=get_context("spawn").Pool(mp_task_nums)#get_context("spawn").Pool(30) #mp.Pool(20)
-
-        # Here we see  broken pipe problem 
-        # more interesting thing is that when DCA compuation is still running , especial other pipeline for folowing 
-        # speices alreays start. 
-        # from loging file we can see MI part never stat . so the problem is cause by DCA part
-        # so DCA part broken, current for loop for current speceis finished and pipelie for other speceis starts 
-        # but in term of current for loop. part after DCA computation were not started
 
         dca_results=pool.map(pydca_mfdca_FN_compresse,currentSpe_allPPIs_pps_ArgForDCA)
 

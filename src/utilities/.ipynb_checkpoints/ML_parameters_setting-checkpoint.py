@@ -8,8 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 def LR_withGridSearchCV(X_train,y_train,n_jobs=20):
     LRtopDCAs_model = LogisticRegression(penalty="l1",solver='liblinear', random_state=0,
                                          max_iter=100,
-                                 ) # parameter from paper Large-scale discovery of protein interactions at residue resolution using co-evolution calculated from genomic sequences
-    # alreay tried parameters 
+                                 ) 
     # 'C':[0.1,1, 10]
     # 'class_weight':[{1: w} for w in [0.1, 1, 10,50,100]]
     parameters = {'C':[0.1,1, 10],

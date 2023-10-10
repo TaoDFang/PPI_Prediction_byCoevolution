@@ -35,6 +35,3 @@ if __name__ == '__main__':
     pool.close()
 
 
-
-# CPU times: user 34.3 s, sys: 1min 34s, total: 2min 9s
-# Wall time: 1h 11min 7s
