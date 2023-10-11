@@ -89,6 +89,13 @@ def get_topRankingBetValue_dict(record,topNum=50):
             
     return(returnList)
 
+def getFrame2Dict_bet(info_frame):
+    list_p1=info_frame['currentSpe_pro1'].tolist()
+    list_p2=info_frame['currentSpe_pro2'].tolist()
+    list_pp=zip(list_p1,list_p2)
+    list_max_bet=info_frame['maxValue_bet'].tolist()
+    return(dict(zip(list_pp,list_max_bet)))
+
 
 def get_topRanking_CoEvo_file(topRanking_CoEvo_file,coevolutoin_path,coevo_suffix,allPPI_info, 
                               returnDic=False,overwrite=True,use_multiprocessing=True):
@@ -202,3 +209,53 @@ def get_topRankingBetValue_dict_PosInSingleMSA_framArray(bet_data_array,topNum=5
             break
             
     return(returnList)
+
+
+
+    
+def get_maxBetValue_dict_npz(record,suffix):
+#     try:
+    #print(record)
+    
+    CurrentSpe_pro1, CurrentSpe_pro2,L1,L2,CoEvo_path =record
+    data_fileName=CoEvo_path+CurrentSpe_pro1+"and"+CurrentSpe_pro2+suffix+".npz"
+    data_array_Dig=np.load(data_fileName)['arr_0']
+
+    data_array =data_array_Dig.T + data_array_Dig
+    #np.fill_diagonal(data_array,data_array_Dig.diagonal())#
+    np.fill_diagonal(data_array,0)
+
+    bet_data_array=data_array[:L1,L1:]
+    #print((CurrentSpe_pro1,CurrentSpe_pro2,data_array.max(),bet_data_array.max()))
+    
+    maxValue_all=data_array.max()
+    maxValue_bet=bet_data_array.max()
+    
+    if np.isnan(maxValue_all): # when we test downsample size 1
+        maxValue_all_idx_row=np.nan
+        maxValue_all_idx_col=np.nan
+
+        
+        maxValue_bet_idx_row=np.nan
+        maxValue_bet_idx_col=np.nan
+    else:
+        maxValue_all_idx=np.where(data_array==maxValue_all)
+        maxValue_all_idx_row=maxValue_all_idx[0][0]
+        maxValue_all_idx_col=maxValue_all_idx[1][0]
+
+        maxValue_bet_idx=np.where(bet_data_array==maxValue_bet)
+        maxValue_bet_idx_row=maxValue_bet_idx[0][0]
+        maxValue_bet_idx_col=maxValue_bet_idx[1][0]+L1
+
+    return((CurrentSpe_pro1,CurrentSpe_pro2,
+            maxValue_all_idx_row,maxValue_all_idx_col,maxValue_all,
+            maxValue_bet_idx_row,maxValue_bet_idx_col,maxValue_bet))
+#     except:
+#         return(None)
+
+def get_maxBetValue_dict_pydcaFNAPC_array_npz(record):
+    return(get_maxBetValue_dict_npz(record,"_pydcaFNAPC_array"))
+def get_maxBetValue_dict_ccmpred_array_npz(record):
+    return(get_maxBetValue_dict_npz(record,"_ccmpre_array"))
+def get_maxBetValue_dict_MI_apc_allResidues_npz(record):
+    return(get_maxBetValue_dict_npz(record,"_apc_allResidues"))
