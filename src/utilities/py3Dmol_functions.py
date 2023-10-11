@@ -12,7 +12,9 @@ def show_pdb(pdb_file,chains,
              # start,end,
              show_sidechains=False, show_mainchains=False, color="lDDT",
             view_width=600,
-            view_height=600):
+            view_height=600,
+            chainNames=[],
+            chaincolors=[]):
     view = py3Dmol.view(width=view_width, height=view_height,
                        js="https://cdn.jsdelivr.net/npm/3dmol@1.8.0/build/3Dmol-min.min.js")
     
@@ -26,7 +28,10 @@ def show_pdb(pdb_file,chains,
     elif color == "chain":
         for n,chain,color in zip(range(chains),list("ABCDEFGH"),
                      ["lime","cyan","magenta","yellow","salmon","white","blue","orange"]):
-            view.setStyle({'chain':chain},{'cartoon': {'color':color}})        
+            view.setStyle({'chain':chain},{'cartoon': {'color':color}})
+    elif color == "chain_withNames":
+        for chain,color in zip(chainNames,chaincolors):
+            view.setStyle({'chain':chain},{'cartoon': {'color':color}})  
     # check http://3dmol.csb.pitt.edu/doc/types.html#ColorschemeSpec for cllorscheme
     #http://3dmol.csb.pitt.edu/doc/$3Dmol.Gradient.ROYGB.html
     elif color == "chain_lDDT":

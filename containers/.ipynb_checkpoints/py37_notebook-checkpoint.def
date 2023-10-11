@@ -29,7 +29,7 @@ From: ubuntu:20.04
     pip install --upgrade jupyter_client  # find this necessery when test in virtural machine , and packate networkx ?
     # ImportError: Can't determine version for numexpr, pip install numexpr
     
-    # seem idea, install py37_scikit learn and then install py3d mol from it ?
+    # seem idea, install py37_scikit learn and then install py3dmol for it ?
            
     conda info --envs
     
@@ -54,12 +54,15 @@ From: ubuntu:20.04
 
 # or create two conda enviroment in this containers , and install ipykernel to allow seperated selection
 #Set notebook conda and container
-# conda create -n py37_notebook python=3.8
+# conda create -n py37_notebook python=3.7
 # conda activate py37_notebook
-# conda install ipykernel
+
+dont do this step or put it to the end ?
+# conda install ipykernel  # also specified version here ??
 # python -m ipykernel install --user --name py37_notebook --display-name "py37_notebook"
-# conda install -c conda-forge matplotlib=3.5.1 # or 3.5.3?
-# conda install -c anaconda seaborn=0.12.2
+
 # conda install -c conda-forge py3dmol=1.8.1  
 # conda install -c anaconda scikit-learn=1.0.2 
-# conda install -c conda-forge biopython=1.80
+# conda install -c conda-forge biopython=1.75  check if above step install biopython directoly 
+# conda install -c anaconda seaborn=0.12.2 check if above pacakge install seaborn directly 
+# conda install -c conda-forge matplotlib=3.5.3   check from wich step, the matplotlib is installed, dont perform this step as seaborn will install it aumatically, other wise it will cause conflicts

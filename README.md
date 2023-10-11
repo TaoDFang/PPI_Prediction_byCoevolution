@@ -29,9 +29,9 @@ To download all the raw data, generate paired alignment data, and compute DCA re
 go to folder  PPI_Prediction_byCoevolution/scripts \
 then run one of the following: 
 ```
-nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao/Data"  -c nextflow.config -profile singularity   -resume (on the local machine) \
-nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao/Data"  -c nextflow.config -profile slurm_withSingularity  -resume (On HPC with slurm)
-nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao/Data"  --conda_envs_path "/home/tao/anaconda3/envs" -c nextflow.config -profile standard   -resume (on the local machine when the singularity is not available) \
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao"  -c nextflow.config -profile singularity   -resume (on the local machine) \
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao"  -c nextflow.config -profile slurm_withSingularity  -resume (On HPC with slurm)
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao"  --conda_envs_path "/home/tao/anaconda3/envs" -c nextflow.config -profile standard   -resume (on the local machine when the singularity is not available) \
 ```
 for the customized parameters, you could directly modify their values in the configuration file "scripts/nextflow.config" \
 or via the command line (e.g. --root_folder= "path to the location where you want to save all data")
