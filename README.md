@@ -1,62 +1,54 @@
 # PPI_Prediction_byCoevolution
 
-in the end, copy paste to remmove all spelling error 
 
-## enviroment setup 
-To run this repository, Nextflow and Singularity need to be insalled.
+## environment setup 
+To run this repository, Nextflow and Singularity need to be installed.
 
-Nextflow installtion:
+Nextflow installation:
 [Official documentation](https://www.nextflow.io/docs/latest/getstarted.html) \
-or simpley done via [conda install](https://anaconda.org/bioconda/nextflow):  
+or simply done via [conda install](https://anaconda.org/bioconda/nextflow):  
 ```
-conda install -c bioconda nextflow=23.04.1
 conda create -n py_nextflow --channel bioconda python=3.8 nextflow=23.04.1
 ```
 
-The simplese strategy to use all necessery softwares and libraries for this project is to use the singularity container that we have built
-Singularity installtaion:
+The simplest strategy to use all necessary software and libraries for this project is to use the singularity container that we have built
+Singularity installation:
 [Official documentation](https://docs.sylabs.io/guides/latest/user-guide/quick_start.html) \
-or simply via [conda install](https://anaconda.org/conda-forge/singularity):  
+or simply via [conda install](https://anaconda.org/conda-forge/singularity)(Currently it's only avaiable for Linux):  
 ```
-conda install -c conda-forge singularity=3.8.7
-conda create -n py_singularity --channel conda-forge python=3.8 singularity=3.8.7
+conda activate py_nextflow 
+conda install -c conda-forge singularity=3.8.6 
 ```
 
-the problem with conda installation, is that when then singulartyi is avaiable
-mention here singularity is not necesseary 
-(Havent test this myself)
 
-If one has probelm to install singularity, all necessery softwares and library can be installed via conda. \
-Check more details in documentation "containers/conda_envs/conda_installation.md" in this repository .
+If one has problems installing Singularity, all necessary software and libraries can be installed via conda (on Linux). \
+Check more details in the documentation "containers/conda_envs/conda_installation.md" in this repository.
 
 
 ## Raw data and result computation 
-mention time and size 
+To download all the raw data, generate paired alignment data, and compute DCA results for all protein pairs.
 
-To download all the raw data and to  generate all the data results needed for this project.
-
-got to folder  PPI_Prediction_byCoevolution/scripts \
+go to folder  PPI_Prediction_byCoevolution/scripts \
 then run one of the following: 
 ```
-nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf  -c nextflow.config -profile singularity   -resume (on local machine) \
-nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf  -c nextflow.config -profile slurm_withSingularity  -resume (On HPC with slurm)
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao/Data"  -c nextflow.config -profile singularity   -resume (on local machine) \
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao/Data"  -c nextflow.config -profile slurm_withSingularity  -resume (On HPC with slurm)
 ```
-for the customised parameters,you could directly modify thier values in configuration file "scripts/nextflow.config" \
-or via nextflow the command line (e.g. --root_folder= "path to the location where you want to save all data")
+for the customized parameters, you could directly modify their values in the configuration file "scripts/nextflow.config" \
+or via the command line (e.g. --root_folder= "path to the location where you want to save all data")
 
-here add more paramerter setting from here and introduce some pamameters , or direct add as comment line "scripts/nextflow.config" 
+Warning: The whole computation could take months depending on the available computational resources and all the final results take up around 16TB of disk space
 
-
-mention colabfold here
+To run Alphafold-Multimer for the selected protein pairs, we use our customized paired alignment data as input to  [ColabFold (v1.3.0)](https://github.com/sokrypton/ColabFold/releases/tag/v1.3.0)
 
 ## Paper figures
-Download singularity container for this :  
+Download the singularity container for this :  
 ```
 singularity pull --arch amd64 library://tfang/base/py37_notebook:latest
 ```
 
-The data needed to run notebooks can either be from last step that are generated from from scratch (This could take monthes depeonding on the avaiable computational resource) \
-Or The final cached results can be download from Zenodo at: \
+The data needed to run notebooks can either be from the last step that is generated from scratch (This could take months depending on the available computational resource) \
+Or The final cached results can be downloaded from Zenodo at: \
 
 to run notebooks: \
 go to folder PPI_Prediction_byCoevolution/notebooks and start the singularity container by: 
@@ -67,14 +59,22 @@ then inside container run:
 ```
 jupyter notebook --no-browser --port=8036 
 ```
-then the notebooks are accessiable at: http://localhost:8036/ \
-Remember to set variable "notebookData_folder" to the path where you save the data 
-check how to change or remove password here password here  
+then the notebooks are accessible at http://localhost:8036/ \
+Remember to set the variable "notebookData_folder" in the notebooks to the path where you save the data 
+
 
 
 
 # Testing
 
+test on VM (password is 123456)
+
 nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/mnt/mnemo6/tao" --conda_envs_path "/mnt/mnemo5/tao/anaconda3/envs" -c nextflow.config -profile standard  -resume
 
 nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/mnt/mnemo6/tao"  -c nextflow.config -profile singularity  -resume
+
+
+nextflow run RawFastaFilesAndMetaData_workflow.nf -entry RawFastaFilesAndMetaData_workflow --root_folder "/Users/taof/Documents/PhD_Data"  -c nextflow.config -profile singularity  -resume
+
+
+nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/Users/taof/Documents/PhD_Data" -c nextflow.config -profile singularity   -resume
