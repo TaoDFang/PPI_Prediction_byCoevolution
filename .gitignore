@@ -14,5 +14,8 @@ scripts/NextflowWithSlurm.sh
 notebooks/draft.ipynb
 
 
+.nextflow.log*
+
 notebooks/.ipynb_checkpoints/*
 .ipynb_checkpoints/*
+.ipynb_checkpoints/
