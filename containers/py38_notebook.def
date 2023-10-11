@@ -2,7 +2,7 @@ BootStrap: library
 From: ubuntu:20.04
 
 %files
-    ~/PPI_Prediction_byCoevolution/containers/conda_envs/py39_notebook_environment.yml  /home/conda_envs/py39_notebook_environment.yml
+    ~/PPI_Prediction_byCoevolution/containers/conda_envs/py38_notebook_environment.yml  /home/conda_envs/py38_notebook_environment.yml
 
 %post
     apt-get update && apt-get -y upgrade
@@ -19,17 +19,17 @@ From: ubuntu:20.04
 
     # this is necessary for nextlfow, so the need envs is activated without extra operation
     echo ". /home/miniconda3/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
-    echo "conda activate py39_notebook" >> $SINGULARITY_ENVIRONMENT
+    echo "conda activate py38_notebook" >> $SINGULARITY_ENVIRONMENT
     
     
-    /home/miniconda3/bin/conda env  create  -f /home/conda_envs/py39_notebook_environment.yml
+    /home/miniconda3/bin/conda env  create  -f /home/conda_envs/py38_notebook_environment.yml
     
-    conda activate py39_notebook  
+    conda activate py38_notebook  
     
     pip install --upgrade jupyter_client  # find this necessery when test in virtural machine , and packate networkx ?
     # ImportError: Can't determine version for numexpr, pip install numexpr
     
-    # seem idea, install py39_scikit learn and then install py3dmol for it ?
+    # seem idea, install py38_scikit learn and then install py3dmol for it ?
            
     conda info --envs
     
@@ -48,14 +48,14 @@ From: ubuntu:20.04
 
 
 # cd ~/PPI_Prediction_byCoevolution/containers
-# or  singularity build --fakeroot ~/singularity_containers/py39_notebook.sif ~/PPI_Prediction_byCoevolution/containers/py39_notebook.def
-# or singularity build --remote ~/singularity_containers/remoteBuild/py39_notebook.sif ~/PPI_Prediction_byCoevolution/containers/py39_notebook.def
+# or  singularity build --fakeroot ~/singularity_containers/py3_notebook.sif ~/PPI_Prediction_byCoevolution/containers/py38_notebook.def
+# or singularity build --remote ~/singularity_containers/remoteBuild/py38_notebook.sif ~/PPI_Prediction_byCoevolution/containers/py38_notebook.def
 
 
 # or create two conda enviroment in this containers , and install ipykernel to allow seperated selection
 #Set notebook conda and container
-# conda create -n py39_notebook python=3.9
-# conda activate py39_notebook
+# conda create -n py38_notebook python=3.8
+# conda activate py38_notebook
 
 #here installl package witout specify version, see if it works ,start from py3dmol, and then check if other pacakge is avaialbe already ?
 
@@ -64,9 +64,10 @@ From: ubuntu:20.04
 # conda install -c anaconda scikit-learn=1.0.2  #here keep the same version to make sure the same results,no.  dont install other pacakge
 # conda install -c conda-forge biopython #=1.75 dont install other pacakge  check if above step install biopython directoly 
 # conda install -c anaconda seaborn #=0.12.2 #this install matplotlib-base           3.7.2  check if above pacakge install seaborn directly 
+# conda install -c anaconda networkx # this is needed
 # conda install -c conda-forge matplotlib=3.5.3  #skip this step  check from wich step, the matplotlib is installed, dont perform this step as seaborn will install it aumatically, other wise it will cause conflicts
-# conda install -c anaconda networkx # 
+
 
 #dont do this step or put it to the end ?
 # conda install ipykernel  # also specified version here ?? no need for this step, seem already done before 
-# python -m ipykernel install --user --name py39_notebook --display-name "py39_notebook"
+# python -m ipykernel install --user --name py38_notebook --display-name "py38_notebook"

@@ -48,7 +48,7 @@ From: ubuntu:20.04
 
 
 # cd ~/PPI_Prediction_byCoevolution/containers
-# or  singularity build --fakeroot ~/singularity_containers/py37_notebook.sif ~/PPI_Prediction_byCoevolution/containers/py37_notebook.def
+# or  singularity build --fakeroot ~/singularity_containers/py3_notebook.sif ~/PPI_Prediction_byCoevolution/containers/py37_notebook.def
 # or singularity build --remote ~/singularity_containers/remoteBuild/py37_notebook.sif ~/PPI_Prediction_byCoevolution/containers/py37_notebook.def
 
 
@@ -57,12 +57,16 @@ From: ubuntu:20.04
 # conda create -n py37_notebook python=3.7
 # conda activate py37_notebook
 
-dont do this step or put it to the end ?
-# conda install ipykernel  # also specified version here ??
-# python -m ipykernel install --user --name py37_notebook --display-name "py37_notebook"
+#here installl package witout specify version, see if it works ,start from py3dmol, and then check if other pacakge is avaialbe already ?
 
-# conda install -c conda-forge py3dmol=1.8.1  
-# conda install -c anaconda scikit-learn=1.0.2 
-# conda install -c conda-forge biopython=1.75  check if above step install biopython directoly 
-# conda install -c anaconda seaborn=0.12.2 check if above pacakge install seaborn directly 
-# conda install -c conda-forge matplotlib=3.5.3   check from wich step, the matplotlib is installed, dont perform this step as seaborn will install it aumatically, other wise it will cause conflicts
+
+# conda install -c conda-forge py3dmol #=1.8.1  , dont install other pacages
+# conda install -c anaconda scikit-learn=1.0.2  #here keep the same version to make sure the same results,no.  dont install other pacakge
+# conda install -c conda-forge biopython #=1.75 dont install other pacakge  check if above step install biopython directoly 
+# conda install -c anaconda seaborn #=0.12.2 #this install matplotlib-base           3.7.2  check if above pacakge install seaborn directly 
+# conda install -c anaconda networkx # this is needed
+# no this step conda install -c conda-forge matplotlib=3.5.3  #skip this step  check from wich step, the matplotlib is installed, dont perform this step as seaborn will install it aumatically, other wise it will cause conflicts
+#dont do this step or put it to the end ?
+# conda install ipykernel  # also specified version here ?? no need for this step, seem already done before 
+# python -m ipykernel install --user --name py37_notebook --display-name "py37_notebook"
+#pip install --upgrade jupyter_client 
