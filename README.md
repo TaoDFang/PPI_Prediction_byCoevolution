@@ -43,7 +43,7 @@ To run Alphafold-Multimer for the selected protein pairs, we use the generated c
 ## Paper figures
 Download the singularity container for this :  
 ```
-singularity pull --arch amd64 library://tfang/base/py37_notebook:latest
+singularity pull --arch amd64 library://tfang/base/py38_notebook:latest
 ```
 
 The data needed to run notebooks can either be from the last step that is generated from scratch (This could take months depending on the available computational resource) \
@@ -52,7 +52,7 @@ Or The final cached results can be downloaded from Zenodo at: https://zenodo.org
 to run notebooks: \
 go to folder PPI_Prediction_byCoevolution/notebooks and start the singularity container by: 
 ```
-singularity shell py37_notebook.sif
+singularity shell py38_notebook.sif
 ```
 then inside container run: 
 ```
