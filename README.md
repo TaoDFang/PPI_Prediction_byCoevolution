@@ -24,16 +24,14 @@ Check more details in the documentation "containers/conda_envs/conda_installatio
 
 
 ## Raw data and result computation 
-To download all the raw data, generate paired alignment data, and compute DCA results for all protein pairs.
-
-go to folder  PPI_Prediction_byCoevolution/scripts \
-then run one of the following: 
+To download all the raw data, generate paired alignment data, and compute DCA results for all protein pairs. \
+Go to folder  PPI_Prediction_byCoevolution/scripts and run one of the following: 
 ```
 nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao"  -c nextflow.config -profile singularity   -resume (on the local machine) \
 nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao"  -c nextflow.config -profile slurm_withSingularity  -resume (On HPC with slurm)
 nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root_folder "/home/tao"  --conda_envs_path "/home/tao/anaconda3/envs" -c nextflow.config -profile standard   -resume (on the local machine when the singularity is not available) \
 ```
-for the customized parameters, you could directly modify their values in the configuration file "scripts/nextflow.config" \
+For the customized parameters, you could directly modify their values in the configuration file "scripts/nextflow.config" \
 or via the command line (e.g. --root_folder= "path to the location where you want to save all data")
 
 Warning: The whole computation could take months depending on the available computational resources and all the final results take up around 16TB of disk space \
@@ -49,16 +47,15 @@ singularity pull --arch amd64 library://tfang/base/py38_notebook:latest
 ```
 
 The data needed to run notebooks can either be from the last step that is generated from scratch (This could take months depending on the available computational resource) \
-Or The final cached results can be downloaded from Zenodo at: https://zenodo.org/record/8429824
+Alternatively the final cached results can be downloaded from Zenodo at: https://zenodo.org/record/8429824
 
-to run notebooks: \
-go to folder PPI_Prediction_byCoevolution/notebooks and start the singularity container by: 
+To run notebooks,go to folder PPI_Prediction_byCoevolution/notebooks and start the singularity container by: 
 ```
 singularity shell py38_notebook.sif
 ```
-then inside container run: 
+Then inside container run: 
 ```
 jupyter notebook --no-browser --port=8036 
 ```
-then the notebooks are accessible at http://localhost:8036/ \
+Then the notebooks are accessible at http://localhost:8036/ \
 Remember to set the variable "notebookData_folder" in the notebooks to the location where you save the data 
