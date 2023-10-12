@@ -36,7 +36,9 @@ nextflow run query2subject_homologousPPDetectionAndCompuation_workflow.nf --root
 for the customized parameters, you could directly modify their values in the configuration file "scripts/nextflow.config" \
 or via the command line (e.g. --root_folder= "path to the location where you want to save all data")
 
-Warning: The whole computation could take months depending on the available computational resources and all the final results take up around 16TB of disk space
+Warning: The whole computation could take months depending on the available computational resources and all the final results take up around 16TB of disk space \
+This dataset is too large to share online so is only available upon request.
+
 
 To run Alphafold-Multimer for the selected protein pairs, we use the generated customized paired alignment data as input to  [ColabFold (v1.3.0)](https://github.com/sokrypton/ColabFold/releases/tag/v1.3.0)
 
@@ -59,4 +61,4 @@ then inside container run:
 jupyter notebook --no-browser --port=8036 
 ```
 then the notebooks are accessible at http://localhost:8036/ \
-Remember to set the variable "notebookData_folder" in the notebooks to the path where you save the data 
+Remember to set the variable "notebookData_folder" in the notebooks to the location where you save the data 
