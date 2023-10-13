@@ -12,7 +12,7 @@ conda create -n py_nextflow --channel bioconda python=3.8 nextflow=23.04.1
 
 Singularity installation:
 [Official documentation](https://docs.sylabs.io/guides/latest/user-guide/quick_start.html) \
-or simply via [conda install](https://anaconda.org/conda-forge/singularity)(Currently it's only avaiable for Linux):  
+or simply via [conda install](https://anaconda.org/conda-forge/singularity) (Currently it's only avaiable for Linux):  
 ```
 conda activate py_nextflow 
 conda install -c conda-forge singularity=3.8.6 
@@ -46,10 +46,10 @@ Download the singularity container for this :
 singularity pull --arch amd64 library://tfang/base/py38_notebook:latest
 ```
 
-The data needed to run notebooks can either be from the last step that is generated from scratch (This could take months depending on the available computational resource) \
+The data needed to run the otebooks can either be from the last step that is generated from scratch (This could take months depending on the available computational resource) \
 Alternatively the final cached results can be downloaded from Zenodo at: https://zenodo.org/record/8429824
 
-To run notebooks,go to folder PPI_Prediction_byCoevolution/notebooks and start the singularity container by: 
+To run the otebooks,go to folder PPI_Prediction_byCoevolution/notebooks and start the singularity container by: 
 ```
 singularity shell py38_notebook.sif
 ```
