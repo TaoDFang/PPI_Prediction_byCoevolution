@@ -93,6 +93,25 @@ def get_msa_statistics_dict(l):
     return (pp1, pp2, msa_ori.shape[0], msa_ori.shape[1], mean_msa_dists, mean_msa_colentropy, mean_msa_colgappercent)
 
 
+def get_msa_dist_list(l):
+    '''converts list of sequences to msa'''
+    pp1, pp2, msa_path = l
+    msa_filename = msa_path+pp1+"and"+pp2+".fasta"
+    names, seqs = parse_fasta(msa_filename)
+
+    msa_ori = []
+    for seq in seqs:
+        msa_ori.append([aa2num(aa) for aa in seq])
+    msa_ori = np.array(msa_ori)
+
+    # compute seq distancre
+    msa_dists = get_dist(msa_ori)
+    msa_dists_triu_list = msa_dists[np.triu_indices(
+        len(msa_dists), k=1)].tolist()
+
+    return (pp1, pp2, msa_ori, msa_dists_triu_list)
+
+
 def downsample_msa(l):
     pp1, pp2, inputmsa_path, outputmsa_path, base_msanum = l
     msa = AlignIO.read(inputmsa_path+pp1+"and"+pp2+".fasta", "fasta")
