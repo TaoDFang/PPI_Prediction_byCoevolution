@@ -105,9 +105,7 @@ ArgForDCA = [
 print("len(ArgForDCA):", len(ArgForDCA))
 
 
-ArgForGetDCAMax = [(p1, p2, leftPhylum_fasta_protein_lens[p1], allPhylum_fasta_protein_lens[p2],
-                    DCA_coevolutoin_path) for p1, p2 in input_PPs]
-print("len(ArgForGetDCAMax):", len(ArgForGetDCAMax))
+
 
 
 if len(ArgForDCA) > 0:
@@ -122,15 +120,3 @@ if len(ArgForDCA) > 0:
 
 now = datetime.now()
 print("DCA comp end now =", now)
-
-
-if not os.path.exists(Benchmark_folder+"max_pydcaFNAPC_frame.csv"):
-    pool = mp.Pool(30)
-    max_pydcaFNAPC_list = pool.map(
-        get_maxBetValue_dict_pydcaFNAPC_array_npz, ArgForGetDCAMax)
-    pool.close()
-    max_pydcaFNAPC_frame = pd.DataFrame(max_pydcaFNAPC_list, columns=["currentSpe_pro1", "currentSpe_pro2",
-                                                                      "maxValue_all_idx_row", "maxValue_all_idx_col", "maxValue_all",
-                                                                      "maxValue_bet_idx_row", "maxValue_bet_idx_col", "maxValue_bet"])
-    max_pydcaFNAPC_frame.to_csv(
-        Benchmark_folder+"max_pydcaFNAPC_frame.csv", header=True, index=None, sep="\t")
