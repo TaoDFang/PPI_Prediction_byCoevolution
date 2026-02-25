@@ -27,7 +27,7 @@ def combinedRBH_STRING1105(record):
     base_file=base_file[:-10]
 
     currentSpe_ogs=pd.read_csv(file,
-                                         header=None,index_col=None,sep="\t",dtype={0: str,1:str})
+                                        header=None,index_col=None,sep="\t",dtype={0: str,1:str})
     #if currentSpe_ogs.shape[0]>400: # here 400 was choose as 1% of all proteome used in orignal david bakers paper
     if currentSpe_ogs.shape[0]>(allBacteriaProteomeNum*0.01):
         
